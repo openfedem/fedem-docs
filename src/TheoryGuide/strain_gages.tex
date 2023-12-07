@@ -1,0 +1,170 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Virtual strain gauges}
+
+The strains computed from a finite element provide the basis for computing the
+strain-rosette strains.
+Both three- and four-node strain-measuring elements can be defined,
+with the strain computations at the centroid of both elements.
+The membrane formulation of the elements is a constant strain triangle and a
+bi-linear quadrilateral element with a $C^0$ bending approach.
+The strains of these elements can be expressed as
+%
+\begin{equation}
+\tilde{\tf\varepsilon} \;=\; \tilde{\mf B} \tilde{\mf v}
+\end{equation}
+%
+where $\tilde{\mf B}$ is the strain-displacement matrix in the local element
+coordinate system.
+
+The strain-rosette element is defined by the user and overlaid on the
+actual FE mesh.
+It does not, however, contribute any stiffness to the structure.
+It exists only as a post-processing device for the purpose of calculating
+the strains at that location.
+
+The Cartesian strains in the rosette coordinate system can be computed as
+%
+\begin{equation}
+\eqalign{
+{\tf\varepsilon}_r \;=\; {\mf T}_{\varepsilon_r} \tilde{\tf\varepsilon}
+\quad \text{where} & \quad
+{\mf T}_{\varepsilon_r} = \left[ \begin{array}{*{20}c}
+c_{11}^2  & c_{12}^2 & c_{11} c_{12} \\
+c_{21}^2  & c_{22}^2 & c_{21} c_{22} \\
+2c_{11} c_{21} & 2c_{22} c_{12} & (c_{11} c_{22} + c_{12} c_{21})
+\end{array} \right] \cr
+\text{and} & \quad c_{ij} \;=\; {\tf i}_i^r \cdot {\tf i}_j
+}
+\end{equation}
+%
+where ${\tf i}_i^r$ are base vectors for the rosette coordinate system, and
+${\tf i}_j$ are base vectors for the element coordinate system.
+
+Once the Cartesian strains ${\tf \varepsilon}_r$ are established, the user can
+compute the strain for each leg of the rosette ${\tf\varepsilon}_l$, defined by
+the unit direction vector ${\tf i}^l$ of the leg
+%
+\begin{equation}
+\eqalign{
+{\varepsilon}_l \;=\; {\mf t}_l {\tf\varepsilon}_r \quad \text{where} & \quad
+{\mf t}_l \;=\; \left[ \begin{array}{ccc}
+c_{l1}^2 & c_{l2}^2 & c_{l1}\:c_{l2}
+\end{array} \right] \cr
+\text{and} & \quad c_{lj} = {\tf i}_l \cdot {\tf i}_j^r
+}
+\end{equation}
+
+\subsection{Recovering the element displacement vectors}
+
+To compute the element strains and the strain gauge readings,
+the element displacement vector $\tilde{\mf v}$ must be recovered from the
+superelement displacement vector ${\mf v}_s$.
+
+The free (unconstrained) DOFs for a superelement can be recovered from the
+external triad DOFs ${\mf v}_{se}$, and the external DOFs ${\mf y}$ can be
+recovered by means of the inverse CMS-transformation of Chapter~\ref{chap:CMS},
+(see \eqnref{eqCMS:Hdef}):
+%
+\begin{equation}
+{\mf v}_{\text{free}} \;=\; {\mf H v}_s \quad\text{or}\quad
+\left[\begin{array}{c} {\mf v}_i \\ {\mf v}_e \end{array}\right] \;=\;
+\left[\begin{array}{cc} {\mf B} & {\tf\Phi} \\ {\mf I} & {\mf 0}
+\end{array}\right]
+\left[\begin{array}{c} {\mf v}_{se} \\ {\mf y}
+\end{array}\right]
+\end{equation}
+%
+The columns of matrix $\mf B$ are displacement vectors; these vectors represent
+the static displacements that occur when each of the external triad DOFs is
+subjected to a unit displacement, one at a time.
+The eigenvectors of the superelement are contained by $\tf\Phi$ when all the
+external triad DOFs are fixed.
+
+In addition, the full set of DOFs has to be recovered from possible linear
+couplings by means of the matrix relationship\footnote{\label{effNote}
+Numerically, this is handled in a much more efficient manner.}
+%
+\begin{equation}
+{\mf v}_\text{full} \;=\; {\mf L v}_\text{free}
+\end{equation}
+%
+where it is assumed that no prescribed displacements are allowed on the
+internal DOFs, i.e., prescribed displacements can exist on external DOFs only.
+
+The element displacement vector can now be extracted from the full system
+displacement vector as$^\text{\ref{effNote}}$
+%
+\begin{equation}
+{\mf v} \;=\; {\mf A v}_\text{full}
+\end{equation}
+%
+where $\mf A$ is the incidence matrix containing only $0$s and $1$s,
+collecting the correct DOFs from the full superelement vector.
+
+Transformation to the local element coordinate system is handled by
+%
+\begin{equation}
+\eqalign{
+\tilde{\mf v} \;=\; {\mf T v} \quad \text{where} & \quad
+{\mf T} \;=\; \left\lceil\begin{array}{ccc}
+{\mf t} & \cdots & {\mf t}
+\end{array}\right\rfloor \cr \text{and} & \quad
+{\mf t} \;=\; \left[\begin{array}{ccc}
+{\tf i}_1\cdot{\tf I}_1 & {\tf i}_1\cdot{\tf I}_2 & {\tf i}_1\cdot{\tf I}_3 \\
+{\tf i}_2\cdot{\tf I}_1 & {\tf i}_2\cdot{\tf I}_2 & {\tf i}_2\cdot{\tf I}_3 \\
+{\tf i}_3\cdot{\tf I}_1 & {\tf i}_3\cdot{\tf I}_2 & {\tf i}_3\cdot{\tf I}_3
+\end{array}\right]
+}
+\end{equation}
+%
+using $\lceil\;\rfloor$ to signify the diagonal matrix.
+
+The superelement-to-element displacement relationship can now be written:
+
+\begin{equation}
+\tilde{\mf v} \;=\; {\mf E}{\mf v}_s
+\quad\text{where}\quad
+{\mf E} = {\mf T A L H}
+\end{equation}
+
+\subsection{Strain displacement relationship for the strain-rosette}
+
+The strain displacement matrix for the Cartesian strains in the rosette
+coordinate system can now be established at the element location as a function
+of the superelement DOFs, expressed as:
+%
+\begin{equation}
+\label{eq:rosette strain}
+{\tf \varepsilon}_r = {\mf B}{\mf v}_s
+\quad\text{where}\quad
+{\mf B} \;=\; {\mf T}_{\varepsilon r} \tilde {\mf B E}
+\end{equation}
+
+\remark{The strain-displacement matrix ${\mf B}$ of \eqnref{eq:rosette strain}
+is computed for each rosette during initialization and stored in memory while
+computing the strains for a time series.
+${\mf B} = {\mf T}_{\varepsilon r} \tilde{\mf B}{\mf E}$ is thus computed once,
+whereas ${\varepsilon}_r = {\mf B}{\mf v}_s$ is computed for each time step.}
+
+The strain-gauge readings for each leg are then obtained from the Cartesian
+strains as
+%
+\begin{equation}
+\label{eq:gage strain}
+\varepsilon_l \;=\; {\mf t}_l {\tf\varepsilon}_r
+\quad\text{and}\quad
+\sigma_l \;=\; {\mf t}_l {\mf C} {\tf\varepsilon}_r
+\end{equation}
+%
+where $\mf C$ is the constitutive matrix from \eqnref{eqK43:18}.

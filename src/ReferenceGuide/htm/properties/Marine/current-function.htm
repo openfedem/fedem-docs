@@ -1,0 +1,52 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_properties_current-function"></a>
+Current Function</h1>
+
+<p>The Current function object is used to represent a sea current in a FEDEM model.</p>
+
+<p>Sea current functions specify the current
+velocity magnitude and direction as functions of the water depth.
+The resulting current velocity vector is superimposed to the velocity of the specified
+<a href="wave-function.htm">Wave Function</a>, if any, to get the overall
+fluid velocity on which the hydrodynamic load calculations are based.</p>
+
+<p><i>NOTE: It is assumed that the time dependency on the current velocity is so
+weak that the water particle acceleration derived from it can be ignored. Thus, no
+acceleration-dependent hydrodynamic loads will result from the specified current.</i></p>
+
+<p>The use of sea current functions is explained in the chapter on "Marine Modeling"
+in the FEDEM User's Guide.</p>
+
+<p><img src="../../../img/prp/prp-current-function-1.png"></p>
+
+<p>The figure above illustrates the Current function properties.
+It is identical to the property panel of the general
+<a href="../function.htm">Function</a>, except that the <i>Argument</i> frame is absent.
+The current functions are functions of the vertical Z-coordinate of the
+<a href="../../dialogbox/Marine/sea-environment.htm#_wave-coordinate-system">Wave coordinate system</a> only.
+However, if the type is set to <i>Math Expression</i>, a function of all the spatial coordinates
+<i>x, y, z</i> (referring to the wave coordinate system), and the time <i>t</i> may be defined.</p>
+
+</body>
+</html>

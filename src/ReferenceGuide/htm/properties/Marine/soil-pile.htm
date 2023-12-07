@@ -1,0 +1,88 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_properties_soil-pile"></a>
+Soil Pile</h1>
+
+<p>The Soil Pile object is a sub-assembly used to represent a hollow or solid pile that has been placed in the marine soil.</p>
+
+<p>The Soil Pile sub-assembly normally contains the same sets of objects in its model tree list as a
+<a href="beamstring.htm">Beamstring</a>, (<a href="../beam.htm">Beam</a>,
+<a href="../triad.htm">Triad</a>s, <a href="../beam-cross-section.htm">Beam cross section</a>s,
+and <a href="../material.htm">Material</a>s).
+In addition, it contains a set of <a href="../free-joint.htm">Free Joint</a>s with
+corresponding Spring characteristic objects, representing the soil behaviour in the model.</p>
+
+<p>Please see the chapter on "Marine Modeling" in the FEDEM User’s Guide
+for more information on how to create soil pile assemblies.</p>
+
+<p><img src="../../../img/prp/soil-pile-1.png"></p>
+
+<p>The figure above illustrates the Soil Pile properties,
+which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Subassembly model file</td><td>Specifies a model file for the soil pile.
+A separate model file may be assigned to the soil pile assembly by using the Browse button.</td></tr>
+<tr><td>Mass</td><td>Displays the total mass of the soil pile
+(excluding additional mass due to internal soil).</td></tr>
+<tr><td>Length</td><td>Displays the total length of the soil pile.</td></tr>
+<tr><td>Visualize 3D</td><td>Enables or disables 3D visualization of the
+<a href="../beam.htm">Beam</a> elements, using the cross section parameters
+to render its actual geometry. If disabled, each beam is visualized as
+a straigth line connecting the two triads, with coloring depending on the referred
+<a href="../beam-cross-section.htm">Beam cross section</a> object.</td></tr>
+<tr><td>Start, Stop</td><td>Specify start and stop angles (in degrees,
+relative to the local Y-axis of the beam cross section)
+for a partial 3D visualization of the beams.</td></tr>
+<tr><td>Internal Soil</td><td>Enables or disables the calculation of additional mass due to
+internal soil in the pile, based on the specified soil density.</td></tr>
+<tr><td>Mass proportional</td><td>Specifies mass proportional structural damping.</td></tr>
+<tr><td>Stiffness proportional</td><td>Specifies stiffness proportional structural damping.</td></tr>
+<tr><td>Stiffness scale</td><td>Specifies stiffness scale.</td></tr>
+<tr><td>Mass scale</td><td>Specifies mass scale.</td></tr>
+<tr><td>Position</td><td>Specifies the position of the soil pile assembly.</td></tr>
+<tr><td>Orientation</td><td>Specifies the orientation of the soil pile assembly.</td></tr>
+</table></p>
+
+<p>If a separate model file is assigned to a soil pile assembly, all beams, triads
+and properties of that soil pile are stored in the specified file when the model is saved.
+It is then possible to reuse this soil pile in another model by importing it into an existing model.
+If the <i>Subassembly model file</i> field is left empty, the elements of the soil pile are stored in
+the main model file together with the rest of the model.</p>
+
+<p>Editing any of the Structural Damping and Scaling of Dynamic Properties fields,
+the values entered will apply to all the underlying <a href="../beam.htm">Beam</a> elements of the soil pile,
+which can be verified by selecting any of the beam elements.
+But, if such a field is edited for one beam element such that the beams
+making up a soil pile no longer have identical properties, the corresponding field
+in the Soil Pile property panel will be blank (no value displayed).
+
+<p>Note: The Visualize 3D toggle has a tri-state value.
+In addition to the usual ON and OFF states,
+it can also have a neither-ON-nor-OFF state, in which the corresponding
+ON/OFF settings on each underlying beam element are applied instead.
+This is usually the default setting for such tri-state toggles.</p>
+
+</body>
+</html>

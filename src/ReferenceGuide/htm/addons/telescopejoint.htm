@@ -1,0 +1,64 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_addons_telescopejoint"></a>
+Telescope Joint</h1>
+
+<p>The Telescope Joint application is used to create a telescope joint, that is a cylindrical connection between two beam strings.<br>
+The tool contains two separate ways to create such a joint:
+</p>
+
+<h2>Connect Beam strings</h2>
+<p>
+<b>"Connect Beam strings"</b> is used when you have an existing pair of beam strings in your model, with overlapping beams in the area you want to create a telescope joint.
+</p>
+<h3>How to use it</h3>
+<p>
+<ol>
+<li>In FEDEM, select the beams to constitute the "upper barrel" of the telescope joint, by holding ctrl and picking the beams in either the 3D-view or object-tree. 
+<li>Push the <b>"Get Selection"</b> button for the <b>"Upper Barrel"</b> list.
+<li>Verify that the selected beams are listed with their base-IDs and description field.
+<li>Repeat the above steps for the "lower barrel"
+<li>Push the <b>"Generate Telescope joint"</b> button to create the cylindrical joint connection between the two barrels.
+</ol>
+</p>
+<p><img src="../../img/addons/TelescopeJointIllustration.png"></p>
+
+<h2>Replace Beam</h2>
+<p>
+<b>"Replace Beam"</b> is used when you want to insert a telescope joint as a replacement for an existing beam in a beam string.
+<p>
+<h3>How to use it</h3>
+<p>
+<ol>
+<li>In FEDEM, select the beam to replace either in the 3D-view or the object-tree. 
+<li>Push the <b>"Get Selected beam"</b> button.
+<li>Verify that the selected beam is shown with its base-ID, description and length.
+<li>Specify the outer and inner diameter for both barrels, as well as their respective lengths.<br>
+Note that each of these must be shorter than the length of the beam to replace.
+<li>Push the <b>"Generate Telescope joint"</b> button to replace the beam with a telescope joint.
+</ol>
+</p>
+<p><img src="../../img/addons/TelescopeJointReplacementIllustration.png"></p>
+
+</body>
+</html>

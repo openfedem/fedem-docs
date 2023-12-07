@@ -1,0 +1,169 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\nm1{{n-1}}
+\def\np1{{n+1}}
+\def\npa{{n+\alpha}}
+
+\chapter{Time integration algorithm}
+\label{chap:Newmark-flowchart}
+
+The Newmark time integration algorithm employed in the FEDEM dynamics solver
+is described in terms of pseudo code in Figure~\ref{fig:Newmark}.
+This algorithm is based on the Hilber--Hughes--Taylor (HHT) Newmark scheme.
+The following notation is employed (all quantities are here referred to the
+intertial frame, i.e., the global coordinate system):
+%
+\begin{namelist}{$\alpha,\beta,\gamma$}
+\item[$\alpha,\beta,\gamma$] : Newmark parameters (typically,
+$\alpha=-0.1, \beta=0.3025, \gamma=0.6$)
+\item[$t, \Delta t$] : physical time and time increment length
+\item[\bm{\varphi}] : position variable (position vector and orientation matrix)
+\item[$\Delta\bm{\varphi}$] : solution increment, i.e.,
+ $\bm{\varphi}_\np1 = \bm{\varphi}_n \oplus \Delta\bm{\varphi}_n$
+\item[$\delta\bm{\varphi}$] : iterative solution correction
+\item[\bm{v}] : velocity ($=\dot{\bm{\varphi}}$)
+\item[\bm{a}] : acceleration ($=\dot{\bm{v}}=\ddot{\bm{\varphi}}$)
+\item[$\bm{F}^{\rm I}$] : inertia force vector
+\item[$\bm{F}^{\rm D}$] : damping force vector
+\item[$\bm{F}^{\rm S}$] : stiffness force vector
+\item[$\bm{Q}$] : external force vector
+\item[$\bm{M}$] : mass matrix
+\item[$\bm{C}$] : damping matrix
+\item[$\bm{K}$] : tangent stiffness matrix
+\item[$(\cdot)_n^{(i)}$] : quantity $(\cdot)$ associated with iteration $i$
+in time increment $n$
+\end{namelist}
+
+\vskip\baselineskip
+Figure~\ref{fig:GeneralizedAlpha} describes an alternative implementation of
+the generalized-alpha time integration algorithm based on interpolated state,
+instead of interpolated forces.
+It makes use of the following additional parameters:
+
+\begin{namelist}{$\alpha_m$}
+\item[$\alpha_f$] : Interpolation parameter for displacements and velocities
+\item[$\alpha_m$] : Interpolation parameter for accelerations
+\end{namelist}
+%
+where now $\beta=\frac{1}{4}(1-\alpha_m+\alpha_f)^2$
+and $\gamma=\frac{1}{2}-\alpha_m+\alpha_f$.
+
+\begin{figure}[t] \small
+\begin{tabbing} XXX \= XXX \= XXX \= \kill
+Set initial conditions: $t_0, \bm{\varphi}_0, \bm{v}_0, \bm{a}_0$
+and $\bm{F}_0^{\rm I}=\bm{M}_0\bm{a}_0$ if $\bm{a}_0$ is nonzero \\[2mm]
+FOR $n = 1$ TO $n_{\rm step}$ \+\\[2mm]
+$t_n$ \> $=\; t_\nm1 + \Delta t_n$ \\
+$\bm{\varphi}_n^{(0)}$ \> $=\; \bm{\varphi}_\nm1\;;\;
+\Delta\bm{\varphi}_n^{(0)} \;=\; {\bf 0}$ \\[2mm]
+
+Predict new velocities and accelerations: \\
+$\bm{v}_n^{(0)}$ \> $=\; \left(\frac{\gamma}{\beta}-1\right)\bm{v}_\nm1 \:+\:
+                         \left(\frac{\gamma}{2\beta}-1\right)\Delta t_n \bm{a}_\nm1$ \\[1mm]
+$\bm{a}_n^{(0)}$ \> $=\; \quad\frac{1}{\beta\Delta t_n}\;\;\bm{v}_\nm1 \:+\:
+                         \left(\frac{1}{2\beta}-1\right) \bm{a}_\nm1$ \\[2mm]
+
+Update mechanism state~$\Longrightarrow \bm{F}_n^{{\rm I}(0)}, \bm{F}_n^{{\rm D}(0)},
+                                        \bm{F}_n^{{\rm S}(0)}, \bm{Q}_n^{(0)}$ \\[2mm]
+
+Compute force residual: \\
+$\bm{R}_n^{(0)}$ \> $=\; (1+\alpha)\left(\bm{Q}_n^{(0)} - \bm{F}_n^{{\rm S}(0)} + \bm{F}_n^{{\rm D}(0)}\right)
+                     + \bm{F}_n^{{\rm I}(0)} - \alpha\bm{F}_\nm1^{\rm I}$ \\[2mm]
+
+FOR $i = 1$ TO $i_{\rm max}$ \+\\[2mm]
+Compute Newton matrix:\\
+\bm{N} \> $=\; \frac{1}{\beta\Delta t_n^2} \bm{M}_n^{(i-1)}
+        + \frac{\gamma}{\beta\Delta t_n}(1+\alpha) \bm{C}_n^{(i-1)}
+        + (1+\alpha) \bm{K}_n^{(i-1)}$ \\[2mm]
+
+Compute iterative correction: \\
+$\delta\bm{\varphi}_n^{(i)}$ \> $=\; \bm{N}^{-1} \bm{R}_n^{(i-1)}$ \\[2mm]
+
+Increment position, velocity and acceleration:\\
+$\Delta\bm{\varphi}_n^{(i)}$ \> $=\; \Delta\bm{\varphi}_n^{(i-1)} + \delta\bm{\varphi}_n^{(i)}$ \\[1mm]
+$\bm{\varphi}_n^{(i)}$ \> $=\; \bm{\varphi}_n^{(i-1)} \:\oplus\: \delta\bm{\varphi}_n^{(i)}$ \\[1mm]
+$\bm{v}_n^{(i)}$ \> $=\; \frac{\gamma}{\beta\Delta t_n}\Delta\bm{\varphi}_n^{(i)} \:-\: \bm{v}_n^{(0)}$ \\[1mm]
+$\bm{a}_n^{(i)}$ \> $=\; \frac{1}{\beta\Delta t_n^2}\Delta\bm{\varphi}_n^{(i)} \:-\: \bm{a}_n^{(0)}$ \\[2mm]
+
+Update mechanism state~$\Longrightarrow \bm{F}_n^{{\rm I}(i)}, \bm{F}_n^{{\rm D}(i)}, \bm{F}_n^{{\rm S}(i)}, \bm{Q}_n^{(i)}$ \\[2mm]
+
+Compute new force residual: \\
+$\bm{R}_n^{(i)}$ \> $=\; (1+\alpha)\left(\bm{Q}_n^{(i)} - \bm{F}_n^{{\rm S}(i)} - \bm{F}_n^{{\rm D}(i)}\right)
+                     - \bm{F}_n^{{\rm I}(i)} - \alpha\bm{F}_\nm1^{\rm I}$ \\[2mm]
+
+IF time increment converged THEN \+\\[1mm]
+Set converged solution: $\left\{\bm{\varphi},\Delta\bm{\varphi},\bm{v},\bm{a}\right\}_n =
+\left\{\bm{\varphi},\Delta\bm{\varphi},\bm{v},\bm{a}\right\}_n^{(i)}$ \\[1mm]
+Update the actual inertia force (alternatively, just use $\bm{F}_n^{\rm I} = \bm{F}_n^{{\rm I}(i)}$): \\
+$\bm{F}_n^{\rm I} \;=\; \bm{Q}_n^{(i)} - \bm{F}_n^{{\rm S}(i)} - \bm{F}_n^{{\rm D}(i)}$ \\[2mm]
+Exit the iteration loop \-\\[1mm]
+END IF \-\\[1mm]
+END DO \-\\[1mm]
+END DO
+\end{tabbing}
+\caption{The Newmark HHT time integration algorithm.}
+\label{fig:Newmark}
+\end{figure}
+
+\begin{figure}[t] \small
+\begin{tabbing} XXX \= XXX \= XXX \= X \= XXXXXXXXxx \= \kill
+Set initial conditions: $t_0, \bm{\varphi}_0, \bm{v}_0, \bm{a}_0$ \\[2mm]
+FOR $n = 0$ TO $n_{\rm step}-1$ \+\\[2mm]
+$t_\np1$ \> $=\; t_n + \Delta t_\np1$ \\
+$\bm{\varphi}_\np1^{(0)}$ \> $=\; \bm{\varphi}_n\;;\;
+\Delta\bm{\varphi}_\np1^{(0)} \;=\; {\bf 0}$ \\[2mm]
+
+Predict new velocities and accelerations: \\
+$\bm{v}_\np1^{(0)}$ \> $=\;  \left(\frac{\gamma}{\beta}-1\right)\bm{v}_n \:+\:
+                             \left(\frac{\gamma}{2\beta}-1\right)\Delta t_\np1 \bm{a}_n$ \\[1mm]
+$\bm{a}_\np1^{(0)}$ \> $=\;\;\frac{1}{\beta\Delta t_\np1}\;\,\bm{v}_n \:+\:
+                             \left(\frac{1}{2\beta}-1\right) \bm{a}_n$ \\[2mm]
+
+FOR $i = 0$ TO $i_{\rm max}-1$ \+\\[2mm]
+Calculate intermediate solution at time $t_\npa$: \\
+$\Delta\bm{\varphi}_\npa$ \>\>$=\; (1-\alpha_f\,)\Delta\bm{\varphi}_n$ \> $+\; \alpha_f\,\Delta\bm{\varphi}_\np1^{(i)}$ \\
+$\bm{v}_\npa$ \>\>$=\; (1-\alpha_f\,)\,\bm{v}_n$ \> $+\; \alpha_f\,\bm{v}_\np1^{(i)}$ \\
+$\bm{a}_\npa$ \>\>$=\; (1-\alpha_m)\,\bm{a}_n$ \> $+\; \alpha_m\bm{a}_\np1^{(i)}$ \\[1mm]
+$\bm{\varphi}_\npa$ \>\>$=\; \bm{\varphi}_n \:\oplus\: \Delta\bm{\varphi}_\npa$ \\[2mm]
+
+Update mechanism state~$\Longrightarrow \bm{F}_\npa^{{\rm I}(i)}, \bm{F}_\npa^{{\rm D}(i)},
+                                        \bm{F}_\npa^{{\rm S}(i)}, \bm{Q}_\npa^{(i)}$ \\[2mm]
+
+Compute force residual: \\
+$\bm{R}_\npa^{(i)}$ \>\> $=\; \bm{Q}_\npa^{(i)} - \bm{F}_\npa^{{\rm S}(i)} - \bm{F}_\npa^{{\rm D}(i)} - \bm{F}_\npa^{{\rm I}(i)}$ \\[2mm]
+
+Compute Newton matrix:\\
+$\bm{N}$ \>\> $=\; \frac{1}{\beta\Delta t_n^2} \alpha_m \bm{M}_\npa^{(i)}
+          + \frac{\gamma}{\beta\Delta t_n} \alpha_f \bm{C}_\npa^{(i)}
+          + \alpha_f \bm{K}_\npa^{(i)}$ \\[2mm]
+
+Compute iterative correction: \\
+$\delta\bm{\varphi}_\np1^{(i+1)}$ \>\> $=\; \bm{N}^{-1} \bm{R}_\npa^{(i)}$ \\[2mm]
+
+Increment position, velocity and acceleration:\\
+$\Delta\bm{\varphi}_\np1^{(i+1)}$ \>\> $=\; \Delta\bm{\varphi}_\np1^{(i)} \:+\: \delta\bm{\varphi}_\np1^{(i+1)}$ \\[1mm]
+$\bm{\varphi}_\np1^{(i+1)}$ \>\> $=\; \bm{\varphi}_n \:\oplus\: \Delta\bm{\varphi}_\np1^{(i+1)}$ \\[1mm]
+$\bm{v}_\np1^{(i+1)}$ \>\> $=\; \frac{\gamma}{\beta\Delta t_n}\Delta\bm{\varphi}_\np1^{(i+1)} \:-\: \bm{v}_\np1^{(0)}$ \\[1mm]
+$\bm{a}_\np1^{(i+1)}$ \>\> $=\; \frac{1}{\beta\Delta t_n^2}\Delta\bm{\varphi}_\np1^{(i+1)} \:-\: \bm{a}_\np1^{(0)}$ \\[2mm]
+
+IF time increment converged THEN \+\\[1mm]
+Set converged solution: $\left\{\bm{\varphi},\Delta\bm{\varphi},\bm{v},\bm{a}\right\}_\np1 =
+\left\{\bm{\varphi},\Delta\bm{\varphi},\bm{v},\bm{a}\right\}_\np1^{(i+1)}$ \\[1mm]
+Exit the iteration loop \-\\[1mm]
+END IF \-\\[1mm]
+END DO \-\\[1mm]
+END DO
+\end{tabbing}
+\caption{The state-based generalized-alpha time integration algorithm.}
+\label{fig:GeneralizedAlpha}
+\end{figure}

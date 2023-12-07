@@ -1,0 +1,140 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{RBAR}
+\label{s:RBAR}
+
+RBAR is a rigid bar element with 2 nodal points and 6 DOFs assigned to each node.
+The nodal points located at each end of the bar are numbered 1 and 2 as shown in Figure~\ref{fig:RBAR}.
+The nodal DOFs are referred to in the link coordinate system.
+The element has no material properties.
+The 12 DOFs of the element are related to each other through the following set of equations:
+%
+\begin{eqnarray}
+u_2 &=& u_1\, + e_z\theta_{y1} - e_y\theta_{z1} \label{equ:RBAR1} \\
+v_2 &=& v_1\: + e_x\theta_{z1} - e_z\theta_{x1} \\
+w_2 &=& w_1   + e_y\theta_{x1} - e_x\theta_{y1} \\
+\theta_{x2} &=& \theta_{x1} \\
+\theta_{y2} &=& \theta_{y1} \\
+\theta_{z2} &=& \theta_{z1} \label{equ:RBAR6}
+\end{eqnarray}
+%
+where $e_x,e_y,e_z$ are the relative distance between the two nodes
+in the respective coordinate directions, as depicted in Figure~\ref{fig:RBAR}
+
+\begin{figure}[t]
+\begin{center}
+\setlength{\unitlength}{1mm}
+\begin{picture}(100,65)
+\thinlines
+\put(15,15){\vector(1,0){70}}
+\put(15,15){\vector(0,1){45}}
+\put(15,15){\vector(-1,-1){12}}
+\put( 0, 0){$x_{\text{link}}$}
+\put(87,14){$y_{\text{link}}$}
+\put(13,62){$z_{\text{link}}$}
+\thicklines
+\put(36,30){\circle*{2}}\put(32,30){$1$}
+\put(70,50){\circle*{2}}\put(66,50){$2$}
+\qbezier(36,30)(53,40)(70,50)
+%Eccentric arms
+\thinlines
+\put(36,30){\line(-1,-1){10}}\put(32,24){$e_x$}
+\put(26,20){\line( 1, 0){44}}\put(48,22){$e_y$}
+\put(70,20){\line( 0, 1){30}}\put(71,35){$e_z$}
+%Nodal dofs
+\thinlines
+\put(70,50){\vector(-1,-1){4.8}}\put(62,42){$u,\theta_x$}
+\put(70,50){\vector( 1, 0){8}}  \put(79,49){$v,\theta_y$}
+\put(70,50){\vector( 0, 1){8}}  \put(67,60){$w,\theta_z$}
+\end{picture}
+\end{center}
+\caption{RBAR, Rigid bar element}
+\label{fig:RBAR}
+\end{figure}
+
+The physical properties of the RBAR element are two sets of component numbers
+at each node, identifying the dependent and independent DOFs at the node.
+The total number of independent DOFs in the element must be equal to 6 and they
+must jointly be capable of representing any general rigid body motion of the element.
+The element may have up to 6 dependent DOFs.
+If no dependent DOFs are specified, all DOFs that are not specified
+as independent will be made dependent.
+
+Since the RBAR element may have dependent DOFs at both nodes, none of the nodes
+can be a triad (external node) in Fedem.
+If all independent DOFs are gathered at one node (and all the dependent DOFs
+are at the other node), the RBAR element is equivalent to a 2-node RGD element,
+see Section~\ref{s:RGD}.
+During an analysis, rigid bar elements are processed using a DOF elimination method.
+The constraint equations~(\ref{equ:RBAR1})--(\ref{equ:RBAR6}) are generated for
+each element and are used to eliminate the dependent DOFs from the global
+system of equations, before that system is assembled.
+
+\section{RGD}
+\label{s:RGD}
+
+RGD is a rigid element with one master node having 6 independent DOFs, 3~translations and 3~rotations.
+All remaining nodes are slave nodes having either 3 or 6 dependent DOFs.
+Only the master node can be a triad (external node) in Fedem.
+The nodal points are numbered 1 through number of nodes as shown in Figure~\ref{fig:RGD}.
+A RGD element has no material properties.
+The set of dependent DOFs at the slave nodes may optionally be specified as a physical property.
+The default behavior if no dependent DOFs are specified is that all DOFs
+at the slave nodes are made dependent on the master node DOFs.
+
+\begin{figure}[t]
+\begin{center}
+\setlength{\unitlength}{1mm}
+\begin{picture}(100,65)
+\thinlines
+\put(15,15){\vector( 1, 0){70}}
+\put(15,15){\vector( 0, 1){45}}
+\put(15,15){\vector(-1,-1){12}}
+\put( 0, 0){$x_{\text{link}}$}
+\put(87,14){$y_{\text{link}}$}
+\put(13,62){$z_{\text{link}}$}
+\thicklines
+\put(36,30){\circle{2}} \put(32,27){$1_m$}
+\put(80,20){\circle*{2}}\put(82,19){$2_s$}
+\put(70,40){\circle*{2}}\put(71,36){$3_s$}
+\put(60,60){\circle*{2}}\put(62,60){$4_s$}
+\put(30,50){\circle*{2}}\put(29,53){$5_s$}
+\qbezier(36,30)(58,25)(80,20)
+\qbezier(36,30)(53,35)(70,40)
+\qbezier(36,30)(48,45)(60,60)
+\qbezier(36,30)(33,40)(30,50)
+%Nodal dofs
+\thinlines
+\put(70,40){\vector(-1,-1){3.6}}\put(64,35){$u$}
+\put(70,40){\vector(1,0){6}}    \put(77,39){$v$}
+\put(70,40){\vector(0,1){6}}    \put(69,47){$w$}
+\end{picture}
+\end{center}
+\caption{RGD, Multi-node rigid element}
+\label{fig:RGD}
+\end{figure}
+
+The presence of a rigid element in a model implies that the motion of all the
+slave nodes on the element are to be constrained as though they were connected
+to the master node by mass less rigid beams (or semi-rigid if not all slave
+node DOFs are made dependent).
+During an analysis, rigid elements are processed using a DOF elimination method.
+A set of constraint equations, equivalent to Equations~(\ref{equ:RBAR1})--(\ref{equ:RBAR6})
+is generated for each slave node, relating the dependent DOFs to the
+independent DOFs of the master node.
+These equations are then used to eliminate all dependent DOFs from the
+global system of equations, prior to the system matrix assembly.
+Note that a master node in one RGD element may be a slave node in another RGD.
+Such chains of RGD elements are resolved explicitly in such a way that all
+slave DOFs ultimately are coupled only to independent DOFs that do not depend
+on other RGD constraints.

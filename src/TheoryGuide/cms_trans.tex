@@ -1,0 +1,471 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Component mode synthesis reduction}
+\label{sec:CMS reduction}
+
+For each substructure modeled, the status codes for the substructure DOFs are set to 1 for
+internal DOFs and 2 for external DOFs. With this control information, the system mass and stiffness
+matrices are assembled from the corresponding element matrices. The first $n_1$ DOFs of the
+system matrices are internal substructure DOFs, and the next $n_2$ DOFs are external.
+
+In symbolic form, the substructure matrices for mass and stiffness can be divided into submatrices,
+with index $i$ for internal and $e$ for external as follows:
+%
+\begin{equation}
+{\mf M} \;=
+\left[\begin{array}{cc}
+{\mf M}_{ii} & {\mf M}_{ie} \\
+{\mf M}_{ei} & {\mf M}_{ee} \\
+\end{array} \right]
+\quad\text{and}\quad
+{\mf K} \;=
+\left[\begin{array}{cc}
+{\mf K}_{ii} & {\mf K}_{ie} \\
+{\mf K}_{ei} & {\mf K}_{ee} \\
+\end{array} \right]
+\end{equation}
+%
+where ${\mf M}_{xx}$ are mass and ${\mf K}_{xx}$ are stiffness submatrices.
+
+The stiffness relation for the substructure may now be expressed as:
+%
+\begin{equation}
+\left[\begin{array}{cc}
+{\mf K}_{ii} & {\mf K}_{ie} \\
+{\mf K}_{ei} & {\mf K}_{ee} \\
+\end{array}\right] \left[\begin{array}{cc}
+{\mf v}_i \\
+{\mf v}_e \\
+\end{array}\right] = \left[\begin{array}{cc}
+{\mf Q}_i \\
+{\mf Q}_e \\
+\end{array}\right]
+\label{eqCMS:41}
+\end{equation}
+%
+where ${\mf v}_x$ is the displacement vector and ${\mf Q}_x$ is the load vector.
+
+\subsection{Static modes}
+\label{subsec:Static modes}
+
+The first line of \eqnref{eqCMS:41} may be written:
+%
+\begin{equation}
+\eqalign{
+{\mf v}_i \;=\; & {\mf K}_{ii}^{-1} {\mf Q}_i
+                - {\mf K}_{ii}^{-1} {\mf K}_{ie} {\mf v}_e \cr =\; &
+{\mf v}_i^i + {\mf v}_i^e}
+\label{eqCMS:42}
+\end{equation}
+%
+where ${\mf v}_i^i$ represents internal displacements with fixed external DOFs,
+and ${\mf v}_i^e$ represents internal displacements as a function of external
+displacements.
+Examination of each term provides
+%
+\begin{equation}
+{\mf v}_i^i \;=\; {\mf K}_{ii}^{-1} {\mf Q}_i
+\label{eqCMS:43}
+\end{equation}
+%
+and
+%
+\begin{equation}
+{\mf v}_i^e \;=\; -{\mf K}_{ii}^{-1}{\mf K}_{ie}{\mf v}_e \;=\; {\mf B}{\mf v}_e
+\label{eqCMS:44}
+\end{equation}
+%
+where
+%
+\begin{equation}
+{\mf B} \;=\; -{\mf K}_{ii}^{-1} {\mf K}_{ie}
+\label{eqCMS:45}
+\end{equation}
+
+The set of nodal displacements $[\;{\mf v}_i^e \;\; {\mf v}_e\;]$ represents the
+"exact" solution of static loads and boundary conditions acting on the external
+nodes ("exact" in the sense that the model reduction has not in any way changed
+the solution in relation to the solution of the full system).
+
+\subsection{Constrained dynamic modes}
+\label{secCMS:FixeIntMode}
+
+The substructure matrices can be reduced by CMS transformation to produce a set of modes called
+{\it Craig Bampton modes}. This is done by eliminating the internal DOFs as system DOFs, and
+replacing them with a limited number of substructure vibration modes called generalized DOFs.
+The CMS transformation starts with an eigenvalue analysis of the substructure system matrices
+with the external DOFs fixed at zero. The equation for free, undamped vibration of the substructure's
+internal DOFs is written:
+%
+\begin{equation}
+{\mf M}_{ii} \ddot{\mf v}_i^i + {\mf K}_{ii} {\mf v}_i^i \;=\; {\mf 0}
+\label{eqCMS:46}
+\end{equation}
+
+Considering simple harmonic motion, the displacement ${\mf v}_i^i$ may be expressed as:
+%
+\begin{equation}
+{\mf v}_i^i \;=\; {\bs\phi}\,\sin\omega t
+\label{eqCMS:47}
+\end{equation}
+%
+where the eigenvector ${\bs\phi}$ is defined by the eigenvalue problem.
+%
+\begin{equation}
+\left({\mf K}_{ii} -\omega^2{\mf M}_{ii}\right) {\bs\phi} \;=\; {\mf 0}
+\label{eqCMS:48}
+\end{equation}
+
+In a substructure with $n$ active DOFs of which $p$ are external DOFs,
+the internal displacements $v_i^i$ can be expressed as:
+%
+\begin{equation}
+{\mf v}_i^i \;=\; \sum_{k=1}^S {\bs\phi}_k \, y_k \;=\; {\bs\Phi}{\mf y}
+\label{eqCMS:49}
+\end{equation}
+%
+where $s<n-p$, and
+%
+\begin{equation}
+{\bs\Phi} \;=\; \left[ \begin{array}{cccc}
+{\bs\phi}_1 & {\bs\phi}_2 & \cdots & {\bs\phi}_s
+\end{array}\right]
+\end{equation}
+%
+is the eigenvector matrix and has dimensions $(n-p)\times s$.
+
+\subsection{Reduced system}
+\label{subsec:Reduced system}
+
+The superelement displacements are now expressed by the external DOFs
+${\mf v}_e$ and by the new generalized DOFs ${\mf y}$:
+%
+\begin{equation}
+{\mf v} \;= \left[\begin{array}{c}
+{\mf v}_e \\ {\mf v}_i
+\end{array}\right] = \left[\begin{array}{cc}
+{\mf I} & {\mf 0} \\
+{\mf B} & {\tf\Phi}
+\end{array}\right]
+\left[\begin{array}{c}
+{\mf v}_e \\ {\mf y}
+\end{array}\right] =\; {\mf H} \left[\begin{array}{c}
+{\mf v}_e \\ {\mf y}
+\end{array}\right]
+\label{eqCMS:Hdef}
+\end{equation}
+
+Usually only a few of the lowest modes of vibration need to be included to
+achieve good results, and this may reduce the size of the problem substantially.
+If all eigenmodes are included, $s=n-p$, the CMS transformation is exact.
+
+\iftoggle{publicedition}{}{% The following is for the in-house edition only.
+
+The substructure dynamic equation of motion may be written:
+%
+\begin{equation}
+\label{eqCMS:PartitionedModelEq}
+\eqalign{
+\left[\begin{array}{cc}
+{\mf M}_{ee} & {\mf M}_{ei} \\
+{\mf M}_{ie} & {\mf M}_{ii}
+\end{array}\right] \left[\begin{array}{cc}
+\ddot{\mf v}_e \\
+\ddot{\mf v}_i
+\end{array}\right] \;+\; &
+\left[\begin{array}{cc}
+{\mf C}_{ee} & {\mf C}_{ei} \\
+{\mf C}_{ie} & {\mf C}_{ii}
+\end{array}\right] \left[\begin{array}{c}
+\dot{\mf v}_e \\
+\dot{\mf v}_i
+\end{array}\right] \cr +\; &
+\left[\begin{array}{cc}
+{\mf K}_{ee} & {\mf K}_{ei} \\
+{\mf K}_{ie} & {\mf K}_{ii}
+\end{array}\right] \left[\begin{array}{c}
+{\mf v}_e \\
+{\mf v}_i
+\end{array}\right] \;=\;
+\left[\begin{array}{c}
+{\mf Q}_e \\
+{\mf Q}_i
+\end{array}\right]}
+\end{equation}
+%
+where ${\mf C}_{xx}$ represents damping.
+
+Combining \eqnref{eqCMS:Hdef} and its first and second time derivatives with
+\eqnref{eqCMS:PartitionedModelEq}, and pre-multiplying with ${\mf H}^T$ produces
+%
+\begin{equation}
+\label{eqCMS:ReducedModelEq}
+\eqalign{
+\left[\begin{array}{cc}
+{\mf m}_{11} & {\mf m}_{12} \\
+{\mf m}_{21} & {\mf m}_{22}
+\end{array}\right]
+\left[\begin{array}{c}
+\ddot{\mf v}_e \\
+\ddot{\mf y}
+\end{array}\right] \;+\; &
+\left[\begin{array}{cc}
+{\mf c}_{11} & {\mf c}_{12} \\
+{\mf c}_{21} & {\mf c}_{22}
+\end{array}\right] \left[\begin{array}{c}
+\dot{\mf v}_e \\
+\dot{\mf y}
+\end{array}\right] \cr +\; &
+\left[\begin{array}{cc}
+{\mf k}_{11} & {\mf k}_{12} \\
+{\mf k}_{21} & {\mf k}_{22}
+\end{array}\right] \left[\begin{array}{c}
+{\mf v}_e \\
+{\mf y}
+\end{array}\right] \;=\;
+\left[\begin{array}{c}
+{\mf q}_1 \\
+{\mf q}_2
+\end{array}\right]}
+\end{equation}
+%
+where
+%
+\begin{eqnarray}
+{\mf m}_{11} &=& {\mf M}_{ee} +
+{\mf B}^T {\mf M}_{ie} + {\mf M}_{ei} {\mf B} +
+{\mf B}^T {\mf M}_{ii} {\mf B}
+\label{eqCMS:Msubs}
+\\
+{\mf m}_{12} &=& {\mf m}_{21}^T \;=\;
+{\mf M}_{ei} {\bs\Phi} + {\mf B}^T
+{\mf M}_{ii} {\bs\Phi}
+\nonumber \\
+{\mf m}_{22} &=& {\bs\Phi}^T
+{\mf M}_{ii} {\bs\Phi}
+\nonumber \\[5mm]
+%
+{\mf c}_{11} &=& {\mf C}_{ee} +
+{\mf B}^T {\mf C}_{ie} + {\mf C}_{ei} {\mf B} +
+{\mf B}^T {\mf C}_{ii} {\mf B}
+\label{eqCMS:Csubs}\\
+{\mf c}_{12} &=&  {\mf c}_{21}^T \;=\;
+{\mf C}_{ei} {\bs\Phi} + {\mf B}^T
+{\mf C}_{ii} {\bs\Phi}
+\nonumber \\
+{\mf c}_{22} &=& {\bs\Phi}^T
+{\mf C}_{ii} {\bs \Phi }
+\nonumber \\[5mm]
+%
+{\mf k}_{11} &=& {\mf K}_{ee} +
+{\mf K}_{ie}^T {\mf B}
+\label{eqCMS:Ksubs}\\
+{\mf k}_{12} &=& {\mf k}_{21}^T \;=\; {\mf 0}
+\nonumber \\
+{\mf k}_{22} &=& {\bs \Phi}^T {\mf K}_{ii} {\bs\Phi}
+\nonumber \\[5mm]
+%
+{\mf q}_1 &=& {\mf Q}_e + {\mf B}^T {\mf Q}_i
+\label{eqCMS:Qsubs}\\
+{\mf q}_2 &=& {\bs\Phi}^T {\mf Q}_i
+\nonumber
+\end{eqnarray}
+
+The matrix ${\mf m}_{22}$ from \eqnref{eqCMS:Msubs} is diagonal and the
+eigenmodes are normalized, so that
+%
+\begin{equation}
+{\mf m}_{22} \;=\; {\mf I} \;=\; {\bs\Phi}^T {\mf M}_{ii} {\bs\Phi}
+\label{eqCMS:424}
+\end{equation}
+%
+which is equal to the unit matrix.
+Notice that ${\mf m}_{11}$, ${\mf m}_{12}$, and ${\mf m}_{21}$ are not diagonal.
+
+The matrix ${\mf k}_{11}$ from \eqnref{eqCMS:Ksubs} is reduced by the expression
+%
+\begin{equation}
+{\mf k}_{11} \;=\; {\mf K}_{ee} +
+{\mf B}^T {\mf K}_{ie} + {\mf K}_{ei} {\mf B} +
+{\mf B}^T {\mf K}_{ii} {\mf B}
+\label{eqCMS:425}
+\end{equation}
+%
+Expanding the last two terms by \eqnref{eqCMS:45} shows that the terms are
+equal, but with opposite signs; therefore, they cancel out of the equation.
+The similarity of these terms is due to the symmetric properties of the
+stiffness matrix, which produce
+%
+\begin{equation}
+{\mf K}_{ie}^T \;=\; {\mf K}_{ei}
+\label{eqCMS:426}
+\end{equation}
+%
+and
+%
+\begin{equation}
+\left({\mf K}_{ii}^{-1}\right)^T \;=\; {\mf K}_{ii}^{-1}
+\label{eqCMS:427}
+\end{equation}
+
+For the same reasons, the matrices ${\mf k}_{12} = {\mf k}_{21}^T$
+are reduced from the equation
+%
+\begin{equation}
+\label{eqCMS:428}
+\eqalign{
+{\mf k}_{12} \;=\;& {\mf k}_{21}^T \;=\; {\mf K}_{ei} {\bs\Phi} +
+{\mf B}^T {\mf K}_{ii} {\bs\Phi} \cr =\; &
+{\mf K}_{ei} {\bs\Phi} +
+\left(-{\mf K}_{ii}^{-1}{\mf K}_{ie}\right)^T {\mf K}_{ii} {\bs\Phi} \cr =\; &
+{\mf K}_{ei} {\bs\Phi} -
+{\mf K}_{ie}^T \left({\mf K}_{ii}^{-1}\right)^T
+{\mf K}_{ii}{\bs\Phi} = {\mf 0}}
+\end{equation}
+
+It may be shown that the stiffness matrix ${\mf k}_{22}$ is diagonal and of a form in which
+%
+\begin{equation}
+{\mf k}_{22} = \left\lceil\begin{array}{cccc}
+\omega_1^2 & \omega_2^2 & \cdots & \omega_{n-p}^2
+\end{array}\right\rfloor
+\label{eqCMS:429}
+\end{equation}
+%
+$\omega_1^2, \omega_2^2, \ldots\omega_{n-p}^2$ are the eigenvalues corresponding
+to the eigenmodes of eigenvector matrix $\bs\Phi$.
+
+The substructure matrices reduced by CMS transformation, as shown above,
+are the superelement matrices in a standardized form (Craig-Bampton modes).
+These matrices will form the basis for the mechanism simulation formulation.
+
+\subsection{Gravitational forces}
+
+Gravitational forces are calculated from unit gravitational acceleration vectors in the substructure's
+local $x$-, $y$-, and $z$-directions and denoted ${\mf U}_x$, ${\mf U}_y$, and ${\mf U}_z$,
+respectively. This also means that for all DOFs in ${\mf U}_x$ corresponding to $x$-translation,
+the acceleration component of ${\mf U}_x$ is set equal to 1, whereas those corresponding to
+$y$- and $z$-translation are equal to 0. In addition, for ${\mf U}_y$ and ${\mf U}_z$ the acceleration
+components in the $y$- and $z$-directions, respectively, are set equal to 1, while the accelerations
+in the other directions are~0.
+
+The gravitational forces ${\mf G}_x$ corresponding to ${\mf U}_x$ are calculate
+from (see \eqnref{eqCMS:ReducedModelEq}):
+%
+\begin{equation}
+\left[\begin{array}{cc}
+{\mf G}_{xi} \\ {\mf G}_{xe}
+\end{array}\right] =
+\left[\begin{array}{cc}
+{\mf M}_{ii} & {\mf M}_{ie} \\
+{\mf M}_{ei} & {\mf M}_{ee}
+\end{array}\right]
+\left[\begin{array}{cc}
+{\mf U}_{xi} \\ {\mf U}_{xe} \\
+\end{array} \right] =
+\left[\begin{array}{cc}
+{\mf M}_{ii}{\mf U}_{xi} + {\mf M}_{ie}{\mf U}_{xe} \\
+{\mf M}_{ei}{\mf U}_{xi} + {\mf M}_{ee}{\mf U}_{xe}
+\end{array}\right]
+\label{eqK35:1}
+\end{equation}
+%
+The forces from unit gravitational acceleration in the $x$-direction are reduced
+by CMS-transformation to ${\mf g}_x$ (see \eqnref{eqCMS:PartitionedModelEq}):
+%
+\begin{equation}
+\left[\begin{array}{cc}
+{\mf g}_{xe} \\ {\mf g}_{xg}
+\end{array}\right]  =
+\left[\begin{array}{cc}
+{\mf I} & {\mf B}^T \\
+{\mf 0} & {\bs\Phi}^T
+\end{array}\right]
+\left[\begin{array}{cc}
+{\mf G}_{xe} \\ {\mf G}_{xi}
+\end{array}\right] =
+\left[\begin{array}{cc}
+{\mf G}_{xe} + {\mf B}^T {\mf G}_{xi} \\
+{\bs\Phi}^T {\mf G}_{xi}
+\end{array}\right]
+\label{eqK35:2}
+\end{equation}
+%
+Expanding by using \eqnref{eqK35:1} results in:
+%
+\begin{eqnarray}
+{\mf g}_{xe} &=&  {\mf M}_{ie}^T {\mf U}_{xi} +
+{\mf M}_{ee} {\mf U}_{xe} + {\mf B}^T {\mf M}_{ii}{\mf U}_{xi} +
+{\mf B}^T  {\mf M}_{ie} {\mf U}_{xe}
+\label{eqK35:3} \\
+%
+{\mf g}_{xg} &=& {\bs\Phi}^T {\mf M}_{ii}{\mf U}_{xi} +
+{\bs\Phi}^T {\mf M}_{ie}{\mf U}_{xe}
+\label{eqK35:5}
+\end{eqnarray}
+%
+taking into account the symmetry property ${\mf M}_{ei} = {\mf M}_{ie}^T$.
+
+The corresponding reduced gravitational forces from unit gravitation in the
+$y$-direction are easily found by changing indices:
+%
+\begin{eqnarray}
+{\mf g}_{ye} &=& {\mf M}_{ie}^T {\mf U}_{yi} +
+{\mf M}_{ee} {\mf U}_{ye} + {\mf B}^T {\mf M}_{ii}{\mf U}_{yi} +
+{\mf B}^T {\mf M}_{ie} {\mf U}_{ye}
+\label{eqK35:6} \\
+%
+{\mf g}_{yg} &=& {\bs\Phi}^T {\mf M}_{ii}{\mf U}_{yi} +
+{\bs \Phi}^T {\mf M}_{ie}{\mf U}_{ye}
+\label{eqK35:7}
+\end{eqnarray}
+%
+and similarly in the $z$-direction:
+%
+\begin{eqnarray}
+{\mf g}_{ze} &=& {\mf M}_{ie}^T {\mf U}_{zi} +
+{\mf M}_{ee} {\mf U}_{ze} + {\mf B}^T {\mf M}_{ii}{\mf U}_{zi} +
+{\mf B}^T  {\mf M}_{ie} {\mf U}_{ze}
+\label{eqK35:8} \\
+%
+{\mf g}_{zg} &=& {\bs\Phi}^T {\mf M}_{ii}{\mf U}_{zi} +
+{\bs \Phi}^T {\mf M}_{ie}{\mf U}_{ze}
+\label{eqK35:9}
+\end{eqnarray}
+
+The superelement gravitational forces ${\mf g}$ are now calculated from
+(see \meqsref{eqK35:3}{eqK35:9}):
+%
+\begin{equation}
+{\mf g} \;=\; a_{g_x}
+\left[\begin{array}{cc}
+{\mf g}_{xe} \\ {\mf g}_{xg}
+\end{array}\right] + a_{g_y}
+\left[\begin{array}{cc}
+{\mf g}_{ye} \\ {\mf g}_{yg}
+\end{array}
+\right] + a_{g_z}
+\left[\begin{array}{cc}
+{\mf g}_{ze} \\ {\mf g}_{zg}
+\end{array}\right]
+\label{eqK35:11}
+\end{equation}
+%
+where ${\mf a}_g = [\; a_{g_x} \;\; a_{g_y} \;\; a_{g_z}\;]^T$ is the
+gravitational acceleration, measured in the superelement coordinate system.
+
+These gravitational forces must now be added to the system force vector,
+but only after they have been transformed to the local supernode coordinate
+system, if there is one.
+
+} % End in-house edition only

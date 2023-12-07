@@ -1,0 +1,1319 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Control System}
+\label{c:Control System}
+
+Mechanisms are often connected to or acted upon by items such as sensors,
+controllers, and actuators; therefore, a need exists for multidisciplinary
+mechanism and/or finite-element control simulation.
+Consequently, a control system has been developed for simulation in a composite
+system.
+
+\section{Problem statement}
+
+Elements have been designed to model these sensors, controllers, actuators,
+and so on, which are referred to as control elements or control blocks.
+Control elements are actually functions, also referred to as control equations,
+that describe the modeled element.
+The control elements can be connected together with input and output blocks to
+perform more complex operations.
+Once connected the elements are referred to as a control module.
+
+Separate numerical methods are used for the structural and control calculations,
+so that only minor changes are imposed on the FEM part.
+
+The structural equation constitutes a $2^{\text{nd}}$ order system for the
+linear case and can be written as:
+%
+\begin{equation}
+{\mf M} \ddot{\mf r} + {\mf C} \ddot{\mf r} + {\mf Kr} \;=\; {\mf Q}(t)
+\label{eqC:91}
+\end{equation}
+%
+where ${\mf r}$ is the vector of displacement, ${\mf M}$, ${\mf C}$ and
+${\mf K}$ are matrices for mass, damping, and stiffness, respectively, and
+${\mf Q}(t)$ is a vector of time-dependent forces acting on the structure.
+
+The control equations can usually be written in the following form:
+%
+\begin{eqnarray}
+\dot{\mf x} &=& {\mf f}(t,{\mf u},{\mf x},{\mf z}) \\
+    {\mf O} &=& {\mf g}(t,{\mf u},{\mf x},{\mf z})
+\label{eqC:92}
+\end{eqnarray}
+%
+where $\mf u$, $\mf x$ and $\mf z$ are vectors of inputs, state variables,
+and algebraic variables, respectively.
+Most control elements are not explicitly time-dependent.
+Exceptions are elements with inherent clock functions, such as those in a
+sample and hold element or a multiplexing unit.
+
+The structural and control calculations are coupled when some elements from the
+displacement vector enter into input vector ${\mf u}$ and, in response, some of
+the forces in ${\mf Q}(t)$ are taken from the control variables $\mf x$
+or $\mf z$.
+Any remaining inputs of $\mf u$ can be time functions,
+such as a controller reference.
+
+The system for solving the structural calculations is based on Newmark's
+established $\beta$-method with (as a general rule) $\gamma=\frac{1}{2}$ and
+$\beta=\frac{1}{4}$ (see~\cite{Newmark}).
+These parameters correspond to the trapezoidal rule.
+
+The dimensions of the discrete structural calculations are usually much higher
+than those of the control calculations, and therefore represent the heaviest
+portion of the computations.
+
+In terms of accuracy, the structural calculations can be expected to limit the
+time step more than the control calculations.
+However, cases may exist in which the coupling between the structural and
+control calculations limits the time step more than either of the two calculations.
+
+The control system module integrates the variables in the
+differential-algebraic system one step forward from a given state.
+The solution for the control system part is iterated until there is convergence
+on each invocation; therefore, these iterations form an inner loop of the
+dynamic integration iterations.
+
+\section{Control variables}
+
+The system is divided into three types of variables: inputs, state,
+and algebraic variables.
+The user defines inputs, while the system automatically determines state
+and algebraic variables.
+The inputs are either external time functions such as a controller reference,
+or sensor inputs that are not changed in the control system.
+
+Control elements are identified by type and have a number of inputs,
+internal states, and outputs.
+The internal states are not connected to other modules.
+In addition, there are a number of parameters the user needs to provide.
+Figure~\ref{figC:91} shows a module of type $nn$, with $i$ inputs, $j$
+internal states, $k$ outputs, and $m$ parameters.
+
+The user needs to bear two things in mind concerning this system.
+First, some parameters are used to carry values from one time step to another.
+These parameters appear in parentheses in the library and are not provided by the user.
+Second, the distinction between inputs and outputs cannot be made for some
+elements before the configuration is set up.
+This is known as the causality problem and may occur in algebraic relations
+(see~\cite{Iversen:STF48}).
+However, this problem is resolved by the system during initialization.
+
+\begin{figure}[t]
+\center
+\setlength{\unitlength}{1mm}
+\begin{picture}(67,40)
+\thicklines
+\put( 6,15){\line(10,0){9}}
+\put( 6,25){\line(10,0){9}}
+\put( 5,15){\circle{2}}
+\put(10,18){$\vdots$}
+\put( 5,25){\circle{2}}
+\put( 1,14){$i$}
+\put( 1,24){$1$}
+\put(15,10){\framebox(30,20){General}}
+\put(54,15){\line(-1,0){9}}
+\put(54,25){\line(-1,0){9}}
+\put(55,15){\circle{2}}
+\put(50,18){$\vdots$}
+\put(55,25){\circle{2}}
+\put(57,14){$i+j+k$}
+\put(57,24){$i+j+1$}
+\put(20,35){\vector(0,-1){5}}
+\put(19,36){$1$}
+\put(28,32){$\cdots$}
+\put(40,35){\vector(0,-1){5}}
+\put(39,36){$m$}
+\put(20, 6){\circle{2}}
+\put(20, 7){\line(0,1){3}}
+\put(17, 0){$i+1$}
+\put(28, 5){$\cdots$}
+\put(40, 6){\circle{2}}
+\put(40, 7){\line(0,1){3}}
+\put(37, 0){$i+j$}
+\end{picture}
+\caption{The general control module}
+\label{figC:91}
+\end{figure}
+
+To configure a control scheme, the user draws a block scheme of modules from
+the library, as shown in Figure~\ref{figC:92}.
+
+\begin{figure}[t]
+\center
+\setlength{\unitlength}{1mm}
+\begin{picture}(120,40)
+\thicklines
+\put( 15,27){\line(10,0){5}}
+\put( 14,27){\circle{2}}
+\put( 13,29){$1$}
+\put( 15,19){\line(10,0){5}}
+\put( 14,19){\circle{2}}
+\put( 20,15){\framebox(15,16){$0$}}
+\put( 45,15){\framebox(15,16){$k$}}
+\put( 70,15){\framebox(30,16){$\frac{k}{\omega_c^2 + 2\xi\omega_0 s + s^2}$}}
+\put( 40,23){\circle{2}}
+\put( 39,25){$2$}
+\put( 65,23){\circle{2}}
+\put( 64,25){$3$}
+\put(105,23){\circle{2}}
+\put(104,25){$5$}
+\put( 85,10){\circle{2}}
+\put( 87, 9){$4$}
+\put( 85,11){\line(0,1){4}}
+\put( 35,23){\line(1,0){4}}
+\put( 41,23){\line(1,0){4}}
+\put( 60,23){\line(1,0){4}}
+\put( 66,23){\line(1,0){4}}
+\put(100,23){\line(1,0){4}}
+\put(106,23){\line(1,0){4}}
+\put(105,22){\line(0,-1){17}}
+\put(105, 5){\line(-1,0){91}}
+\put( 14, 5){\vector(0,1){13}}
+\put( 52,35){\vector(0,-1){4}}
+\put( 51,36){$k$}
+\put( 75,35){\vector(0,-1){4}}
+\put( 74,36){$k$}
+\put( 85,35){\vector(0,-1){4}}
+\put( 84,36){$\omega_0$}
+\put( 95,35){\vector(0,-1){4}}
+\put( 94,36){$\xi$}
+\end{picture}
+\caption{Configuration example}
+\label{figC:92}
+\end{figure}
+
+\section{Control system tasks}
+
+The control system module manages the three main activities:
+Initialization, steady state computation, and integration.
+
+\subsection{Initialization}
+
+During initialization the task is to label the state and algebraic variables.
+For the algebraic variables of \eqnref{eqC:92}, initialization determines which
+variable to allocate to the function value.
+Each module must be prepared for this task, which is managed during the
+initialization process.
+Algebraic loops or causality problems may require several iterations.
+
+\subsection{Steady state}
+
+With the different types of variables collected in one vector,
+%
+\begin{equation}
+{\mf y} \;= \left[\begin{array}{c}
+{\mf u} \\ {\mf x} \\ {\mf z}
+\end{array}\right]
+\label{eqC:93}
+\end{equation}
+%
+the set of equations may be written:
+%
+\begin{equation}
+{\mf F}(t,{\mf y},\dot{\mf y}) \;=
+\left[\begin{array}{c}
+-{\mf u} + {\mf s}(t) \\
+-\dot{\mf x} + {\mf f}(t,{\mf y}) \\
+{\mf g}(t,{\mf y}) \\
+\end{array}\right] =
+\left[\begin{array}{c}
+{\mf 0} \\ {\mf 0} \\ {\mf 0}
+\end{array}\right]
+\label{eqC:94}
+\end{equation}
+%
+Steady state is found by setting the derivative to zero.
+Applying Newton iteration to \eqnref{eqC:94} produces the following system
+which is solved at iteration number $k$:
+%
+\begin{equation}
+\left[\begin{array}{ccc}
+{\mf I} &  {\mf 0}   &  {\mf 0}   \\
+{\mf 0} & -{\mf f}_x & -{\mf f}_z \\
+{\mf 0} & -{\mf g}_x & -{\mf g}_z
+\end{array}\right]\left[\begin{array}{c}
+\Delta{\mf u}^k \\
+\Delta{\mf x}^k \\
+\Delta{\mf z}^k
+\end{array}\right] = \left[\begin{array}{c}
+{\mf 0} \\
+{\mf f}(t,{\mf u},{\mf x}^k,{\mf z}^k) \\
+{\mf g}(t,{\mf u},{\mf x}^k,{\mf z}^k)
+\end{array}\right]
+\label{eqC:95}
+\end{equation}
+%
+A standard equation solver is used for the solution of this vector equation.
+
+\subsection{Time integration}
+
+Integration is performed using two numerical methods to estimate local error.
+
+A starting point of \eqnref{eqC:94} is established for the development of the
+numerical equations.
+All the input components can be treated as time functions, even though some of
+them are determined by the structure calculations.
+The inputs are not changed in the control calculations.
+Because they are labeled, the variables in vector ${\mf y}$ do not have to be be
+ordered according to type; this is for convenience of development notation only.
+
+Since Newmark's $\beta$ method is of second order, it naturally follows that a
+method of second order is chosen for the control part also.
+Therefore, Lobatto IIIC, an implicit, second-order Runge-Kutta method,
+is selected.
+Backward Euler, which is first-order and also implicit,
+is used for local error estimation.
+Local extrapolation is used, meaning that the integration proceeds with the
+result from the higher-order method.
+
+The general $m$-level Runge-Kutta (RK) method for the solution of
+\eqnref{eqC:94} can be written:
+%
+\begin{eqnarray}
+F(t + c_i h, Y_i, \dot{Y}_i) &=& 0 \\
+\label{eqC:96}
+Y_i &=& y_n + h\sum_{j=1}^m a_{ij} \dot{Y}_i \\
+\label{eqC:97}
+y_{n+1} &=& y_n + h\sum_{i=1}^m b_i \dot{Y}_i
+\label{eqC:98}
+\end{eqnarray}
+%
+where $h$ is the time step.
+To visualize a particular method, the matrix ${\mf A}$ and the vectors ${\mf b}$
+and ${\mf c}$ formed by the ${a}$, ${b}$ and ${c}$ coefficients are usually put
+in a tableau as shown in Table~\ref{tabC:91}.
+For backward Euler and Lobatto IIIC, we have the following Butcher tableau
+given by Table~\ref{tabC:92}.
+
+\begin{table}
+\begin{center}
+\begin{tabular} {c|c}
+{\mf c} & {\mf A}     \\ \hline
+        & {\mf b}$^T$ \\
+\end{tabular}
+\end{center}
+\caption{Butcher tableau}
+\label{tabC:91}
+\end{table}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{c|r}
+1 & 1 \\ \hline
+  & 1 \\
+\end{tabular} \hskip1.5cm
+\begin{tabular}{c|rr}
+0 & 1/2 & -1/2 \\
+1 & 1/2 &  1/2 \\ \hline
+  & 1/2 &  1/2 \\
+\end{tabular}
+\end{center}
+\caption{Backward Euler and Lobatto IIIC}
+\label{tabC:92}
+\end{table}
+%
+For an RK method satisfying
+%
+\begin{equation}
+b_i \;=\; a_{mi},\;\;\mbox{for}\;\; i=1,\dots,m
+\label{eqC:99}
+\end{equation}
+%
+a recording of the response in the variables is obtained as in the two methods above.
+%
+\begin{equation}
+y_{n+1} \;=\; Y_m
+\label{eqC:910}
+\end{equation}
+%
+From \eqsref{eqC:99}{eqC:910} an explicit expression may be derived for Y:
+%
+\begin{equation}
+\dot{Y}_i \;=\;
+\frac{1}{h}\sum_{j=1}^m d_{ij} \left(Y_j - y_n \right),
+\;\;\mbox{where}\;\;
+d_{ij} = D = A^{-1}
+\label{eqC:911}
+\end{equation}
+%
+The \meqsref{eqC:96}{eqC:911} can then be replaced by:
+%
+\begin{eqnarray}
+F\left(t + c_i h Y_i \frac{1}{h}\sum_{j=1}^m d_{ij}
+\left(Y_j-y_n\right)\right) &=& 0,
+\;\;\mbox{for}\;\; i = 1,\dots,m \\
+\label{eqC:912}
+y_{n+1} &=& Y_m
+\label{eqC:913}
+\end{eqnarray}
+%
+For Backward Euler this gives:
+%
+\begin{equation}
+F\left(t_{n+1}, \tilde{y}_{n+1} ,\frac{1}{h}\left(
+\tilde{y}_{n+1} - y_n\right)\right) \;=\; 0
+\label{eqC:914}
+\end{equation}
+%
+and for Lobatto IIIC:
+%
+\begin{eqnarray}
+F\left(t_n,Y_1, \frac{1}{h}\left(Y_1 + Y_2 - 2y_n \right)\right) &=& 0
+\label{eqC:915} \\
+%
+F\left(t_{n+1}, Y_2 ,\frac{1}{h}\left(-Y_1 + y_2 \right)\right) &=& 0
+\label{eqC:916}
+\end{eqnarray}
+%
+The local error estimate is then:
+%
+\begin{equation}
+l_{n+1} = \left\| y_{n+1} - \tilde{y}_{n+1}\right\|
+\label{eqC:918}
+\end{equation}
+%
+To find the solution of the implicit numerical equations~\eqref{eqC:914},
+\eqref{eqC:915} and~\eqref{eqC:916}, Newton iteration is used as in steady state.
+Starting values for the iterations are:
+%
+\begin{eqnarray}
+\tilde{y}_{n+1}^0 &=& y_n + \frac{h_{n+1}}{h_n} \left(y_n - y_{n-1}\right)
+\label{eqC:919} \\
+%
+Y_{1,n+1}^0 &=& y_n
+\label{eqC:920} \\
+%
+Y_{2,n+1}^0 &=& \tilde{y}_{n+1}
+\label{eqC:921}
+\end{eqnarray}
+%
+The Jacobian, which is needed in the Newton matrices, is generated numerically.
+This is done by excitation of each variable in turn and recording of the
+response in the other variables.
+
+\section{Control element library}
+
+The control elements represent basic algebraic or differential functions;
+time- dependent sample and hold functions; basic linear transfer functions;
+the most frequently used controllers; and algebraic elements with
+discontinuities in one of their derivatives, such as the logical switch,
+limitation, and dead zone.
+
+In the case of the sample and hold element, the user meets no restriction with
+respect to relations between the sample period and the numerical time step.
+However, to maintain the order of the method, the control system has to adjust
+the time step to collect the appropriate sample points.
+
+Each sample represents a discontinuous change in the variable.
+The discontinuity is said to be of order $q$ when it occurs in the $q$'th
+derivative of one of the variables and the lower-order derivatives are continuous.
+Gear and {\O}sterby~\cite{GearOsterby} have shown that the accuracy of the
+result will drop below the order $p$ when $q \le p$, unless we the integration
+points hit the discrete discontinuity points.
+With $p = 2$, actions must be taken for discontinuities in the first derivative
+of the right-hand side of \eqnref{eqC:92}.
+
+The discontinuity points of regular sampling is foreseen easily, however, this is
+not the case for other element types, such as the logical switch or dead zone.
+In these cases the discontinuity point must be found by interpolation.
+For this purpose, an interpolant is used that is optimal for Lobatto IIIC.
+For development of interpolants for RK-methods refer to~\cite{RungeKutta}
+for an example.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Basic Elements}
+
+\subsubsection{Comparator\hfill type 1}
+\begin{minipage}{61mm}
+\setlength{\unitlength}{1mm}
+\begin{picture}(60,30)
+\thicklines
+\put( 6, 5){\line(1,0){9}}
+\put( 5, 5){\circle{2}}
+\put( 1, 4){2}
+\put(10, 1){$-$}
+\put( 6,15){\line(1,0){9}}
+\put( 5,15){\circle{2}}
+\put( 1,14){1}
+\put(10,11){$+$}
+\put(15, 0){\framebox(30,20){0}}
+\put(54,10){\line(-1,0){9}}
+\put(55,10){\circle{2}}
+\put(57, 9){3}
+\put(30,25){\vector(0,-1){5}}
+\put(29,26){$K$}
+\end{picture}
+\end{minipage}\hfill
+\begin{minipage}{55mm}
+$\displaystyle
+y_3 = K(y_1 - y_2)
+$
+\end{minipage}
+
+\bigskip
+\subsubsection{Adder\hfill type 2}
+\begin{minipage}{61mm}
+\setlength{\unitlength}{1mm}
+\begin{picture}(60,30)
+\thicklines
+\put( 6, 5){\line(1,0){9}}
+\put( 5, 5){\circle{2}}
+\put( 1, 4){2}
+\put(10, 1){$+$}
+\put( 6,15){\line(1,0){9}}
+\put( 5,15){\circle{2}}
+\put( 1,14){1}
+\put(10,11){$+$}
+\put(15, 0){\framebox(30,20){0}}
+\put(54,10){\line(-1,0){9}}
+\put(55,10){\circle{2}}
+\put(57, 9){3}
+\put(30,25){\vector(0,-1){5}}
+\put(29,26){$K$}
+\end{picture}
+\end{minipage}\hfill
+\begin{minipage}{55mm}
+$\displaystyle
+y_3 = K(y_1 + y_2)
+$
+\end{minipage}
+
+\bigskip
+\subsubsection{Amplifier\hfill type 3}
+\begin{minipage}{61mm}
+\setlength{\unitlength}{1mm}
+\begin{picture}(60,30)
+\thicklines
+\put( 6,10){\line(1,0){9}}
+\put( 5,10){\circle{2}}
+\put( 1, 9){1}
+\put(15, 0){\framebox(30,20){$K$}}
+\put(54,10){\line(-1,0){9}}
+\put(55,10){\circle{2}}
+\put(57, 9){2}
+\put(30,25){\vector(0,-1){5}}
+\put(29,26){$K$}
+\end{picture}
+\end{minipage}\hfill
+\begin{minipage}{55mm}
+$\displaystyle
+y_2 = K y_1
+$
+\end{minipage}
+
+\bigskip
+\subsubsection{Integrator\hfill type 4}
+\begin{minipage}{61mm}
+\setlength{\unitlength}{1mm}
+\begin{picture}(60,30)
+\thicklines
+\put( 6,10){\line(1,0){9}}
+\put( 5,10){\circle{2}}
+\put( 1, 9){1}
+\put(15, 0){\framebox(30,20){$\displaystyle\frac{K}{s}$}}
+\put(54,10){\line(-1,0){9}}
+\put(55,10){\circle{2}}
+\put(57, 9){2}
+\put(30,25){\vector(0,-1){5}}
+\put(29,26){$K$}
+\end{picture}
+\end{minipage}\hfill
+\begin{minipage}{55mm}
+$\displaystyle
+\dot{y}_2 = K y_1
+$\\[3mm]
+The resulting output is then \\
+$\displaystyle
+y_2 = K\int_0^t y_1 d\tau
+$
+\end{minipage}
+
+\bigskip
+\subsubsection{Limited derivator\hfill type 5}
+\begin{minipage}{61mm}
+\setlength{\unitlength}{1mm}
+\begin{picture}(60,35)
+\thicklines
+\put( 6,15){\line(10,0){9}}
+\put( 5,15){\circle{2}}
+\put( 1,14){1}
+\put(15, 5){\framebox(30,20){$\displaystyle\frac{s}{1+T_u s}$}}
+\put(54,15){\line(-1,0){9}}
+\put(55,15){\circle{2}}
+\put(57,14){3}
+\put(30,30){\vector(0,-1){5}}
+\put(29,31){$T_u$}
+\put(30, 1){\circle{2}}
+\put(30, 2){\line(0,1){3}}
+\put(33, 0){2}
+\end{picture}
+\end{minipage}\hfill
+\begin{minipage}{55mm}
+$\displaystyle
+\dot{y}_2 = y_3
+$\\[1mm]
+$\displaystyle
+y_3 = \frac{1}{T_u}(y_1 - y_2)
+$\\[2mm]
+$y_2$ is an internal variable.
+\end{minipage}
+
+\bigskip
+\subsubsection{Multiplier\hfill type 6}
+\begin{minipage}{61mm}
+\setlength{\unitlength}{1mm}
+\begin{picture}(60,20)
+\thicklines
+\put( 6, 5){\line(1,0){9}}
+\put( 5, 5){\circle{2}}
+\put( 1, 4){2}
+\put( 6,15){\line(1,0){9}}
+\put( 5,15){\circle{2}}
+\put( 1,14){1}
+\put(15, 0){\framebox(30,20){$\otimes$}}
+\put(54,10){\line(-1,0){9}}
+\put(55,10){\circle{2}}
+\put(57, 9){3}
+\end{picture}
+\end{minipage}\hfill
+\begin{minipage}{55mm}
+$\displaystyle
+y_3 = y_1 y_2
+$
+\end{minipage}
+
+\bigskip
+\subsubsection{Power\hfill type 7}
+\begin{minipage}{61mm}
+\setlength{\unitlength}{1mm}
+\begin{picture}(60,30)
+\thicklines
+\put( 6,10){\line(1,0){9}}
+\put( 5,10){\circle{2}}
+\put( 1, 9){1}
+\put(15, 0){\framebox(30,20){$p$}}
+\put(54,10){\line(-1,0){9}}
+\put(55,10){\circle{2}}
+\put(57, 9){2}
+\put(30,25){\vector(0,-1){5}}
+\put(29,26){$K$}
+\end{picture}
+\end{minipage}\hfill
+\begin{minipage}{55mm}
+$\displaystyle
+y_2 = y_1^p
+$
+\end{minipage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Time dependent elements}
+
+\subsubsection{Time delay\hfill type 11}
+\begin{minipage}{61mm}
+\setlength{\unitlength}{1mm}
+\begin{picture}(60,30)
+\thicklines
+\put( 6,10){\line(1,0){9}}
+\put( 5,10){\circle{2}}
+\put( 1, 9){1}
+\put(30,25){\vector(0,-1){5}}
+\put(29,26){$T$}
+\put(15, 0){\framebox(30,20){$e^{-T s}$}}
+\put(54,10){\line(-1,0){9}}
+\put(55,10){\circle{2}}
+\put(57, 9){2}
+\end{picture}
+\end{minipage}\hfill
+\begin{minipage}{55mm}
+$\displaystyle
+y_2(t) = y_1(t - T)
+$
+\end{minipage}
+
+\bigskip
+\subsubsection{Sample and hold\hfill type 12}
+\begin{minipage}{61mm}
+\setlength{\unitlength}{1mm}
+\begin{picture}(60,30)
+\thicklines
+\put( 6,10){\line(1,0){9}}
+\put( 5,10){\circle{2}}
+\put( 1, 9){1}
+\put(20,25){\vector(0,-1){5}}
+\put(19,26){$T$}
+\put(30,25){\vector(0,-1){5}}
+\put(29,26){$m$}
+\put(40,25){\vector(0,-1){5}}
+\put(39,26){$d$}
+\put(15, 0){\framebox(30,20){$\frac{1}{s}(1-e^{-Ts})$}}
+\put(54,10){\line(-1,0){9}}
+\put(55,10){\circle{2}}
+\put(57, 9){2}
+\end{picture}
+\end{minipage}\hfill
+\begin{minipage}{55mm}
+$$\eqalign{
+y_2(t) =\:& y_1(t^*) \cr
+t^* =\:& (\frac{t- d\, T}{m\, T})m\, T
+}\hskip2cm{}$$
+\small
+\makebox[3mm][l]{$T$} - basic sample period \\
+\makebox[3mm][l]{$m$} - multiplicity of basic sample period \\
+\makebox[3mm][l]{$d$} - phase delay in basic sample periods
+\end{minipage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Piecewise Continuous Elements}
+
+\subsubsection{Logic switch\hfill type 21}
+\begin{minipage}{61mm}
+\setlength{\unitlength}{1mm}
+\begin{picture}(60,30)
+\thicklines
+\put( 6,10){\line(1,0){9}}
+\put( 5,10){\circle{2}}
+\put( 1, 9){1}
+\put(20,25){\vector(0,-1){5}}
+\put(19,26){$L$}
+\put(30,25){\vector(0,-1){5}}
+\put(29,26){$Y_{\rm on}$}
+\put(40,25){\vector(0,-1){5}}
+\put(39,26){$U$}
+\put(15, 0){\framebox(30,20){}}
+% The picture in the middle
+\thinlines
+\put(17,10){\vector(1,0){26}}
+\put(25, 2){\vector(0,1){16}}
+\put(20, 5){\line(1,0){15}}
+\put(37, 4){{\scriptsize $L$}}
+\put(35, 5){\line(0,1){10}}
+\put(30,14){{\scriptsize $U$}}
+\put(34,16){{\scriptsize $Y_{on}$}}
+\put(35,15){\line(1,0){5}}
+%
+\thicklines
+\put(54,10){\line(-1,0){9}}
+\put(55,10){\circle{2}}
+\put(57, 9){2}
+\end{picture}
+\end{minipage}\hfill
+\begin{minipage}{55mm}
+$\displaystyle
+y_2 = \left\{\begin{array}{ccc}
+L & \text{for} & y_1 < Y_{\rm on} \\
+U & \text{for} & y_1 \geq Y_{\rm on}
+\end{array}\right.
+$\\[3mm]
+\makebox[5mm][l]{$L$} - lower value \\
+\makebox[5mm][l]{$U$} - upper value \\
+\makebox[5mm][l]{$Y_{\rm on}$} - switch coordinate
+\end{minipage}
+
+\bigskip
+\subsubsection{Limitation\hfill type 22}
+\begin{minipage}{61mm}
+\setlength{\unitlength}{1mm}
+\begin{picture}(60,30)
+\thicklines
+\put( 6,10){\line(1,0){9}}
+\put( 5,10){\circle{2}}
+\put( 1, 9){1}
+\put(20,25){\vector(0,-1){5}}
+\put(19,26){$L$}
+\put(40,25){\vector(0,-1){5}}
+\put(39,26){$U$}
+\put(15, 0){\framebox(30,20){}}
+% The picture in the middle
+\thinlines
+\put(17,10){\vector(1,0){26}}
+\put(30, 2){\vector(0,1){16}}
+\put(20, 5){\line(1,0){5}}
+\put(26, 4){{\scriptsize $L$}}
+\put(25, 5){\line(1,1){10}}
+\put(32,14){{\scriptsize $U$}}
+\put(35,15){\line(1,0){5}}
+%
+\thicklines
+\put(54,10){\line(-1,0){9}}
+\put(55,10){\circle{2}}
+\put(57, 9){2}
+\end{picture}
+\end{minipage}\hfill
+\begin{minipage}{55mm}
+$\displaystyle
+y_2 = \max\left\{L,\min\left\{U,y_1\right\}\right\}
+$\\[3mm]
+\makebox[4mm][l]{$L$}- lower limit \\
+\makebox[4mm][l]{$U$}- upper limit
+\end{minipage}
+
+\bigskip
+\subsubsection{Dead Zone\hfill type 23}
+\begin{minipage}{61mm}
+\setlength{\unitlength}{1mm}
+\begin{picture}(60,30)
+\thicklines
+\put( 6,10){\line(1,0){9}}
+\put( 5,10){\circle{2}}
+\put( 1, 9){1}
+\put(20,25){\vector(0,-1){5}}
+\put(19,26){$L$}
+\put(40,25){\vector(0,-1){5}}
+\put(39,26){$R$}
+\put(15, 0){\framebox(30,20){}}
+% The picture in the middle
+\thinlines
+\put(17,10){\vector(1,0){26}}
+\put(30, 2){\vector(0,1){16}}
+\put(18, 5){\line(1,1){5}}
+\put(22,11){{\scriptsize $L$}}
+\put(23,10){\line(1,0){10}}
+\put(32, 7){{\scriptsize $R$}}
+\put(33,10){\line(1,1){5}}
+%
+\thicklines
+\put(54,10){\line(-1,0){9}}
+\put(55,10){\circle{2}}
+\put(57, 9){2}
+\end{picture}
+\end{minipage}\hfill
+\begin{minipage}{55mm}
+$\displaystyle
+y_2 = \left\{\begin{array}{ccl}
+y_1 - L & \text{for} & y_1 < L \\
+0       & \text{for} & L \leq y_1 \leq R \\
+y_1 - R & \text{for} & y_1 > Y_0
+\end{array}\right.
+$\\[3mm]
+\makebox[4mm][l]{$L$} - left limit \\
+\makebox[4mm][l]{$U$} - right limit
+\end{minipage}
+
+\bigskip
+\subsubsection{Hysteresis\hfill type 24}
+\begin{minipage}{61mm}
+\setlength{\unitlength}{1mm}
+\begin{picture}(60,30)
+\thicklines
+\put( 6,10){\line(1,0){9}}
+\put( 5,10){\circle{2}}
+\put( 1, 9){1}
+\put(20,25){\vector(0,-1){5}}
+\put(19,26){$L$}
+\put(30,25){\vector(0,-1){5}}
+\put(29,26){$R$}
+\put(40,25){\vector(0,-1){5}}
+\put(39,26){$\alpha$}
+\put(15, 0){\framebox(30,20){}}
+% The picture in the middle
+\thinlines
+\put(17,10){\vector(1,0){26}}
+\put(30, 2){\vector(0,1){16}}
+\put(18, 5){\line(1,1){12}}
+\put(22,11){{\scriptsize $L$}}
+\put(30,17){\line(1,0){10}}
+\put(18, 5){\line(1,0){10}}
+\put(32, 7){{\scriptsize $R$}}
+\put(28, 5){\line(1,1){12}}
+%
+\thicklines
+\put(54,10){\line(-1,0){9}}
+\put(55,10){\circle{2}}
+\put(57, 9){2}
+\end{picture}
+\end{minipage}\hfill
+\begin{minipage}{55mm}
+$\displaystyle
+y_2 = \left\{\begin{array}{cl}
+\alpha(y_1 - R) & \text{on right slope} \\
+\alpha(y_1 - L) & \text{on left slope} \\
+y_1 & \text{otherwise}
+\end{array}\right.
+$\\[3mm]
+\makebox[4mm][l]{$L$} - left limit \\
+\makebox[4mm][l]{$R$} - right limit
+\end{minipage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Compensator Elements}
+
+\subsubsection{PI\hfill type 31}
+\begin{minipage}{61mm}
+\setlength{\unitlength}{1mm}
+\begin{picture}(60,35)
+\thicklines
+\put( 6,15){\line(10,0){9}}
+\put( 5,15){\circle{2}}
+\put( 1,14){1}
+\put(15, 5){\framebox(30,20){$\displaystyle K_p\frac{1+T_i s}{T_i s}$}}
+\put(54,15){\line(-1,0){9}}
+\put(55,15){\circle{2}}
+\put(57,14){3}
+\put(20,30){\vector(0,-1){5}}
+\put(19,31){$K_p$}
+\put(40,30){\vector(0,-1){5}}
+\put(39,31){$T_i$}
+\put(30, 1){\circle{2}}
+\put(30, 2){\line(0,1){3}}
+\put(33, 0){2}
+\end{picture}
+\end{minipage}\hfill
+\begin{minipage}{55mm}
+$\displaystyle
+\dot{y}_2 = y_1
+$\\
+$\displaystyle
+y_3 = K_p\left(y_1 + \frac{1}{T_i}y_2\right)
+$\\[2mm]
+where $y_2$ is an internal variable. \\[3mm]
+The resulting output is then \\
+$\displaystyle
+y_3 = K_p\left(y_1 + \frac{1}{T_i}\int_0^t y_1 d\tau\right)
+$
+\end{minipage}
+
+\bigskip
+\subsubsection{P + lim.\ I\hfill type 32}
+\begin{minipage}{61mm}
+\setlength{\unitlength}{1mm}
+\begin{picture}(60,35)
+\thicklines
+\put( 6,15){\line(10,0){9}}
+\put( 5,15){\circle{2}}
+\put( 1,14){1}
+\put(15, 5){\framebox(30,20){$\displaystyle K_p\:\frac{T_{fi}}{T_i}\:\frac{1+T_i s}{1+T_{fi}
+s}$}}
+\put(54,15){\line(-1,0){9}}
+\put(55,15){\circle{2}}
+\put(57,14){4}
+\put(20,30){\vector(0,-1){5}}
+\put(19,31){$K_p$}
+\put(30,30){\vector(0,-1){5}}
+\put(29,31){$T_i$}
+\put(40,30){\vector(0,-1){5}}
+\put(39,31){$T_{fi}$}
+\put(20, 1){\circle{2}}
+\put(20, 2){\line(0,1){3}}
+\put(23, 0){2}
+\put(40, 1){\circle{2}}
+\put(40, 2){\line(0,1){3}}
+\put(43, 0){3}
+\end{picture}
+\end{minipage}\hfill
+\begin{minipage}{55mm}
+$\displaystyle
+\dot{y}_2 = y_1 \qquad T_{fi} > T_i
+$\\
+$\displaystyle
+\dot{y}_3 = y_4
+$\\
+$\displaystyle
+y_4 = K_p\left(y_1 + \frac{1}{T_i}y_2\right) - \frac{1}{T_{fi}}y_3
+$\\[2mm]
+$y_2$ and $y_3$ are internal variables.
+\end{minipage}
+
+\bigskip
+\subsubsection{PD\hfill type 33}
+\begin{minipage}{61mm}
+\setlength{\unitlength}{1mm}
+\begin{picture}(60,35)
+\thicklines
+\put( 6,15){\line(10,0){9}}
+\put( 5,15){\circle{2}}
+\put( 1,14){1}
+\put(15, 5){\framebox(30,20){$\displaystyle K_p( 1 + T_d s)$}}
+\put(54,15){\line(-1,0){9}}
+\put(55,15){\circle{2}}
+\put(57,14){4}
+\put(20,30){\vector(0,-1){5}}
+\put(19,31){$K_p$}
+\put(40,30){\vector(0,-1){5}}
+\put(39,31){$T_d$}
+\put(20, 1){\circle{2}}
+\put(20, 2){\line(0,1){3}}
+\put(23, 0){2}
+\put(40, 1){\circle{2}}
+\put(40, 2){\line(0,1){3}}
+\put(43, 0){3}
+\end{picture}
+\end{minipage}\hfill
+\begin{minipage}{55mm}
+$\displaystyle
+\dot{y}_2 = y_1
+$\\
+$\displaystyle
+\dot{y}_3 = y_4
+$\\
+$\displaystyle
+y_3 = K_p\left(T_d y_1 + y_2\right)
+$\\[2mm]
+where $y_2$ and $y_3$ are \\ internal variables. \\[3mm]
+The resulting output is then \\
+$\displaystyle
+y_4 = K_p\left(y_1 + T_d \dot{y}_1\right)
+$
+\end{minipage}
+
+\bigskip
+\subsubsection{P + lim.\ D\hfill type 34}
+\begin{minipage}{61mm}
+\setlength{\unitlength}{1mm}
+\begin{picture}(60,35)
+\thicklines
+\put( 6,15){\line(10,0){9}}
+\put( 5,15){\circle{2}}
+\put( 1,14){1}
+\put(15, 5){\framebox(30,20){$\displaystyle K_p\:\frac{1+T_d s}{1+T_{fd} s}$}}
+\put(54,15){\line(-1,0){9}}
+\put(55,15){\circle{2}}
+\put(57,14){4}
+\put(20,30){\vector(0,-1){5}}
+\put(19,31){$K_p$}
+\put(30,30){\vector(0,-1){5}}
+\put(29,31){$T_d$}
+\put(40,30){\vector(0,-1){5}}
+\put(39,31){$T_{fd}$}
+\put(20, 1){\circle{2}}
+\put(20, 2){\line(0,1){3}}
+\put(23, 0){2}
+\put(40, 1){\circle{2}}
+\put(40, 2){\line(0,1){3}}
+\put(43, 0){3}
+\end{picture}
+\end{minipage}\hfill
+\begin{minipage}{55mm}
+$\displaystyle
+\dot{y}_2 = y_1 \qquad T_{fd} < T_d
+$\\
+$\displaystyle
+\dot{y}_3 = y_4
+$\\[2mm]
+$\displaystyle
+y_4 = \frac{1}{T_{fd}}\left(K_p(T_d y_1 + y_2) - y_3\right)
+$\\[2mm]
+$y_2$ and $y_3$ are internal variables.
+\end{minipage}
+
+\bigskip
+\subsubsection{PID\hfill type 35}
+\begin{minipage}{61mm}
+\setlength{\unitlength}{1mm}
+\begin{picture}(60,35)
+\thicklines
+\put( 6,15){\line(10,0){7}}
+\put( 5,15){\circle{2}}
+\put( 1,14){1}
+\put(13, 5){\framebox(34,20){$\displaystyle
+K_p\left(1 + \frac{1}{T_i s} + T_d s\right)$}}
+\put(54,15){\line(-1,0){7}}
+\put(55,15){\circle{2}}
+\put(57,14){5}
+\put(20,30){\vector(0,-1){5}}
+\put(19,31){$K_p$}
+\put(30,30){\vector(0,-1){5}}
+\put(29,31){$T_i$}
+\put(40,30){\vector(0,-1){5}}
+\put(39,31){$T_d$}
+\put(20, 1){\circle{2}}
+\put(20, 2){\line(0,1){3}}
+\put(23, 0){2}
+\put(30, 1){\circle{2}}
+\put(30, 2){\line(0,1){3}}
+\put(33, 0){3}
+\put(40, 1){\circle{2}}
+\put(40, 2){\line(0,1){3}}
+\put(43, 0){4}
+\end{picture}
+\end{minipage}\hfill
+\begin{minipage}{55mm}
+$\displaystyle
+\dot{y}_2 = y_1
+$\\
+$\displaystyle
+\dot{y}_3 = y_2
+$\\
+$\displaystyle
+\dot{y}_4 = y_5
+$\\
+$\displaystyle
+y_4 = K_p\left(T_d y_1 + y_2 + \frac{1}{T_i}y_3\right)
+$\\[2mm]
+where $y_2$, $y_3$ and $y_4$ \\ are internal variables. \\[3mm]
+The resulting output is then \\
+$\displaystyle
+y_5 = K_p\left(y_1 + \frac{1}{T_i}\int_0^t y_1 d\tau + T_d\dot{y}_1\right)
+$
+\end{minipage}
+
+\bigskip
+\subsubsection{PI + lim.\ D\hfill type 36}
+\begin{minipage}{61mm}
+\setlength{\unitlength}{1mm}
+\begin{picture}(60,35)
+\thicklines
+\put( 6,15){\line(10,0){5}}
+\put( 5,15){\circle{2}}
+\put( 1,14){1}
+\put(11, 5){\framebox(38,20){$\displaystyle
+K_p\:\frac{1 + T_i s}{T_i s}\:\frac{1 + T_d s}{1 + T_{fd} s}$}}
+\put(54,15){\line(-1,0){5}}
+\put(55,15){\circle{2}}
+\put(57,14){5}
+\put(20,30){\vector(0,-1){5}}
+\put(19,31){$K_p$}
+\put(27,30){\vector(0,-1){5}}
+\put(26,31){$T_i$}
+\put(34,30){\vector(0,-1){5}}
+\put(33,31){$T_d$}
+\put(41,30){\vector(0,-1){5}}
+\put(40,31){$T_{fd}$}
+\put(20, 1){\circle{2}}
+\put(20, 2){\line(0,1){3}}
+\put(23, 0){2}
+\put(30, 1){\circle{2}}
+\put(30, 2){\line(0,1){3}}
+\put(33, 0){3}
+\put(40, 1){\circle{2}}
+\put(40, 2){\line(0,1){3}}
+\put(43, 0){4}
+\end{picture}
+\end{minipage}\hfill
+\begin{minipage}{55mm}
+$\displaystyle
+\dot{y}_2 = y_1
+$\\
+$\displaystyle
+\dot{y}_3 = K_p\left(y_1 + \frac{1}{T_i}y_2\right)
+$\\
+$\displaystyle
+\dot{y}_4 = y_5
+$\\
+$\displaystyle
+y_5 = \frac{1}{T_{fd}}\left(T_d \dot y_3 + y_3 - y_4\right)
+$\\[2mm]
+$y_2$, $y_3$ and $y_4$ are internal variables.
+\end{minipage}
+
+\bigskip
+\subsubsection{P + lim.\ I + lim.\ D\hfill type 37}
+\begin{minipage}{61mm}
+\setlength{\unitlength}{1mm}
+\begin{picture}(60,35)
+\thicklines
+\put( 6,15){\line(10,0){2}}
+\put( 5,15){\circle{2}}
+\put( 1,14){1}
+\put( 8, 5){\framebox(44,20){$\displaystyle
+K_p\:\frac{T_{fi}}{T_i}\:\frac{1 + T_i s}{1 + T_{fi} s}\:\frac{1 + T_d s}{1 + T_{fd} s} $}}
+\put(54,15){\line(-1,0){2}}
+\put(55,15){\circle{2}}
+\put(57,14){5}
+\put(14,30){\vector(0,-1){5}}
+\put(13,31){$K_p$}
+\put(22,30){\vector(0,-1){5}}
+\put(21,31){$T_i$}
+\put(30,30){\vector(0,-1){5}}
+\put(29,31){$T_d$}
+\put(38,30){\vector(0,-1){5}}
+\put(37,31){$T_{fi}$}
+\put(46,30){\vector(0,-1){5}}
+\put(45,31){$T_{fd}$}
+\put(20, 1){\circle{2}}
+\put(20, 2){\line(0,1){3}}
+\put(23, 0){2}
+\put(30, 1){\circle{2}}
+\put(30, 2){\line(0,1){3}}
+\put(33, 0){3}
+\put(40, 1){\circle{2}}
+\put(40, 2){\line(0,1){3}}
+\put(43, 0){4}
+\end{picture}
+\end{minipage}\hfill
+\begin{minipage}{55mm}
+$\displaystyle
+\dot{y}_2 = y_1
+$\\
+$\displaystyle
+\dot{y}_3 = K_p\left(y_1 + \frac{1}{T_i}y_2\right) - \frac{1}{T_{fi}}y_3
+$\\
+$\displaystyle
+\dot{y}_4 = y_5
+$\\
+$\displaystyle
+y_5 = \frac{1}{T_{fd}}\left(T_d \dot y_3 + y_3 - y_4\right)
+$\\[2mm]
+$y_2$, $y_3$ and $y_4$ are internal variables.
+\end{minipage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{General Transfer Functions}
+
+\subsubsection{Real pole\hfill type 41}
+\begin{minipage}{61mm}
+\setlength{\unitlength}{1mm}
+\begin{picture}(60,30)
+\thicklines
+\put( 6,10){\line(1,0){9}}
+\put( 5,10){\circle{2}}
+\put( 1, 9){1}
+\put(15, 0){\framebox(30,20){$\displaystyle \frac{K}{1 + T s}$}}
+\put(54,10){\line(-1,0){9}}
+\put(55,10){\circle{2}}
+\put(57, 9){2}
+\put(20,25){\vector(0,-1){5}}
+\put(19,26){$K$}
+\put(40,25){\vector(0,-1){5}}
+\put(39,26){$T$}
+\end{picture}
+\end{minipage}\hfill
+\begin{minipage}{55mm}
+$\displaystyle
+y_2 = \frac{1}{T}(K y_1 - y_2)
+$
+\end{minipage}
+
+\bigskip
+\subsubsection{Complex Conjugate Pole\hfill type 42}
+\begin{minipage}{61mm}
+\setlength{\unitlength}{1mm}
+\begin{picture}(60,35)
+\thicklines
+\put( 6,15){\line(10,0){7}}
+\put( 5,15){\circle{2}}
+\put( 1,14){1}
+\put(13, 5){\framebox(34,20){$\displaystyle
+\frac{K}{\omega_0 + 2\xi\omega_0 s + s^2}$}}
+\put(54,15){\line(-1,0){7}}
+\put(55,15){\circle{2}}
+\put(57,14){3}
+\put(20,30){\vector(0,-1){5}}
+\put(19,31){$K$}
+\put(30,30){\vector(0,-1){5}}
+\put(29,31){$\omega_0$}
+\put(40,30){\vector(0,-1){5}}
+\put(39,31){$\xi$}
+\put(30, 1){\circle{2}}
+\put(30, 2){\line(0,1){3}}
+\put(33, 0){2}
+\end{picture}
+\end{minipage}\hfill
+\begin{minipage}{55mm}
+$\displaystyle
+\dot{y}_2 = K y_1 - 2 \xi\omega_0 - \omega_0^2 y_3
+$\\
+$\displaystyle
+\dot{y}_3 = y_2
+$\\[2mm]
+$y_2$ is an internal variable.
+\end{minipage}
+
+\bigskip
+\subsubsection{1st Order Element\hfill type 43}
+\begin{minipage}{61mm}
+\setlength{\unitlength}{1mm}
+\begin{picture}(60,35)
+\thicklines
+\put( 6,15){\line(10,0){7}}
+\put( 5,15){\circle{2}}
+\put( 1,14){1}
+\put(13, 5){\framebox(34,20){$\displaystyle K_p\:\frac{1 + T_2 s}{1 + T_1 s}$}}
+\put(54,15){\line(-1,0){7}}
+\put(55,15){\circle{2}}
+\put(57,14){4}
+\put(20,30){\vector(0,-1){5}}
+\put(19,31){$K_p$}
+\put(30,30){\vector(0,-1){5}}
+\put(29,31){$T_1$}
+\put(40,30){\vector(0,-1){5}}
+\put(39,31){$T_2$}
+\put(25, 1){\circle{2}}
+\put(25, 2){\line(0,1){3}}
+\put(28, 0){2}
+\put(35, 1){\circle{2}}
+\put(35, 2){\line(0,1){3}}
+\put(38, 0){3}
+\end{picture}
+\end{minipage}\hfill
+\begin{minipage}{55mm}
+$\displaystyle
+\dot{y}_2 = y_1
+$\\
+$\displaystyle
+\dot{y}_3 = y_4
+$\\
+$\displaystyle
+\dot{y}_4 = \frac{1}{T_1}\left( K_p \left( T_2 y_1 + y_2 \right) - y_3 \right)
+$\\[2mm]
+$y_2$ and $y_3$ are internal variables.
+\end{minipage}
+
+\bigskip
+\subsubsection{2nd Order Element\hfill type 44}
+\begin{minipage}{61mm}
+\setlength{\unitlength}{1mm}
+\begin{picture}(60,35)
+\thicklines
+\put( 6,15){\line(10,0){7}}
+\put( 5,15){\circle{2}}
+\put( 1,14){1}
+\put(13, 5){\framebox(34,20){$\displaystyle K_p\:\frac{1 + T_3 s + T_4 s^2}
+{1 + T_1 s + T_2 s^2}$}}
+\put(54,15){\line(-1,0){7}}
+\put(55,15){\circle{2}}
+\put(57,14){6}
+\put(14,30){\vector(0,-1){5}}
+\put(13,31){$K_p$}
+\put(22,30){\vector(0,-1){5}}
+\put(21,31){$T_1$}
+\put(30,30){\vector(0,-1){5}}
+\put(29,31){$T_2$}
+\put(38,30){\vector(0,-1){5}}
+\put(37,31){$T_3$}
+\put(46,30){\vector(0,-1){5}}
+\put(45,31){$T_4$}
+\put(15, 1){\circle{2}}
+\put(15, 2){\line(0,1){3}}
+\put(18, 0){2}
+\put(25, 1){\circle{2}}
+\put(25, 2){\line(0,1){3}}
+\put(28, 0){3}
+\put(35, 1){\circle{2}}
+\put(35, 2){\line(0,1){3}}
+\put(38, 0){4}
+\put(45, 1){\circle{2}}
+\put(45, 2){\line(0,1){3}}
+\put(48, 0){5}
+\end{picture}
+\end{minipage}\hfill
+\begin{minipage}{55mm}
+$\displaystyle
+\dot{y}_2 = y_1
+$\\
+$\displaystyle
+\dot{y}_3 = y_2
+$\\
+$\displaystyle
+\dot{y}_4 = y_6
+$\\
+$\displaystyle
+\dot{y}_5 = y_4
+$\\[2mm]
+$\displaystyle\eqalign{
+\dot{y}_6 = \frac{1}{T_2}(& K_p( T_4 y_1 + T_3 y_2 + y_3) \cr
+                          & - T_1 y_4 - y_5)}
+$\\[2mm]
+$y_2$, $y_3$, $y_4$ and $y_5$ are internal \\ variables.
+\end{minipage}

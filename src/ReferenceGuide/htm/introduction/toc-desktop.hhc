@@ -1,0 +1,12 @@
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<LI><OBJECT type="text/sitemap">
+	<param name="Name" value="Introduction">
+	<param name="Local" value="htm\introduction\desktop.htm">
+	</OBJECT>

@@ -1,0 +1,168 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{WAVGM}
+\label{s:WAVGM}
+
+WAVGM is an interpolation constraint element\footnote{
+This element is known as RBE3 in Nastran.},
+which defines the motion at a reference (slave) node as the weighted average of
+the motions at a set of other (master) nodes.
+The element topology is similar to that of the RGD-element,
+see Figure~\ref{fig:WAVGM}, except that for WAVGM node 1 is a slave node
+containing the dependent DOFs, whereas all other nodes are masters with
+independent DOFs.
+
+\begin{figure}[t]
+\begin{center}
+\setlength{\unitlength}{1mm}
+\begin{picture}(100,75)
+\thinlines
+\put(15,15){\vector( 1, 0){70}}
+\put(15,15){\vector( 0, 1){55}}
+\put(15,15){\vector(-1,-1){12}}
+\put( 0, 0){$x_{\text{link}}$}
+\put(87,14){$y_{\text{link}}$}
+\put(13,72){$z_{\text{link}}$}
+\thicklines
+\put(36,30){\circle*{2}} \put(31,30){$1_s$}
+\put(80,20){\circle{2}}\put(82,19){$2_m$}
+\put(70,40){\circle{2}}\put(71,36){$3_m$}
+\put(60,60){\circle{2}}\put(62,60){$4_m$}
+\put(30,50){\circle{2}}\put(29,53){$5_m$}
+\qbezier[25](36,30)(58,25)(80,20)
+\qbezier[20](36,30)(53,35)(70,40)
+\qbezier[20](36,30)(48,45)(60,60)
+\qbezier[12](36,30)(33,40)(30,50)
+%Nodal dofs
+\thinlines
+\put(36,30){\vector(-1,-1){4.8}}\put(28,22.5){$u,\theta_x$}
+\put(36,30){\vector(1,0){8}}    \put(45,29){$v,\theta_y$}
+\put(36,30){\vector(0,1){8}}    \put(34,39){$w,\theta_z$}
+\end{picture}
+\end{center}
+\caption{WAVGM, Multi-node weighted averaged motion element}
+\label{fig:WAVGM}
+\end{figure}
+
+Unlike the RBAR and RGD elements described in the previous sections,
+the WAVGM element does not add stiffness to the link, unless the slave node
+already is connected to some of the master nodes via other finite elements.
+Thus, the WAVGM element works like a force distributor; forces that are applied
+at the reference (slave) node are distributed over the master nodes depending
+on the given weighting factors and the relative distance to the reference node.
+
+The manner in which the forces are distributed is analogous to the classical
+bolt pattern analysis.
+Consider a given force \bm{F} and a moment\bm{M} applied at the reference node
+of the WAVGM element.
+They are first replaced by an equivalent force $\widetilde{\bm{F}}=\bm{F}$
+and moment $\widetilde{\bm{M}}=\bm{M}+\bm{F}\times\bm{e}$ at the weighted center
+of gravity of the master nodes, where \bm{e} is the offset vector between the
+reference node and the weighted center of gravity.
+The force $\widetilde{\bm{F}}$ is then distributed to the master nodes
+proportional to the given weighting factors, whereas the moment
+$\widetilde{\bm{M}}$ is distributed as forces proportional to their distance
+from the weighted center of gravity times their weighting factors.
+Alternatively, the moment $\widetilde{\bm{M}}$ may be distributed directly as
+moments at the master nodes (provided they are 6-DOF nodes) proportional to
+their weighting factors, in the same manner as the force $\widetilde{\bm{F}}$.
+This can be used if all master nodes of the element are co-linear, such that
+they cannot absorb a moment though a set of forces.
+
+The weighting factors can in principle be different for the various force
+component at a given master node.
+Thus, the force distribution is carried out on a component-by-component basis.
+The resulting expression for the $i$'th force component at master
+node number $a$ is then
+%
+\begin{equation}
+\label{equ:WAVGM force distribution}
+f_i^a \;=\; \frac{F_i\,\omega_i^a}{\sum_b\omega_i^b}
+      \;+\; \frac{\left( M_j - F_k e_i + F_i e_k \right) \omega_i^a r_{ik}^a}
+                 {\sum_b\left( {r_{ik}^b}^2 + {r_{ii}^b}^2 \right)\omega_i^b}
+      \;-\; \frac{\left( M_k - F_i e_j + F_j e_i \right) \omega_i^a r_{ij}^a}
+                 {\sum_b\left( {r_{ii}^b}^2 + {r_{ij}^b}^2 \right)\omega_i^b}
+\end{equation}
+%
+where $(i,j,k)$ forms a cyclic permutation of the components $x,y,z$,
+and $r_{ij}^a$ denotes the $j$'th component of the relative position vector
+$\bm{r}_i^a$ from the weighted center of gravity to the $a$'th master node,
+based on the weighting factors $\omega_i^a$:
+%
+\begin{equation}
+\bm{r}_i^a = \bm{x}^a - \frac{\sum_b\omega_i^b \bm{x}^b}{\sum_b\omega_i^b}
+\end{equation}
+%
+Alternatively, when the master nodes are co-linear such that the moment has to
+be distributed directly, the force components at master node $a$ are given by
+only the first term of Equation~(\ref{equ:WAVGM force distribution}), whereas
+the moment components are
+%
+\begin{equation}
+\label{equ:WAVGM moment distribution}
+m_i^a \;=\; \frac{\left( M_i - F_j e_k + F_k e_j \right) \omega_{3+i}^a}
+                 {\sum_b\omega_{3+i}^b}
+\end{equation}
+
+The above expressions are now used to establish the governing constraint
+equations for the WAVGM element, which are used to eliminate the slave node DOFs
+in the global system of equations of the link FE model.
+Let ${\bf R}_m$ and ${\bf R}_s$ denote vectors that collect force components at
+all master DOFs and slave DOFs, respectively, in the element.
+Similarly, let ${\bf r}_m$ and ${\bf r}_s$ denote the associated displacement
+ vectors.
+The master and slave components are then related through
+%
+\begin{eqnarray}
+{\bf r}_s &=& {\bf T}_c   \;{\bf r}_m \label{equ:WAVGM constraints}\\
+{\bf R}_m &=& {\bf T}_c^T \:{\bf R}_s
+\end{eqnarray}
+%
+The row of ${\bf T}_c^T$ (column of ${\bf T}_c$) corresponding to a given
+slave DOF is then obtained by in inserting a unit value for $F_x,F_y,F_z$,
+$M_x,M_y,M_z$, respectively, in turn while letting the other components be zero.
+
+It is clear that for some WAVGM element geometries the denominators of
+Equation~(\ref{equ:WAVGM force distribution}) might be small, or even zero.
+For instance, for a three-noded element where all nodes lie on a line that is
+parallel to the global x-axis, the denominator of the first term is zero when
+$i=3$.
+The size of the denominator is therefore checked against a threshold value,
+and the resulting constraint coefficient is omitted if the denominator is
+smaller than this threshold. These checks are performed as follows for the
+two terms:
+%
+\begin{eqnarray}
+\sum_b\left( {r_{ik}^b}^2 + {r_{ii}^b}^2 \right)\omega_i^b &>&
+\left(\max_b \|r_{ik}^b\|\,\epsilon_{\rm tol} \right)^2 +
+\left(\max_b \|r_{ii}^b\|\,\epsilon_{\rm tol} \right)^2 \\[1mm]
+\sum_b\left( {r_{ii}^b}^2 + {r_{ij}^b}^2 \right)\omega_i^b &>&
+\left(\max_b \|r_{ii}^b\|\,\epsilon_{\rm tol} \right)^2 +
+\left(\max_b \|r_{ij}^b\|\,\epsilon_{\rm tol} \right)^2
+\end{eqnarray}
+%
+where $\epsilon_{tol}$ is a relative tolerance parameter that may be set by the
+user through the command-line option {\tt -tolWAVGM} of the Fedem Link Reducer
+(default value $=10^{-4}$).
+Thus, constraint coefficients are added only for those terms satisfying the
+above conditions.
+
+It should be emphasized that the constraints given by
+Equation~(\ref{equ:WAVGM constraints}) are enforced in strong form in Fedem
+(the same is true for the RGD and RBAR elements as well).
+This implies that a WAVGM slave node can not be a triad (external node) in Fedem.
+Moreover, WAVGM elements where the slave node already is connected to the master
+nodes trough other finite elements should be used with caution.
+Such element may result in an over-constrained system of equations, such that
+the resulting reduced link does not possess the necessary 6 rigid body modes.
+This may in turn make the dynamics simulation unstable.

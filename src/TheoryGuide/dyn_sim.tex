@@ -1,0 +1,1156 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\Eqnref#1{Equation~\eqref{#1}}
+\def\Fi{{\bf F}^{\rm I}}
+\def\Fd{{\bf F}^{\rm D}}
+\def\Fs{{\bf F}^{\rm S}}
+\def\Q {{\bf Q}}
+\def\kp1{{k+1}}
+\def\ls#1{{}^{#1}}
+\def\dr{\delta{\mf r}}
+\def\ddr{\delta\dot{\mf r}}
+\def\dddr{\delta\ddot{\mf r}}
+
+\chapter{Dynamics Simulation}
+\label{c:Dynamics Simulation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Dynamics equation on incremental form}
+\label{s:Dynamics equation on incremental form}
+
+The equation of dynamic equilibrium at time $t$ may be written
+%
+\begin{equation}
+{\mf R} \left( t, {\mf r}, \dot{\mf r}, \ddot{\mf r} \right) \;=\; {\mf 0}
+\label{eq:31}
+\end{equation}
+%
+or
+%
+\begin{equation}
+\Fi \left( t, {\mf r}, \dot{\mf r}, \ddot{\mf r} \right) \,+\,
+\Fd \left( t, {\mf r}, \dot{\mf r}, \ddot{\mf r} \right) \,+\,
+\Fs \left( t, {\mf r}, \dot{\mf r}, \ddot{\mf r} \right) \,-\,
+\Q  \left( t, {\mf r}, \dot{\mf r}, \ddot{\mf r} \right) \;=\; {\mf 0}
+\label{eq:32}
+\end{equation}
+%
+where
+%
+\begin{namelist}{XX}
+\item[$\Fi$] represents inertia forces,
+\iftoggle{publicedition}{}{% The following is for the in-house edition only.
+with the optional inclusion of inertia force correction terms, as defined in
+Section~\ref{subs:Correction to FE inertia forces}
+} % End in-house edition only
+\item[$\Fd$] represents damping forces
+\item[$\Fs$] represents internal elastic forces
+\item[$\Q$] represents input loads (forces and torques)
+and gravitational forces
+\end{namelist}
+%
+\Eqnref{eq:32} is integrated in time with a time increment length of $h$.
+At time $t_k$, this equation of equilibrium may be written
+%
+\begin{equation}
+\Fi_k + \Fd_k + \Fs_k \;=\; \Q_k
+\label{eq:DynEquil}
+\end{equation}
+
+Since \eqnref{eq:DynEquil} has to be satisfied at all times, we can subtract
+this equation from the same equation at time $t_\kp1=t_k+h$ to produce the
+equation of motion on incremental form, as follows
+%
+\begin{equation}
+\left[ \Fi_\kp1 - \Fi_k \right] \,+\,
+\left[ \Fd_\kp1 - \Fd_k \right] \,+\,
+\left[ \Fs_\kp1 - \Fs_k \right] \;=\; \Q_\kp1 - \Q_k
+\end{equation}
+%
+or
+%
+\begin{equation}
+\Delta\Fi_k + \Delta\Fd_k + \Delta\Fs_k \;=\; \Delta\Q_k
+\label{eq:DynEquilIncForm}
+\end{equation}
+%
+In the following,
+the different terms of \eqnref{eq:DynEquilIncForm} are expanded.
+
+The inertia, damping and stiffness relationships are estimated by a linear
+approximation around the starting position for each time increment.
+Incremental system matrices are then generated for that configuration.
+Equilibrium iterations are next used to reduce the error in this approximation.
+The exact incremental system matrices, called tangent matrices, are functions
+of the unknown displacement increments and cannot be generated in advance.
+
+The incremental inertia forces from \eqnref{eq:DynEquilIncForm} may be written
+%
+\begin{equation}
+\Delta\Fi_k \;=\; \Fi_\kp1 - \Fi_k \;=\; {\mf M}_k \Delta\ddot{\mf r}_k
+\label{eq:37}
+\end{equation}
+%
+where ${\mf M}_k$ is the system mass matrix at the beginning of time
+increment $k$, and $\Delta\ddot{\mf r}_k = \ddot{\mf r}_\kp1 - \ddot{\mf r}_k$
+represents the change in acceleration during that time increment.
+The system mass matrix may be constant or a function of the displacement
+${\mf r}$, depending on the element mass representation used.
+The element mass matrices are constant, but undergo a geometric transformation
+before they are added into the system matrix.
+If a lumped mass representation is chosen, the element mass matrix is diagonal
+and the geometric transformations have no effect.
+Then the system mass matrix will be diagonal and constant during integration.
+
+The incremental damping forces from \eqnref{eq:DynEquilIncForm} may be written
+%
+\begin{equation}
+\Delta\Fd_k \;=\; \Fd_\kp1 - \Fd_k \;=\; {\mf C}_k \Delta\dot{\mf r}_k
+\label{eq:38}
+\end{equation}
+%
+where ${\mf C}_k$ is the system damping matrix at the beginning of time
+increment $k$, and $\Delta\dot{\mf r}_k = \dot{\mf r}_\kp1 - \dot{\mf r}_k$
+represents the change in velocity during that time increment.
+The system damping matrix may be constant or a function of the displacement
+${\mf r}$.
+If the damping matrix is diagonal, the damping matrix will not be affected by
+the geometric transformation and remains constant.
+
+The incremental elastic forces from \eqnref{eq:DynEquilIncForm} may be written
+%
+\begin{equation}
+\Delta\Fs_k \;=\; \Fs_\kp1 - \Fs_k \;=\; {\mf K}_k \Delta{\mf r}_k
+\label{eq:39}
+\end{equation}
+%
+where ${\mf K}_k$ is the system stiffness matrix at the beginning of time
+increment $k$, and $\Delta{\mf r} = {\mf r}_\kp1 - {\mf r}_k$ represents the
+associated displacement increment.
+The system stiffness matrix is in general a function of the displacement vector.
+
+The incremental dynamic equation of motion~(\ref{eq:DynEquilIncForm}) can now be
+written on the linearized form
+%
+\begin{equation}
+{\mf M}_k \Delta\ddot{\mf r}_k +
+{\mf C}_k  \Delta\dot{\mf r}_k +
+{\mf K}_k      \Delta{\mf r}_k \;=\; \Delta\Q_k
+\label{eq:310}
+\end{equation}
+%
+The matrices ${\mf M}_k$, ${\mf C}_k$ and ${\mf K}_k$ may be recalculated for
+each time increment and iteration of the solution process.
+Solving \eqnref{eq:310} using a time integration algorithm, such as the Newmark
+method, gives $\Delta{\mf r}_k,\Delta\dot{\mf r}_k$, and $\Delta\ddot{\mf r}_k$.
+Therefore, the total solution at the end of the increment is
+%
+\begin{equation}
+\eqalign{
+     {\mf r}_\kp1 \;=\;\; &      {\mf r}_k +      \Delta{\mf r}_k \cr
+ \dot{\mf r}_\kp1 \;=\;\; &  \dot{\mf r}_k +  \Delta\dot{\mf r}_k \cr
+\ddot{\mf r}_\kp1 \;=\;\; & \ddot{\mf r}_k + \Delta\ddot{\mf r}_k }
+\end{equation}
+
+This solution may be used to calculate the forces $\Fi_\kp1$, $\Fd_\kp1$ and
+$\Fs_\kp1$.
+However, due to the linear approximation there will be unbalanced forces at the
+end of the increment, given by
+%
+\begin{equation}
+\hat{\mf R}_\kp1 \;=\; \Q_\kp1 - \left[ \Fi_\kp1 + \Fd_\kp1 + \Fs_\kp1 \right]
+\end{equation}
+%
+These residual forces may be added to the load increment for the next step
+%
+\begin{equation}
+\Delta\hat\Q_k \;=\; \Delta\Q_k + \hat{\mf R}_k \;=\;
+\Q_\kp1 - \left[ \Fi_k + \Fd_k + \Fs_k \right]
+\end{equation}
+%
+Replacing $\Delta\Q_k$ by $\Delta\hat\Q_k$, \eqnref{eq:310} may then be written
+%
+\begin{equation}
+{\mf M}_k \Delta\ddot{\mf r}_k +
+{\mf C}_k  \Delta\dot{\mf r}_k +
+{\mf K}_k      \Delta{\mf r}_k \;=\;
+\Q_\kp1 - \left[ \Fi_k + \Fd_k + \Fs_k \right]
+\label{eq:314}
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Newmark time integration}
+\label{s:Newmark time integration}
+
+The Newmark $\beta$-family of algorithms is used for time integration in Fedem.
+The basis for the Newmark method is the following update scheme
+%
+\begin{eqnarray}
+{\mf r}_\kp1 &=& {\mf r}_k + h \dot{\mf r}_k + \left(\frac{1}{2}-\beta\right)
+h^2 \ddot{\mf r}_k + \beta
+h^2 \ddot{\mf r}_\kp1
+\label{eq:NewmarkBasis} \\[1mm]
+\dot{\mf r}_\kp1 &=& \dot{\mf r}_k +
+(1-\gamma) h \ddot{\mf r}_k + \gamma h \ddot{\mf r}_\kp1
+\end{eqnarray}
+%
+where $\beta$ and $\gamma$ are integration parameters (see
+Section~\ref{subs:Stability and accuracy}) and $h$ is the time increment length.
+These equations may be rewritten into the incremental forms
+%
+\begin{eqnarray}
+{\mf r}_\kp1 \;=\; {\mf r}_k + \Delta{\mf r}_k & \text{where} &
+\Delta{\mf r}_k \;=\; h\dot{\mf r}_k + \frac{h^2}{2} \ddot{\mf r}_k +
+\beta h^2 \Delta\ddot{\mf r}_k
+\label{eq:321} \\
+\dot{\mf r}_\kp1 \;=\; \dot{\mf r}_k + \Delta\dot{\mf r}_k & \text{where} &
+\Delta\dot{\mf r}_k \;=\; h\ddot{\mf r}_k + \gamma h\Delta\ddot{\mf r}_k
+\label{eq:320}
+\end{eqnarray}
+
+The increment in velocity and acceleration can now be expressed as functions of
+the displacement increment and known quantities at time $t_k$.
+With $\Delta\ddot{\mf r}_k = \ddot{\mf r}_\kp1 - \ddot{\mf r}_k$,
+\eqnref{eq:321} produces
+%
+\begin{equation}
+\eqalign{
+\ddot{\mf r}_\kp1 \;=\; \ddot{\mf r}_k + \Delta\ddot{\mf r}_k \;=\;\; &
+\ddot{\mf r}_k +
+\frac{1}{\beta h^2}\Delta{\mf r}_k -
+\frac{1}{\beta h} \dot{\mf r}_k -
+\frac{1}{2\beta} \ddot{\mf r}_k \cr =\;\; &
+\frac{1}{\beta h^2} \Delta{\mf r}_k - {\mf a}_k
+}\label{eq:322}
+\end{equation}
+%
+where
+%
+\begin{equation}
+{\mf a}_k \;=\; \frac{1}{\beta h}\dot{\mf r}_k +
+\left( \frac{1}{2\beta} - 1 \right) \ddot{\mf r}_k
+\label{eq:323}
+\end{equation}
+%
+Combining \eqnref{eq:320} with \eqnref{eq:322} yields
+%
+\begin{equation}
+\eqalign{
+\dot{\mf r}_\kp1 \;=\; \dot{\mf r}_k + \Delta\dot{\mf r}_k \;=\;\; &
+\dot{\mf r}_k +
+\frac{\gamma}{\beta h} \Delta{\mf r}_k -
+\frac{\gamma}{\beta} \dot{\mf r}_k -
+\left( \frac{\gamma h}{2\beta} - h \right) \ddot{\mf r}_k \cr =\;\; &
+\frac{\gamma}{\beta h} \Delta{\mf r}_k - {\mf d}_k
+}\label{eq:324}
+\end{equation}
+%
+where
+%
+\begin{equation}
+{\mf d}_k \;=\; \left( \frac{\gamma}{\beta} -1 \right) \dot{\mf r}_k +
+\left( \frac{\gamma}{2\beta} - 1 \right) h \ddot{\mf r}_k
+\label{eq:325}
+\end{equation}
+
+By inserting \eqsref{eq:322}{eq:324} into \eqnref{eq:314}, we now get
+%
+\begin{equation}
+{\mf N}_k \Delta{\mf r}_k \;=\; \hat{\mf R}_k
+\label{eq:326}
+\end{equation}
+%
+where the Newton matrix is
+%
+\begin{equation}
+{\mf N}_k \;=\; {\mf K}_k +
+\frac{\gamma}{\beta h}{\mf C}_k +
+\frac{1}{\beta h^2}{\mf M}_k
+\label{eq:327}
+\end{equation}
+%
+and the right-hand-side vector is
+%
+\begin{equation}
+\hat{\mf R}_k \;=\; \Q_\kp1 - \left[
+\Fi_k + \Fd_k + \Fs_k \right] +
+{\mf M}_k \left[ {\mf a}_k + \ddot{\mf r}_k \right] +
+{\mf C}_k \left[ {\mf d}_k + \dot{\mf r}_k \right]
+\label{eq:328}
+\end{equation}
+%
+The evaluation of the system Newton matrix, ${\mf N}_k$, is covered by
+Section~\ref{s:Evaluation of the Newton matrix}, whereas the external loading,
+$\Q_\kp1$, and the internal inertia, damping, and elastic forces, $\Fi_k$,
+$\Fd_k$ and $\Fs_k$, are covered by
+Section~\ref{s:Evaluation of the force vector}.
+
+\subsection{Stability and accuracy}
+\label{subs:Stability and accuracy}
+
+The integration parameters $\gamma$ and $\beta$ are selected for controlling
+the stability, accuracy and efficiency of the integration process.
+For the linear case, the method is unconditionally stable for
+%
+\begin{equation}
+\gamma \geq \frac{1}{2}
+\qquad\text{and}\qquad
+\beta \geq \frac{1}{4} \left( \gamma + \frac{1}{2} \right)^2
+\label{eq:335}
+\end{equation}
+%
+For smaller $\beta$-values, the method is only conditionally stable.
+The stability criterion is
+%
+\begin{equation}
+h_{\rm cr} \;=\; \frac{T}{2\pi} \left( \frac{1}{4}
+\left( \gamma + \frac{1}{2} \right)^2 - \beta \right)^{-\frac{1}{2}}
+\label{eq:336}
+\end{equation}
+%
+where $h_{\rm cr}$ is the critical time increment size and $T$ is the period for
+the highest frequency in the model.
+
+The parameter $\gamma$ may be selected to introduce artificial damping into the
+integration process.
+$\gamma > \frac{1}{2}$ gives positive artificial damping; in other words,
+the amplitude will decay with increasing $k$.
+$\gamma < \frac{1}{2}$ gives negative artificial damping, i.e.,
+the amplitude will increase with increasing $k$.
+$\gamma = \frac{1}{2}$ gives no artificial damping.
+Unfortunately, numerical (algorithmic) damping can not be introduced without
+loss off accuracy, and using a value of $\gamma\neq\frac{1}{2}$ will make the
+algorithm only first order accurate.
+Consequently, $\gamma=\frac{1}{2}$ is often the selection.
+In this case, the Newmark $\beta$-family includes the following methods
+%
+\begin{namelist}{XXXX}
+\item[$\beta=0$] The second central difference method with $h_{\rm cr} = 0.318T$
+\item[$\beta=\frac{1}{12}$] Fox-Goodwins method with $h_{\rm cr} = 0.389T$
+\item[$\beta=\frac{1}{6}$] Linear acceleration with $h_{\rm cr} = 0.551T$
+\item[$\beta=\frac{1}{4}$] Constant average acceleration (trapezoid method),
+which is unconditionally stable for linear systems
+\end{namelist}
+
+Fedem is using $\gamma=\frac{1}{2}$ and $\beta=\frac{1}{4}$ for its Newmark
+integration algorithm.
+This constitutes a second order accurate integration with no numerical damping
+for any frequencies.
+Because of the lack of numerical damping, we must include structural damping to
+the model to obtain stable integration with the Newmark algorithm.
+We will usually include (mainly) stiffness proportional damping in order to
+introduce dissipation of high-frequency modes, see
+Section~\ref{s:Structural damping}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Newton--Raphson iteration}
+\label{s:Newton-Raphson iteration}
+
+\Eqnref{eq:314} is an approximation of the equilibrium equation at time $t_\kp1$.
+To achieve equilibrium at the end of the increment, so-called Newton--Raphson
+iterations are used to minimize the error from the solution of this equation.
+
+An iteration is formally conducted by replacing the right hand side of
+\eqnref{eq:314} by the residual from the previous iteration,
+$\ls{i-1}\hat{\mf R}_\kp1$,
+and then solving for the correction $\dr_k$ to $\Delta{\mf r}_k$ from
+%
+\begin{equation}
+\eqalign{
+\ls{i}{\mf M}_k \ls{i}\dddr_k \,+\,
+\ls{i}{\mf C}_k \ls{i}\ddr_k \,+\,
+\ls{i}{\mf K}_k \ls{i}\dr_k \;=\;\; &
+\ls{i-1}\Q_\kp1 \cr -\;\; & \left[
+\ls{i-1}\Fi_\kp1 + \ls{i-1}\Fd_\kp1 + \ls{i-1}\Fs_\kp1
+\right]
+}\label{eq:NewtonDynEq}
+\end{equation}
+%
+The superindex to the left of the symbols indicates the iteration number.
+The displacement, velocity and acceleration increments are then corrected from
+%
+\begin{equation}
+\eqalign{
+  \ls{i}\Delta{\mf r}_k      \;=\;\; &
+\ls{i-1}\Delta{\mf r}_k      \,+\, \ls{i}\dr_k \cr
+  \ls{i}\Delta\dot{\mf r}_k  \;=\;\; &
+\ls{i-1}\Delta\dot{\mf r}_k  \,+\, \ls{i}\ddr_k \cr
+  \ls{i}\Delta\ddot{\mf r}_k \;=\;\; &
+\ls{i-1}\Delta\ddot{\mf r}_k \,+\, \ls{i}\dddr_k
+}\label{eq:316}
+\end{equation}
+%
+The total displacement, velocity and acceleration vectors are updated through
+%
+\begin{equation}
+\eqalign{
+\ls{i}{\mf r}_\kp1      =\; & \ls{i-1}{\mf r}_\kp1      \,+\, \ls{i}\dr_k \cr
+\ls{i}\dot{\mf r}_\kp1  =\; & \ls{i-1}\dot{\mf r}_\kp1  \,+\, \ls{i}\ddr_k \cr
+\ls{i}\ddot{\mf r}_\kp1 =\; & \ls{i-1}\ddot{\mf r}_\kp1 \,+\, \ls{i}\dddr_k
+}\label{eq:317}
+\end{equation}
+
+The improved displacement increment, given by \eqnref{eq:316}$_1$, is next
+inserted into \eqsref{eq:322}{eq:324}, respectively, yielding
+%
+\begin{eqnarray}
+\ls{i}\ddot{\mf r}_\kp1 &=&
+\frac{1}{\beta h^2}\ls{i}\Delta{\mf r}_k - {\mf a}_k =
+\frac{1}{\beta h^2}\left[\ls{i-1}\Delta{\mf r}_k + \ls{i}\dr_k\right] -
+{\mf a}_k \\
+\ls{i}\dot{\mf r}_\kp1 &=&
+\frac{\gamma}{\beta h}\ls{i}\Delta{\mf r}_k - {\mf d}_k \hskip5pt =
+\frac{\gamma}{\beta h}\left[\ls{i-1}\Delta{\mf r}_k + \ls{i}\dr_k\right]
+ - {\mf d}_k
+\end{eqnarray}
+%
+From this it follows that the iterative acceleration and velocity corrections
+are given by, respectively
+%
+\begin{equation}
+\ls{i}\dddr_k = \frac{1}{\beta h^2} \ls{i}\dr_k
+\qquad\text{and}\qquad
+\ls{i}\ddr_k = \frac{\gamma}{\beta h} \ls{i}\dr_k
+\label{eq:NewmarkVelAndAccCorr}
+\end{equation}
+
+Combining \eqnref{eq:NewmarkVelAndAccCorr} with \eqnref{eq:NewtonDynEq} yields
+%
+\begin{equation}
+\ls{i}{\mf N}_k \ls{i}\dr_k \;=\; \ls{i-1}\hat{\mf R}_k
+\label{eq:NewmarkDispCorr}
+\end{equation}
+%
+with
+%
+\begin{equation}
+\ls{i}{\mf N}_k \;=\; \ls{i}{\mf K}_k +
+\frac{\gamma}{\beta h} \ls{i}{\mf C}_k +
+\frac{1}{\beta h^2} \ls{i}{\mf M}_k
+\label{eq:333}
+\end{equation}
+%
+and
+%
+\begin{equation}
+\ls{i-1} \hat{\mf R}_k \;=\; \ls{i-1}\Q_\kp1 - \left[
+\ls{i-1}\Fi_\kp1 + \ls{i-1}\Fd_\kp1 + \ls{i-1}\Fs_\kp1
+\right]
+\label{eq:residual}
+\end{equation}
+
+After updating the solution state through the \eqsref{eq:316}{eq:317},
+the internal forces $\ls{i}\Fi_\kp1$, $\ls{i}\Fd_\kp1$ and $\ls{i}\Fs_\kp1$
+can be calculated from the \meqsref{eq:37}{eq:39} and substituted into
+\eqnref{eq:NewtonDynEq} to solve for the correction $\ls{i+1}\dr_k$
+of the next iteration, and so on.
+
+If the matrices ${\mf M}_k$, ${\mf C}_k$ and ${\mf K}_k$ are updated in each
+iteration, this iteration process is called Newton--Raphson iteration.
+If they all are left constant during the iterations, or only updated after some
+iterations, the process is called modified Newton--Raphson iteration.
+The coefficient matrix of the equation system~\eqref{eq:NewmarkDispCorr} is then
+unchanged for those iterations and new triangularizations are avoided.
+The iterations are repeated until the chosen convergence test is satisfied
+(refer to Section~\ref{subs:Convergence criteria}).
+
+\input{convergence}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Newmark integration with numerical damping}
+\label{s:Newmark integration with numerical damping}
+
+\subsection{The Hilber--Hughes--Taylor method}
+\label{subs:The Hilber--Hughes--Taylor method}
+
+The $\alpha$-method by Hilber, Hughes and Taylor~\cite{HHT} circumvents the
+problem of not being able to introduce numerical damping without a loss of
+accuracy as in the traditional Newmark algorithm.
+This is achieved by modifying the equilibrium \eqnref{eq:DynEquil}, as follows
+%
+\begin{equation}
+\Fi_\kp1 +
+(1+\alpha)\Fd_\kp1 - \alpha\Fd_k +
+(1+\alpha)\Fs_\kp1 - \alpha\Fs_k \;=\;
+(1+\alpha)\Q_\kp1  - \alpha\Q_k
+\label{eq:NewmarkAlphaEquil}
+\end{equation}
+%
+where $\alpha$ adjusts the amount of numerical damping.
+
+The HHT-$\alpha$ method gives efficient high-frequency dissipation and is
+unconditionally stable for parameters in the range
+%
+\begin{equation}
+\alpha \in [-\frac{1}{3},0], \qquad
+\gamma = \frac{1}{2}(1-2\alpha), \qquad\text{and}\qquad
+\beta = \frac{1}{4}(1-\alpha)^2
+\end{equation}
+%
+Fedem is using $\alpha = -0.1$, which gives $\gamma = 0.6$ and $\beta = 0.3025$.
+
+\remark{For simulations involving high-speed rotations, the $\alpha$-method can
+give less accurate estimates for the rigid body rotational velocities than the
+standard Newmark method.
+The latter method might give better results and allow larger time increments in
+such cases.
+Note, however, that the standard Newmark method requires more structural damping
+than the $\alpha$-method.
+With the use of stiffness proportional damping, no artificial damping against
+the rigid body rotation is introduced.}
+
+\Eqnref{eq:NewmarkAlphaEquil} can also be expressed as
+%
+\begin{equation}
+\Fi_\kp1 \,+\, (1+\alpha)\Fd_\kp1 \,+\, (1+\alpha)\Fs_\kp1 \;=\;
+(1+\alpha)\Q_\kp1 \,-\, \alpha\Fi_\text{actual}
+\label{eq:HHTequil}
+\end{equation}
+%
+where $\Fi_\text{actual}$ represents the actual inertia force at increment $k$,
+computed from the equilibrium \eqnref{eq:DynEquil}, i.e.
+%
+\begin{equation}
+\Fi_\text{actual} \;=\; \Q_k - \Fd_k - \Fs_k
+\end{equation}
+%
+This modified equilibrium equation is integrated by the standard Newmark method.
+Hence, the finite difference expressions~\eqref{eq:NewmarkBasis}--\eqref{eq:325}
+are retained.
+
+By inserting the internal force linearizations from \meqsref{eq:37}{eq:39} into
+\eqnref{eq:HHTequil}, we obtain
+%
+\begin{equation}
+\eqalign{
+\Fi_k \,+\, {\mf M}_k\Delta\ddot{\mf r}_k \;\;+\;\; &
+(1+\alpha)\left( \Fd_k + {\mf C}_k\Delta\dot{\mf r}_k \right) \cr +\;\; &
+(1+\alpha)\left( \Fs_k + {\mf K}_k\Delta{\mf r}_k \right) \cr =\;\; &
+(1+\alpha)\,\Q_\kp1 \,-\, \alpha\Fi_\text{actual} }
+\end{equation}
+%
+or
+%
+\begin{equation}
+\eqalign{
+{\mf M}_k\Delta\ddot{\mf r}_k \;+\; &
+(1+\alpha)\,{\mf C}_k\Delta\dot{\mf r}_k +
+(1+\alpha)\,{\mf K}_k\Delta{\mf r}_k \cr =\; &
+(1+\alpha)\left(\Q_\kp1 - \Fd_k - \Fs_k \right) - \Fi_k
+-\alpha\Fi_\text{actual}
+}\label{eq:IncHHTequil}
+\end{equation}
+%
+Inserting the Newmark incremental acceleration and velocity expressions from
+\eqsref{eq:322}{eq:324}, resepctively, into \eqnref{eq:IncHHTequil} now yields
+%
+\begin{equation}
+\eqalign{
+          {\mf M}_k&\left(
+\frac{1}{\beta h^2} \Delta{\mf r}_k - {\mf a}_k - \ddot{\mf r}_k \right) \;+ \cr
+(1+\alpha){\mf C}_k&\left(
+\frac{\gamma}{\beta h} \Delta{\mf r}_k - {\mf d}_k - \dot{\mf r}_k \right) \;+ \cr
+(1+\alpha){\mf K}_k&\Delta{\mf r}_k \;=\;
+(1+\alpha)\left(\Q_\kp1 - \Fd_k - \Fs_k \right) - \Fi_k
+-\alpha\Fi_\text{actual} }
+\end{equation}
+%
+which after rearranging the known quantities on the right hand side becomes
+%
+\begin{equation}
+{\mf N}_k \Delta{\mf r}_k \;=\; \widehat{\mf R}_k
+\end{equation}
+%
+with
+%
+\begin{equation}
+{\mf N}_k \;=\;
+\frac{1}{\beta h^2}{\mf M}_k \;+\;
+\frac{(1+\alpha)\gamma}{\beta h} {\mf C}_k \;+\;
+(1+\alpha){\mf K}_k
+\label{eq:NewtonHHT}
+\end{equation}
+%
+and
+%
+\begin{equation}
+\eqalign{
+\widehat{\mf R}_k \;=\; & (1+\alpha)\left(
+\Q_\kp1 + {\mf C}_k({\mf d}_k + \dot{\mf r}_k) - \Fd_k - \Fs_k \right) \cr +\; &
+{\mf M}_k({\mf a}_k + \ddot{\mf r}_k) - \Fi_k - \alpha\Fi_\text{actual}
+}\label{eq:PredictorHHT}
+\end{equation}
+
+If we assume that the inertia- and damping forces are linear with respect to the
+total acceleration and velocity, respectively, we have that
+$\Fd_k={\mf C}_k\dot{\mf r}_k$ and $\Fi_k={\mf M}_k\ddot{\mf r}_k$, and
+\eqnref{eq:PredictorHHT} reduces to the following
+%
+\begin{equation}
+\eqalign{
+\widehat{\mf R}_k \;=\; & (1+\alpha)\left(
+\Q_\kp1 + {\mf C}_k{\mf d}_k - \Fs_k \right) \;+\;
+{\mf M}_k{\mf a}_k - \alpha\Fi_\text{actual}
+}\label{eq:PredictorHHTsimplified}
+\end{equation}
+%
+The \eqnref{eq:PredictorHHTsimplified} is used as the default force predictor
+in Fedem, optionally also replacing $\Fi_\text{actual}$ by $\Fi_k$.
+The linear assumption on the inertia- and damping- forces is a simplification
+that should not matter much if the mass- and damping characteritiscs are
+relatively constant during the simulation time.
+However, for systems consisting of large bodies moving relative to each other,
+like in contact problems, or systems with significant nonlinear damping,
+like hydrodynamic drag, etc., it is worth considering using the full expression,
+\eqnref{eq:PredictorHHT}.
+
+\remark{A small error in the predictor force usually has no significance in
+a nonlinear simulation with Newton--Raphson iterations, since then it will
+iterate towards the correct solution in any case.
+But if the predictor force is too far off, there is a risk of divergence,
+or in the worst case, convergence towards an incorrect solution.}
+
+For a linear system, the state at time $t_\kp1$ given by $\Delta{\mf r}_k$,
+$\Delta\dot{\mf r}_k$ and $\Delta\ddot{\mf r}_k$, and the associated inertia,
+damping and elastic forces forces $\Fi_\kp1$, $\Fd_\kp1$ and $\Fs_\kp1$,
+respectively, will satisfy the equilibrium \eqnref{eq:HHTequil}.
+However, for nonlinear systems the increments $\Delta{\mf r}_k$,
+$\Delta\dot{\mf r}_k$ and $\Delta\ddot{\mf r}_k$ will in general not satisfy
+\eqnref{eq:HHTequil}.
+In order to ensure dynamic equilibrium before advancing to the next increment,
+the dynamic residual seeks to be minimized through a similar Newton--Raphson
+procedure as described in Section~\ref{s:Newton-Raphson iteration}.
+Thus, in each iteration we have to solve the linearized system of equations
+%
+\begin{equation}
+\ls{i}{\mf N}_k \ls{i}\Delta_k \;=\; \ls{i-1}\widehat{\mf R}_k
+\end{equation}
+%
+where the Newton matrix $\ls{i}{\mf N}_k$ is the same as in
+\eqnref{eq:NewtonHHT}, and the right-hand-side vector
+$\ls{i-1}\widehat{\mf R}_k$ equals the residual from the previous iteration
+%
+\begin{equation}\small
+\ls{i-1}\widehat{\mf R}_k \;=\; (1+\alpha)\left(
+\ls{i-1}\Q_\kp1 - \ls{i-1}\Fd_\kp1 - \ls{i-1}\Fs_\kp1 \right) \;-\;
+\ls{i-1}\Fi_\kp1 \;-\; \alpha\Fi_\text{actual}
+\label{eq:CorrectorHHT}
+\end{equation}
+
+\iftoggle{publicedition}{}{% The following is for the in-house edition only
+The overall HHT-$\alpha$ Newmark time integration algorithm with
+Newton--Raphson iterations is summarized in a flow chart in
+Appendix~\ref{chap:Newmark-flowchart}.
+}{\clearpage} % End in-house edition only
+
+\input{NewmarkDampingProp}
+\input{generalized_alpha}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Structural damping}
+\label{s:Structural damping}
+\label{sec:PropDamping}
+\label{sec:RayleighDamping}
+
+\iftoggle{publicedition}{% The following is for the public edition
+The reduced superelement damping matrix
+}{% The following is for the in-house edition only
+The reduced superelement damping matrix, given by \eqnref{eqCMS:Csubs},
+} % End in-house edition only
+is not developed in Fedem.
+Instead, proportional damping is used.
+If we assume that the damping force in a superelement is proportional to the
+velocity of each mass point, we have
+%
+\begin{equation}
+{\mf c} \;=\; \alpha_1 {\mf m}
+\end{equation}
+%
+where $\alpha_1$ is a constant.
+Similarly, if we assume the damping force is proportional to the strain velocity
+in each point, we have
+%
+\begin{equation}
+{\mf c} \;=\; \alpha_2 {\mf k}
+\end{equation}
+%
+where $\alpha_2$ is another constant.
+The combination of these two assumptions produces the damping matrix of
+{\it Rayleigh-damping} or {\it proportional damping}
+%
+\begin{equation}
+{\mf c} \;=\; \alpha_1 {\mf m} + \alpha_2 {\mf k}
+\label{eq:337}
+\end{equation}
+
+The damping ratio for the natural frequencies can now be calculated from
+%
+\begin{equation}
+\lambda_i \;=\; \frac{1}{2}
+\left( \frac{\alpha_1}{\omega_i} + \alpha_2 \omega_i \right)
+\label{eq:338}
+\end{equation}
+%
+where $\alpha_1$ damps out lower vibration modes
+while $\alpha_2$ damps out higher modes.
+If the damping ratios $\lambda_i$ for two vibration modes are selected,
+the corresponding constants of proportionality, $\alpha_1$ and $\alpha_2$
+may be calculated from
+%
+\begin{equation}
+\eqalign{
+\alpha_1 =\;& \frac{2 \omega_1 \omega_2}{\omega_2^2 - \omega_1^2}
+\left( \lambda_1 \omega_2 - \lambda_2 \omega_1 \right) \cr
+\alpha_2 =\;& \frac{2 \left( \omega_2 \lambda_2 - \omega_1 \lambda_1 \right)}
+                   {\omega_2^2 - \omega_1^2}
+}\label{eq:339}
+\end{equation}
+%
+where $\omega_1$ and $\omega_2$ are the circle frequencies and $\lambda_1$ and
+$\lambda_2$ are the damping ratios for the selected vibration modes,
+see Figure~\ref{fig:RayleighDamping}.
+
+\begin{figure}[b]
+\input{fig_struct_damp.tex}
+\caption{A typical relationship between damping and natural frequency arising
+from the specification of damping ratio at the frequencies.
+($\alpha_1=1.5$ and $\alpha_2 = 0.004$).}
+\label{fig:RayleighDamping}
+\end{figure}
+
+When using component modes (see Section~\ref{sec:CMS reduction}), the reduced
+\iftoggle{publicedition}{% The following is for the public edition
+superelement matrices are partitioned into sub-matrices associated with
+the retained nodal DOFs and component modes, respectively.
+}{% The following is for the in-house edition only
+superelement mass- and stiffness matrices are partitioned
+as given by \eqsref{eqCMS:Msubs}{eqCMS:Ksubs}, respectively.
+} % End in-house edition only
+It is then possible to assign individual Rayleigh damping factors for each
+component mode.
+In this case, exploiting that ${\mf k}_{12} = {\mf k}_{21}^T = {\mf 0}$
+and ${\mf m}_{12} = {\mf m}_{21}^T$, \eqnref{eq:337} reads
+%
+\begin{equation}
+\left[\begin{array}{cc}
+{\mf c}_{11} & {\mf c}_{12} \\
+{\mf c}_{21} & {\mf c}_{22}
+\end{array}\right] \;=\;
+\left[\begin{array}{cc}
+\alpha_1 {\mf m}_{11} & \left( {\bm\alpha}_m {\mf m}_{21} \right)^T \\
+{\bm\alpha}_m {\mf m}_{21} & {\bm\alpha}_m {\mf m}_{22}
+\end{array}\right] +
+\left[\begin{array}{cc}
+\alpha_2 {\mf k}_{11} & {\mf 0} \\
+{\mf 0} & {\bm\alpha}_k {\mf k}_{22}
+\end{array}\right]
+\end{equation}
+%
+where ${\bm\alpha}_m = \lceil\alpha_{mi}\rfloor$
+and ${\bm\alpha}_k = \lceil\alpha_{ki}\rfloor$
+are diagonal matrices containing the component mode damping factors.
+Note that ${\mf m}_{22}$ and ${\mf k}_{22}$ both are diagonal matrices,
+see Section~\ref{subsec:Reduced system}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Evaluation of the Newton matrix}
+\label{s:Evaluation of the Newton matrix}
+
+The Newton matrix is a function of the integration parameters $\gamma$ and
+$\beta$ and of the time increment size size $h$, see \eqnref{eq:327}.
+In Section~\ref{sec:CMS reduction}, mass and stiffness matrices are developed
+for each of the substructures and reduced to superelement matrices by
+CMS-reduction techniques.
+The tangent stiffness matrix of each substructure is then established at the
+current configuration through the co-rotational formulation outlined in
+Chapter~\ref{chap:SupElCorot}.
+
+A superelement Newton matrix can now be calculated from the following relation
+(refer to \eqsref{eq:327}{eq:337})
+%
+\begin{equation}
+{\mf n}_i \;=\; {\mf k}_i
++ \frac{\gamma}{\beta h} \left( \alpha_1 {\mf m}_i + \alpha_2 {\mf k}_i \right)
++ \frac{1}{\beta h^2} {\mf m}_i
+\label{eq:340}
+\end{equation}
+%
+where
+%
+\begin{namelist}{xxx}
+\item[${\mf n}_i$] reduced superelement Newton matrix
+\item[${\mf k}_i$] reduced superelement stiffness matrix
+\item[${\mf m}_i$] reduced superelement mass matrix
+\end{namelist}
+
+Each time the integration algorithm requires a new Newton matrix
+(refer to \eqsref{eq:326}{eq:NewmarkDispCorr}),
+the superelement Newton matrices are transformed to the actual directions
+of the system level DOFs by
+%
+\begin{equation}
+\bar{\mf n}_i \;=\; {\mf T}_{SEi}^T {\mf n}_i {\mf T}_{SEi}
+\label{eq:341}
+\end{equation}
+%
+resulting in the transformed superelement Newton matrix, $\bar{\mf n}_i$
+\iftoggle{publicedition}{}{% The following is for the in-house edition only
+(refer to
+Sections~\ref{sec:SupElIntForce}--\ref{s:Substituting into system matrices})}.
+
+The superelement Newton matrices are added into the incremental Newton matrix at
+system level as indicated by
+%
+\begin{equation}
+{\mf N}_k \;=\; \sum\limits_i {\mf a}_i^T \bar{\mf n}_i {\mf a}_i
+\label{eq:342}
+\end{equation}
+%
+where ${\mf a}_i$ are incidence matrices that represent superelement topology
+\iftoggle{publicedition}{% The following is for the public edition
+at system level.
+}{% The following is for the in-house edition only
+at system level (see also \eqsref{eqSC:512}{eqSC:513}).
+} % End in-house edition only
+
+The stiffness for a spring may be a constant or, in the nonlinear case,
+a variable that is dependent on the spring deflection.
+For axial springs, the stiffness is transformed to the directions of the
+connected supernodes and then added directly to the Newton system matrix.
+For joint springs, stiffness is added to the diagonal of the involved DOF
+of the system's Newton matrix.
+
+The damping coefficient of a damper may be a constant, or in the nonlinear case
+a variable that is dependent on the damper velocity.
+For the Newton matrix, the damping coefficient must be modified by the factor
+$\frac{\gamma}{\beta h}$ (see \eqsref{eq:327}{eq:333}).
+For axial dampers, the modified damping coefficient is transformed to the
+actual directions for the connected supernodes and then added to the Newton
+system matrix.
+For joint dampers, the modified damping coefficients are added to the diagonal
+of the involved DOF of the system's Newton matrix.
+
+Additional masses may be regarded as constants during simulation.
+For the Newton matrix, additional masses must be modified by the factor
+$\frac{1}{\beta h^2}$ (refer to \eqsref{eq:327}{eq:333}).
+The modified additional masses are added to the diagonal elements for the
+specified DOFs of the Newton matrix.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Evaluation of the force vector}
+\label{s:Evaluation of the force vector}
+
+The force vector must be evaluated for each time increment and iteration (refer
+to \eqsref{eq:326}{eq:NewmarkDispCorr}).
+\iftoggle{publicedition}{}{% The following is for the in-house edition only
+In addition to the contributions described in the sub-sections below,
+the force vector may also contain buoyancy and hydrodynamic forces for beam
+structures immersed in water.
+These forces, and the associated tangent matrix contributions, are described in
+Appendix~\ref{chap:Hydrodynamics}.
+} % End in-house edition only
+
+\subsection{External forces}
+\label{subs:External forces}
+
+The external forces at time increment $k+1$, $\Q_\kp1$
+consist of the following contributions:
+%
+\begin{itemize}
+\item Superelement gravitational forces
+\item Concentrated external forces in supernodes
+\item Gravitational forces from additional masses
+\end{itemize}
+
+The gravitational forces are transformed to actual directions of the DOFs at
+\iftoggle{publicedition}{% The following is for the public edition
+system level by means of the superelement transformation matrix ${\mf T}_{SEi}$
+}{% The following is for the in-house edition only
+system level by means of the transformation matrix~\eqref{eqSC:59}
+} % End in-house edition only
+%
+\begin{equation}
+\bar{\mf g}_i \;=\; {\mf T}_{SEi}^T {\mf g}_i
+\label{eq:343}
+\end{equation}
+%
+\iftoggle{publicedition}{}{% The following is for the in-house edition only
+(see also \eqsref{eqSC:510}{eqSC:511}).
+} % End in-house edition only
+The transformed superelement's gravitational forces are then added
+into the force vector by
+%
+\begin{equation}
+\Q_\kp1 \;=\; \Q_\kp1 + \sum\limits_i {\mf a}_i^T \bar{\mf g}_i
+\label{eq:344}
+\end{equation}
+%
+\iftoggle{publicedition}{}{% The following is for the in-house edition only
+(refer to \eqsref{eqSC:512}{eqSC:513}).
+} % End in-house edition only
+
+Direction and magnitude for specified concentrated loads are calculated for the
+actual position of the mechanism, then transformed to the supernode direction
+\iftoggle{publicedition}{}{% The following is for the in-house edition only
+by the transformation matrix from \eqnref{eqSC:57} or~\eqref{eqSC:58},
+} % End in-house edition only
+and added into the system vector $\Q_\kp1$.
+For loading on specified DOFs at system level, the magnitude at that position is
+added directly into $\Q_\kp1$.
+
+For additional masses added to translational DOFs, a gravitational force is
+calculated by multiplying the component of the gravitational vector along the
+actual DOF by the specified mass.
+These gravitational forces are then added to $\Q_\kp1$ for the DOFs in question.
+
+\subsection{Stiffness forces}
+
+The superelement stiffness forces are
+\iftoggle{publicedition}{}{% The following is for the in-house edition only
+calculated as shown in Section~\ref{sec:SupElIntForce}. These forces are then}
+transformed to the actual directions of the DOFs for superelement $i$, i.e.
+%
+\begin{equation}
+\bar{\mf S}_i \;=\; {\mf T}_{SEi}^T {\mf S}_i
+\label{eq:350}
+\end{equation}
+%
+(see \eqnref{eq:343}) and formally added into the force vector by
+%
+\begin{equation}
+\Fs \;=\; \sum\limits_i {\mf a}_i^T \bar{\mf S}_i
+\label{eq:351}
+\end{equation}
+%
+(see \eqnref{eq:344}).
+
+In general, a spring element may have a stress-free length that is a function of
+time, and it may also have a spring stiffness which is a function of the spring
+deflection (see Section~\ref{s:Spring elements}).
+At a given configuration of the mechanism, the specified stress-free length of
+the spring, $l_0$, is evaluated and subtracted from the actual spring length,
+$l$, to give the actual spring deflection
+%
+\begin{equation}
+\delta \;=\; l({\mf r}) - l_0 (t)
+\end{equation}
+
+In a typical nonlinear case, the spring force is found by integrating the
+stiffness over a change in the deflection.
+For axial springs, the evaluated spring force is transformed to the direction of
+the end supernodes and added into the force vector similar to
+\eqsref{eq:350}{eq:351}.
+
+For joint springs, the force (or torque) is calculated similarly to that of
+axial springs; however, the force is added directly to the involved DOF of the
+load vector without any further transformation.
+
+\subsection{Inertia and damping forces}
+
+Taking into account that
+%
+\begin{eqnarray}
+\Fi_k &=& {\mf M}_k \ddot{\mf r}_k \label{eq:345} \\
+\Fd_k &=& {\mf C}_k  \dot{\mf r}_k \label{eq:346}
+\end{eqnarray}
+%
+the right-hand-side vector defined by \eqnref{eq:328} reduces to
+%
+\begin{equation}
+\Delta\hat\Q_k \;=\;
+\Q_\kp1 + {\mf C}_k{\mf d}_k + {\mf M}_k{\mf a}_k - \Fs_k
+\label{eq:347}
+\end{equation}
+%
+where ${\mf a}_k$ and ${\mf d}_k$ are the \textit{predicted} acceleration and
+velocity, defined by \eqsref{eq:323}{eq:325}, respectively.
+
+For the first iteration within each time increment, the effective inertia
+forces are calculated by replacing $\ddot{\mf r}_k$ with $-{\mf a}_k$
+in \eqnref{eq:345} and $\dot{\mf r}_k$ with $-{\mf d}_k$ in \eqnref{eq:346}.
+To avoid assembling the system mass and damping matrix explicitly,
+the corresponding superelement accelerations and velocities are extracted from
+the system vectors and transformed to the local superelement direction.
+The local superelement mass and damping matrices are then multiplied by the
+corresponding local acceleration and velocity vectors to produce the
+superelement inertia and damping forces, respectively.
+These forces are then transformed to the actual supernode directions and added
+into the system vector (compare with \eqsref{eq:343}{eq:344}).
+
+In general, a damper element has a damping coefficient that is a function of the
+damper velocity (see Section~\ref{s:Damper elements}).
+For a given velocity, the damping coefficient and associated force or
+torque is calculated.
+The force/torque is then added directly to the involved DOF of the load vector
+without any further transformation for joint dampers.
+For axial dampers, the force is transformed in a similar manner as described
+above for the axial springs.
+
+The inertia forces (or torques) from additional masses on specified DOFs of the
+mechanism are calculated by multiplying the DOF acceleration by the magnitude
+of the mass.
+These forces are then added to the corresponding DOFs of the load vector.
+
+\subsection{Forces due to prescribed motion}
+
+Prescribed motions in a mechanism can be imposed by introducing stiff springs
+with a specified stress-free length variation as a function of time,
+as described in Section~\ref{s:Spring elements}.
+This is equivalent to a penalty-enforcement of the motion constraint,
+where the spring stiffness serves as the penalty parameter.
+
+In Fedem, it is also possible of enforce the prescribed motion explicitly,
+by eliminating the DOF that is prescribed from the system of
+\eqsref{eq:326}{eq:NewmarkDispCorr}.
+This is usually more efficient, since the number of unknowns then is reduced,
+and it may also yield a more stable solution process since we don't have to
+deal with penalty parameters.
+It is possible to prescribe motions in joint DOFs or directly on triads.
+
+For a given DOF $n$, we assume that the motion in terms of total displacement
+relative to the initial position is a known function of time, $u_n = u_n(t)$.
+%
+The right-hand-side vector of the equation system~\eqref{eq:326}, given by
+\eqnref{eq:347} above, is then modified as follows
+%
+\begin{equation}
+\eqalign{
+\Delta\hat\Q_k =\; &
+\Q_\kp1 - {\mf N}_k {\bm\delta}_n \Delta u_k +
+{\mf C}_k{\mf d}_k + {\mf M}_k{\mf a}_k - \Fs_k
+}\label{eq:352}
+\end{equation}
+%
+where $\Delta u_k = u_n(t_\kp1) - u_n(t_k)$ is the increment in the prescribed
+motion from the previous time increment, $k$, to the next increment, $k+1$,
+and ${\bm\delta}_n$ is a constant vector with the value 1 at the location
+corresponding to the prescribed DOF $n$, and zero elsewhere.
+The size of the equation system~\eqref{eq:326} is then reduced by 1, by removing
+the $n$'th column and row of the Newton matrix and the right-hand-side vector,
+since this DOF no longer is an unknown.
+
+The equation system of the iterations~\eqref{eq:NewmarkDispCorr} is modified in
+a similar manner, except that there is no additional force term here since the
+iterative correction on the prescribed DOF, $\ls{i}\Delta u_k$, by definition
+always is zero.
+
+One can also use a prescribed velocity or acceleration in the same manner.
+We then use the Newmark integration parameters to derive the equivalent
+prescribed displacement, which then is inserted into \eqnref{eq:352}.
+With a prescribed velocity function $v_n(t)$,
+we find the equivalent displacement increment to impose from \eqnref{eq:324} as
+%
+\begin{equation}
+\Delta u_k \;=\; \frac{\beta h}{\gamma}\left(v_n(t_\kp1) - v_n(t_k)\right) +
+h\,v_n(t_k) + \left(\frac{1}{2}-\frac{\beta}{\gamma}\right)h^2 \ddot{r}_k
+\end{equation}
+%
+Similarly, with a prescribed acceleration function $a_n(t)$,
+we can find an equivalent displacement from \eqnref{eq:322} as
+%
+\begin{equation}
+\Delta u_k \;=\; \beta h^2 \left(a_n(t_\kp1) - a_n(t_k)\right) +
+h\,\dot{r}_k + \frac{h^2}{2}a_n(t_k)
+\end{equation}
+
+
+\clearpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Quasi-static equilibrium}
+\label{s:Quasi-static equilibrium}
+
+Dynamic simulation of mechanism motion should start from an equilibrium position
+to avoid that unbalanced forces in the mechanism from the initial configuration
+cause a false superimposed vibration in the simulation results.
+This can happen when the simulation starts from both a stationary position and
+a position with initial velocities and acceleration.
+Unbalanced forces for the stationary position arise from gravitation forces,
+initially loaded springs and initial external loading, as well as from
+positioning inaccuracies in the mechanism modeling.
+Equilibrium for the initial positions of mechanisms with initial velocities and
+accelerations also includes the unbalanced inertia and damping forces.
+
+The inclusion of possible inertia and damping effects in the initial equilibrium
+iteration justifies the term {\it quasi-static equilibrium} iteration.
+Since the initial velocities and accelerations are either zero or specified,
+their correction in the inertia and damping terms on the left-hand side of the
+iteration \eqnref{eq:NewtonDynEq} cancel out.
+The quasi-static iteration equation therefore reduces to
+%
+\begin{equation}
+\ls{i}{\mf K}_0 \ls{i}\dr_0 \;=\; \ls{i-1}\Q_0 - \left[
+\ls{i-1}\Fi_0 + \ls{i-1}\Fd_0 + \ls{i-1}\Fs_0 \right]
+\label{eq:QSE}
+\end{equation}
+%
+Here, the subindices have been changed to $0$, indicating the initial position.
+In the case of prescribed motion, the first iteration is instead governed by
+%
+\begin{equation}
+{}^1{\mf K}_0 {}^1\dr_0 \;=\; {}^0\Q_0 - \left[
+{}^1{\mf K}_0 {\bm\delta}_n u_n(t_0) + {}^0\Fi_0 + {}^0\Fd_0 + {}^0\Fs_0 \right]
+\end{equation}
+
+If the rigid body mechanism motions all are either constrained by springs---as
+in a car suspension system---or fixed, the stiffness matrix is nonsingular and
+\eqnref{eq:QSE} may be used to iterate for the equilibrium position.
+When mechanism motion is controlled by force input, \eqnref{eq:QSE} may
+be singular and {\it additional boundary conditions} must be introduced
+into the equation to eliminate the rigid body DOFs of the mechanism.
+In this case, extra boundary conditions that are effective for the quasi-static
+equilibrium iterations only, are usually specified for DOFs where the external
+forces are applied.
+This modifies \eqnref{eq:QSE} so that it becomes nonsingular, and the
+iteration can proceed until equilibrium is reached within a specified tolerance.
+
+\clearpage
+\subsection{Equilibrium iteration procedure}
+
+Starting from \eqnref{eq:QSE}, possibly modified by additional boundary
+conditions, the iteration will follow the same algorithm as in the dynamic
+equilibrium iteration described above, with the exception that the stiffness
+matrix ${\mf K}_0$ replaces the Newton matrix from the dynamic case.
+For each iteration the initial position of the mechanism is improved from
+%
+\begin{equation}
+\ls{i}{\mf r}_0 \;=\; \ls{i-1}{\mf r}_0 + \ls{i}\dr_0
+\end{equation}
+%
+The updating of the velocity and acceleration vector in the dynamic iteration
+procedure is omitted in the quasi-static case.
+The stiffness matrix is evaluated in the same way as the Newton matrix described
+in Section~\ref{s:Evaluation of the Newton matrix}.
+All the stiffness terms from superelement matrices and springs are kept,
+while the mass and damping terms from superelement matrices, additional masses,
+and dampers are skipped.
+
+The external force vector $\ls{i-1}\Q_0$ in \eqnref{eq:QSE}
+is evaluated in the same way as in the dynamic case for the initial time.
+The inertia and damping forces, $\ls{i-1}\Fi_0$ and $\ls{i-1}\Fd_0$,
+are evaluated based on constant velocities and accelerations during iteration.
+However, these vectors may also change during iteration due to updated positions
+of the mechanism.
+The stiffness forces $\ls{i-1}\Fs_0$ are evaluated in exactly the same way
+as in the dynamic case.
+
+The iteration based on \eqnref{eq:QSE} is called Newton--Raphson
+iteration, or modified Newton--Raphson if the stiffness matrix is kept constant
+during some or all iterations.
+If the stiffness matrix is kept constant during iteration, the last evaluated
+and triangularized stiffness matrix is kept for new iterations.
+Only the right-hand-side vector of \eqnref{eq:QSE} is then evaluated
+for each iteration, and the increments for improving the mechanism position
+are evaluated through backward substitution.
+When many iterations are necessary, this can save computational effort.
+
+\input{frequency_domain}

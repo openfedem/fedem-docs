@@ -1,0 +1,54 @@
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Addon Reference">
+		<param name="ImageNumber" value="1">
+		</OBJECT>
+	<UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Overview">
+		<param name="Local" value="htm\addons\default.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Beam String Creator">
+		<param name="Local" value="htm\addons\beamstringcreator.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Casing FLS">
+		<param name="Local" value="htm\addons\casingfls.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Hotspot FLS">
+		<param name="Local" value="htm\addons\hotspotfls.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Connect">
+		<param name="Local" value="htm\addons\connect.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Jacket Creator">
+		<param name="Local" value="htm\addons\jacketcreator.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Directional Fatigue Factor">
+		<param name="Local" value="htm\addons\directionalfatiguefactor.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Scatter">
+		<param name="Local" value="htm\addons\scatter.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Soil Creator">
+		<param name="Local" value="htm\addons\soilcreator.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Telescope Joint">
+		<param name="Local" value="htm\addons\telescopejoint.htm">
+		</OBJECT>
+	</UL>

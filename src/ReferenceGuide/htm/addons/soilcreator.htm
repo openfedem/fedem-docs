@@ -1,0 +1,105 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_addons_soilcreator"></a>
+SoilCreator</h1>
+
+<p>SoilCreator is used to apply soil-springs to a beam string based on user-defined p-y, t-z and q-z curves.</p>
+
+<h2>Soil properties</h2>
+<p>In order to generate soil-springs for a beam string you need definitions for either the p-y, t-z, q-z curves, or all of these.<br>
+The <b>"New"</b> button will clear all the current soil-data and let you create a new soil definition. 
+If you load a *.FedemSoil -file with the <b>"Open"</b> button, the tables will be filled with the data contained in that file.<br>
+The <b>"Save"</b> button allows you to save a soil definition complete with all the tables and scale-values, to a file of type ".FedemSoil".
+</p>
+<h3>Soil definition tables</h3>
+<p>In the soil definition tables you can insert and edit the p-y, t-z and q-z curves you need for your soil.<br>
+There is a separate tab for all three curve-types, each containing a table with the curves, and a field for the value used to scale the curves.<br>
+Common for all three curve tables is the depth-column on the left. For p-y and t-z tables, additional rows/depths will be added automatically once you edit the bottom row.
+The q-z table by definition only has one row, representing the bottom of the beam string/soil-pile.<br>
+The columns named "y 1", "z 1" etc. should contain the deflection values for the curve, while "p 1", "t 1", "q 1" etc. should contain the corresponding force values.<br> 
+For all tables you can manually add or remove data-points to the curves by using the <b>"Add data pair"</b> and <b>"Remove data pair"</b> buttons.<br>
+When pasting in data from an external spreadsheet such as Excel, the required rows and data-point columns will automatically be added. For the q-z table no additional rows will be added.<br>
+The button <b>"Paste from clipboard"</b> fills the table with data from the clipboard, starting from the top-left cell.<br>
+All tables support copy, paste and delete operations through "ctrl-c", "ctrl-v" and "del" respectively.<br>
+When clicking on a cell in a row, the graph-view below the table will display the curve corresponding to the active row.<br>
+</p>
+
+<h2>Generate soil-springs in FEDEM</h2>
+<h3>Top triad</h3>
+<p>The top triad is the triad the SoilCreator use as a starting point for traversing and finding all other triads in the beam string. 
+You define this triad by selecting a triad in FEDEM, and then clicking the <b>"Use selected"</b> button.
+If a triad has been selected in FEDEM prior to opening the SoilCreator add-on, the <b>"Selected triad"</b> field should be pointing to this triad.<br>
+</p>
+
+<h3>Mudline level</h3>
+<p>
+The <b>"Mudline level"</b> field sets the upper level for where soil-springs should be applied as an offset along the z-axis from global origo.
+All depths in the soil definition tables are used relative to this position.
+<br>
+Example: With a mudline level set to -5, a beam string stretching from z=10 to z=-100 would only get soil-springs on the triads between z=-5 and z=-100, with p-y curves with depth 0 applied to the triad at z=-5 etc.
+</p>
+
+<h3>Spring inter-connectivity</h3>
+<p>
+The <b>Spring inter-connectivity"</b> check-box determines whether or not the soil-springs for x and y -translation should be interconnected. By default this property is toggled on.
+</p>
+
+<h3>Generate soil springs</h3>
+<p>
+When all properties are set and a top-triad has been selected, you are ready to generate the actual soil-springs in your FEDEM-model by clicking the <b>"Generate soil springs"</b> button.
+If the selected top-triad is valid, the message "Generating soil. Don't close window ..." will appear in the status-bar. Please do not close the SoilCreator-app before the message "Soil generation complete!" is visible.<br>
+A subassembly with the description given in the SoilCreators <b>"Description"</b> field, should be generated in FEDEM, containing the generated free-joints, master-triads and functions for spring characteristics. 
+If you need to remove the generated soil, deleting the subassembly should be sufficient.
+</p>
+
+<h2>Restrictions</h2>
+<ul>
+<li>The beam string to be traversed must be strictly descending.</li>
+<li>The beam string to be traversed can't branch off.</li>
+<li>The triad selected as starting point for traversal does not have to be the first triad in the beam string, but must be above or at the mudline.</li>
+<li>The generated joints used for the soil-springs, will have the master triad connected to earth (fixed), and the slave triad will be the beam-triad. 
+If the beam string to be used is paired with another beam string, or its triads are connected to joints in some other way, the beam triads will have to be the master triads in this relationship.</li>
+</ul>
+
+<h2>How soil-spring creation works</h2>
+<p>First the program will traverse the beam-string in the downward direction(negative z), and create a list of all the triads in the beam string.</p>
+<p>For each triad in the beam string that lies below the specified mudline:</p>
+<ul>
+   <li><b>Find the p-y or t-z curves above and below (or at) the triad.</b></li>
+   <li><b>Create a re-sampling of the p-y or t-z curve furthest away from the triad</b>, using the y-values on the curve closest to the triad. Linear interpolation is used for the re-sampling.</li>
+   <li><b>Calculate the effective p- or t-values at the triad's position</b> using a linear interpolation of the curve above and below it, and scale it with the combined length of half the beam above the triad, and half the beam below the triad.<br>
+   <ul>
+            <li><b>For the top triad</b> (the first triad on the beam-string below the mudline), half the length of the beam below the triad is used for scaling, and if available the part of the beam above it that lies under the mudline.</li>
+            <li><b>For the bottom triad</b>, half the length of the beam above it is used for scaling</li>
+   </ul>
+   </li>
+   <li><b>Create a joint at the triad and add springs</b> for translation in x- and y-direction for p-y curves and in the z-direction for t-z curves using the new curve found in the steps above, and if specified a scale-function.<br>
+   <ul>
+            <li><b>Set the inter-connectivity</b> between the x- and y-direction if chosen by the user.</li>
+            <li><b>Add q-z spring for the bottom triad/joint</b> in the z-direction using the specified q-z curve if one is available. If a spring is already present from a t-z curve this will be replaced.</li>
+   </ul>
+   </li>
+  </ul>
+
+</body>
+</html>

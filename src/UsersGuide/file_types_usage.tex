@@ -1,0 +1,235 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM User Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\Ext#1{\File{.#1}}
+
+\Chapter{File Types and Usage}{file-types-and-usage}
+
+This appendix describes the file types used by Fedem
+and explains which program module use which files.
+
+Sections in this appendix address the following topics:
+
+\begin{itemize}
+\item
+  \protect\hyperlink{file-types}{File types}
+\item
+  \protect\hyperlink{file-usage-for-each-program-module}
+                    {File usage for each program module}
+\end{itemize}
+
+\clearpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Section{File types}{file-types}
+
+Fedem uses three main types of files: input, intermediate, and results files.
+Fedem files have an ASCII text or Binary (platform-independent) format,
+a common tag syntax, and use intuitive naming conventions.
+
+
+\SubSection{Input files}{input-files}
+
+Fedem uses several types of input files to import FE models,
+existing mechanism models, and simulation data as listed in the following table.
+
+\begin{table}[h]
+  \footnotesize
+  \begin{tabular}{| m{6mm} |>\raggedright m{4cm} | m{4cm} | m{1cm} |}
+    \hline
+    Ext. & File description & Content & Format \\ \hline\hline
+    \Ext{fmm} & Fedem Mechanism Model file & Mechanism Model and Graph/ Animation description & ASCII \\ \hline
+    \Ext{ftl} & Fedem Technology Link file & FE model data & ASCII \\ \hline
+    \Ext{ftc} & Fedem Technology Cad file & Cad geometry data & ASCII \\ \hline
+    \Ext{bdf} & Nastran Bulk Data File & FE model data & ASCII \\
+    \Ext{nas} &                        &               &       \\ \hline
+    \Ext{FEM} & SESAM Input Interface & File FE model data & ASCII \\ \hline
+    \Ext{flm} & Fedem Link Model (used by previous Fedem versions) & FE model data & ASCII \\ \hline
+    \Ext{dac} & nCode DAC file & Time history data & Binary \\ \hline
+    \Ext{asc} & ASCII text file & Time history data & ASCII \\
+    \Ext{txt} &                 & (xy-paired coordinates) & \\ \hline
+    \Ext{rsp} &              &                   &        \\
+    \Ext{drv} & MTS RPC file & Time history data & Binary \\
+    \Ext{tim} &              &                   &        \\ \hline
+    \Ext{tpf} & TNO Tire file & Tire model description & ASCII \\ \hline
+    \Ext{tir} & COSIN Tire file & Tire model description & ASCII \\ \hline
+    \Ext{rdf} & Road property file & Road description & ASCII \\ \hline
+  \end{tabular}
+\end{table}
+
+
+\SubSection{Intermediate files}{intermediate-files}
+
+Fedem uses the following intermediate files to store analysis options and
+simulation data from the analyses.
+
+% table with footnote below the table
+\vskip\parskip
+\begin{threeparttable}[h]
+  \footnotesize
+  \begin{tabular}{| m{6mm} | m{6cm} | m{1cm} |}
+    \hline
+    Ext. & File description & Format \\ \hline\hline
+    \Ext{fsi} & Fedem Solver Input file & ASCII \\ \hline
+    \Ext{fco} & Fedem Calculation Options file\tnote{1} & ASCII \\ \hline
+    \Ext{fop} & Fedem Output Options file\tnote{2} & ASCII \\ \hline
+    \Ext{fao} & Fedem Additional Options file & ASCII \\ \hline
+    \Ext{fsm} & Fedem SAM data file & Binary \\ \hline
+    \Ext{fmx} & Fedem Matrix file & Binary \\ \hline
+  \end{tabular}
+  \begin{tablenotes}
+    \item[1]{Changes to files of this type affect the calculated response.}
+    \item[2]{Changes to files of this type do not affect the calculated response, only the amount of output.}
+  \end{tablenotes}
+\end{threeparttable}
+
+
+\SubSection{Results files}{results-files}
+
+The following table lists the results file types.
+
+\begin{table}[h]
+  \footnotesize
+  \begin{tabular}{| m{6mm} | m{6cm} | m{1cm} |}
+    \hline
+    Ext. & File description & Format \\ \hline\hline
+    \Ext{frs} & Fedem results database file & Binary \\ \hline
+    \Ext{res} & Fedem results output file & ASCII \\ \hline
+  \end{tabular}
+\end{table}
+
+
+\SubSection{Other files}{other-files}
+
+The following table lists all other file types used by Fedem.
+
+\begin{table}[h]
+  \footnotesize
+  \begin{tabular}{| m{6mm} | m{6cm} | m{1cm} |}
+    \hline
+    Ext. & File description & Format \\ \hline\hline
+    \Ext{fcd} & Fedem unit conversion file & ASCII \\ \hline
+    \Ext{fsn} & Fedem S-N curves file & ASCII \\ \hline
+  \end{tabular}
+\end{table}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Section{File usage for each program module}{file-usage-for-each-program-module}
+
+The table below is an overview of Fedem file usage.
+
+\vskip\baselineskip
+\begin{flushleft}
+  \footnotesize
+  \begin{tabular}{|>\raggedright p{0.17\textwidth} | p{0.42\textwidth} | p{0.3\textwidth}|}
+    \hline
+    \rowcolor[HTML]{EFEFEF}
+    Fedem application & Uses these file types & Creates these file types \\ \hline\hline
+    User Interface &
+    FE data files (\Ext{ftl}, \Ext{nas}, \Ext{bdf}, \newline
+    \Ext{FEM}, \Ext{flm}) \newline
+    CAD geometry files (\Ext{wrl}, \Ext{ftc}) \newline
+    Time history data files (\Ext{asc}, \Ext{txt}, \Ext{dac},
+    \Ext{rsp}, \Ext{drv}, \Ext{tim}) -- optional \newline
+    Tire data files (\Ext{tpf}, \Ext{tir}) -- optional \newline
+    Unit conversion file (\Ext{fcd}) -- optional \newline
+    Fedem results files (\Ext{frs}) \newline
+    S-N curve definition file (\Ext{fsn}) &
+    Model file (\Ext{fmm}) \newline
+    FE data files (\Ext{ftl}) \newline
+    CAD geometry files (\Ext{ftc}) \newline
+    Solver input files (\Ext{fsi}) \newline
+    Solver control files (\Ext{fco}, \Ext{fop}, \Ext{fao}) \\ \hline
+
+    Fedem Reducer (FE model reduction) &
+    FE data file (\Ext{ftl}) \newline
+    Solver control files (\Ext{fco}, \Ext{fop}, \Ext{fao}) &
+    Matrix files (stiffness, mass, gravitation, loads, recovery)
+    (\Ext{fmx}) \newline
+    Data structure file (\Ext{fsm}) \newline
+    Result files (\Ext{frs}) \newline
+    ASCII results (\Ext{res}) \\ \hline
+  \end{tabular}
+\end{flushleft}
+
+\begin{flushleft}
+  \footnotesize
+  \begin{tabular}{|>\raggedright p{0.17\textwidth}| p{0.42\textwidth}| p{0.3\textwidth}|}
+    \hline
+    \rowcolor[HTML]{EFEFEF}
+    Fedem application & Use these file types & Create these file types \\ \hline\hline
+    Fedem Solver (dynamics solver) &
+    Solver input file (\Ext{fsi}) \newline
+    Solver control files (\Ext{fco}, \Ext{fop}, \Ext{fao}) \newline
+    Matrix files (stiffness, mass, \newline gravitation, loads) (\Ext{fmx}) \newline
+    Time history data files (\Ext{asc}, \Ext{txt}, \Ext{dac}, \Ext{rsp}, \Ext{drv}, \Ext{tim}) -- optional \newline
+    Tire description files (\Ext{tpf}, \Ext{tir}) \newline -- optional \newline
+    Road description files (\Ext{rdf}) -- optional \newline
+    CAD geometry files (\Ext{ftc}) -- optional \newline
+    Solver result files (\Ext{frs}) -- optional, \newline in case of restart &
+    Fedem results files (time history response, frequency response) (\Ext{frs}) \newline
+    ASCII results (\Ext{res}) \\ \hline
+
+    Fedem Stress (stress recovery) &
+    Solver input file (\Ext{fsi}) \newline
+    Solver control files (\Ext{fco}, \Ext{fop}, \Ext{fao}) \newline
+    Matrix files (for recovery) (\Ext{fmx}) \newline
+    Data structure file (\Ext{fsm}) \newline
+    FE data file (\Ext{ftl}) \newline
+    Solver result files (\Ext{frs}) &
+    Result files (\Ext{frs}) \newline
+    ASCII results (\Ext{res}) \\ \hline
+
+    Fedem Modes (eigenmode recovery) &
+    Solver input file (\Ext{fsi}) \newline
+    Solver control files (\Ext{fco}, \Ext{fop}, \Ext{fao}) \newline
+    Matrix files (for recovery) (\Ext{fmx}) \newline
+    Data structure file (\Ext{fsm}) \newline
+    FE data file (\Ext{ftl}) \newline
+    Solver result files (\Ext{frs}) &
+    Result files (\Ext{frs}) \newline
+    ASCII results (\Ext{res}) \\ \hline
+
+    Fedem Gage (strain rosette recovery) &
+    Solver input files (\Ext{fsi}) \newline
+    Solver control files (\Ext{fco}, \Ext{fop}, \Ext{fao}) \newline
+    Rosette input files (\Ext{ros}, \Ext{dat}) \newline
+    Matrix files (for recovery) (\Ext{fmx}) \newline
+    Data structure file (\Ext{fsm}) \newline
+    FE data file (\Ext{ftl}) \newline
+    Solver results files (\Ext{frs}) &
+    Result files (\Ext{frs}) \newline
+    ASCII results (\Ext{res}, \Ext{asc}) \newline
+    DAC time history files \newline (\Ext{dac}) \\ \hline
+
+    Fedem FPP (strain coat recovery) &
+    Solver input file (\Ext{fsi}) \newline
+    Solver control files (\Ext{fco}, \Ext{fop}, \Ext{fao}) \newline
+    Matrix files (for recovery) (\Ext{fmx}) \newline
+    Data structure file (\Ext{fsm}) \newline
+    FE data file (\Ext{ftl}) \newline
+    Solver result files (\Ext{frs}) \newline
+    S-N curve file (\Ext{fsn}) -- optional &
+    Result files (\Ext{frs}) \newline
+    ASCII results (\Ext{res}) \\ \hline
+
+    \hskip-1mm{\scriptsize Fedem GraphExp}\newline (curve export\newline utility) &
+    Solver control files (\Ext{fco}, \Ext{fop}, \Ext{fao}) \newline
+    Model file (\Ext{fmm}) \newline
+    Results files (\Ext{frs}) &
+    RPC time history data file (\Ext{rsp}) \newline
+    DAC time history files (\Ext{dac}) \newline
+    ASCII time history data files (\Ext{asc}) \\ \hline
+  \end{tabular}
+\end{flushleft}

@@ -1,0 +1,1220 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM User Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\Chapter{Command line options}{appendix-command-line-options}
+
+Each of the Fedem programs may be run manually from a console window or using
+the \textbf{Run} option from the {\sf Start} menu in Windows.
+To facilitate such batch-execution of the programs,
+the complete list of command-line options for each solver module is
+given in this appendix. Any of these options may also be specified in
+the Additional Solver Options dialog box (see
+\refSection{additional-solver-options}{Additional solver options}).
+
+The command-line options may contain both upper case and lower case letters.
+However, the interpretation of the options is case insensitive.
+For options accepting a numerical (or text string) value, a '='
+character may optionally be added between the option and its value.
+Thus, all the following option specifications are equivalent:
+
+{\tt
+-myOption 1.0 \\[\parskip]
+-myoption 1.0 \\[\parskip]
+-MYOPTION 1.0 \\[\parskip]
+-myOption=1.0}
+
+If you mis-spell or specify a non-existing option, the option is ignored.
+A warning for each unrecognized option is the printed to the console window,
+or in the \protect\hyperlink{output-list}{\sl Output List}
+if executed through the user interface.
+
+Sections in this appendix address the following topics:
+
+\begin{itemize}
+\item
+  \protect\hyperlink{fedem-gui-options}
+                    {Fedem GUI options}
+\item
+  \protect\hyperlink{reducer-options}
+                    {Reducer options (fedem\_reducer)}
+\item
+  \protect\hyperlink{solver-options}
+                    {Dynamics solver options (fedem\_solver)}
+\item
+  \protect\hyperlink{stress-options}
+                    {Stress recovery options (fedem\_stress)}
+\item
+  \protect\hyperlink{mode-options}
+                    {Mode shape recovery options (fedem\_modes)}
+\item
+  \protect\hyperlink{gage-options}
+                    {Strain rosette recovery options (fedem\_gage)}
+\item
+  \protect\hyperlink{strain-coat-options}
+                    {Strain coat recovery options (fedem\_fpp)}
+\item
+  \protect\hyperlink{curve-export-options}
+                    {Curve export options (fedem\_graphexp)}
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Section{Fedem GUI options}{fedem-gui-options}
+
+\noindent
+\begin{threeparttable}[b]
+\footnotesize
+\begin{tabular}{|>{\raggedright} p{0.23\linewidth}| p{0.48\linewidth}| p{0.18\linewidth}|}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  \rule{0pt}{15pt}Cmd-line option & Description & Default \\
+  \hline\hline
+  {\tt-checkRDBinterval} & Time [ms] between each RDB check/update during solve & 500 \\
+  \hline
+  \texttt{-console} &  Enable console window  &   \texttt{- (false)} \\
+  \hline
+  \texttt{-debug} & Run in debug mode  &   \texttt{- (false)} \\
+  \hline
+  \texttt{-events}  &   Simulation event definition file  & \\
+  \hline
+  \texttt{-exportAnimations}  &   Auto-export toggled animations to VTF on batch solve & \texttt{- (false)} \\
+  \hline
+  \texttt{-exportCurves}  &   Auto-export curves on batch solve.\newline
+                              Specifies folder to export curve files into. & \\
+  \hline
+  \texttt{-f\tnote{1}}  &   Model file to open & \texttt{untitled.fmm} \\
+  \hline
+  \texttt{-help}  &   Display this help and exit & \texttt{- (false)} \\
+  \hline
+  \texttt{-logFile}  &   Write all Output List contents to log-file.\newline
+                         Log-file name: <modelFilePrefix>.log         & \texttt{+ (true)} \\
+  \hline
+  \texttt{-noFEData}  &   Load model file without FE-Models and FE-Results info. Use together with -f & \texttt{- (false)} \\
+  \hline
+  \texttt{-plotElements}  &   Enable plotting of element results & \texttt{- (false)} \\
+  \hline
+  \texttt{-plotNodes}  &   Enable plotting of nodal results & \texttt{- (false)} \\
+  \hline
+  \texttt{-prepareBatch}  &   Prepare for batch execution. This option can have the following arguments:\newline
+                              all = all solvers\newline
+                              reducer = reduction of all parts\newline
+                              dynamics = dynamics solver\newline
+                              stress = stress recovery for in parts\newline
+                              modes = mode shape recovery in all parts\newline
+                              straingage = strain gage recovery in all parts\newline
+                              straincoat = strain coat recovery in all parts   & \\
+  \hline
+  \texttt{-purgeOnSave}  &   Purge inactive mechanism objects on Save & \texttt{- (false)} \\
+  \hline
+  \texttt{-solve}  &   Start given solver(s) in batch mode. This option can have the following arguments:\newline
+                       all = all solvers\newline
+                       events = all solvers on all events\newline
+                       reducer = reduction of all parts\newline
+                       dynamics = dynamics solver\newline
+                       stress = stress recovery in all parts\newline
+                       modes = mode shape recovery in all parts\newline
+                       straingage = strain gage recovery in all parts\newline
+                       straincoat = strain coat recovery in all parts    & \\
+  \hline
+  \texttt{-timerange}  &  Time specification for batch stress recovery.
+                          Format: [startTime,stopTime(,timeInc)].\newline
+                          timeInc is optional            &  \\
+  \hline
+  \texttt{-version} &  Display program version and exit  &   \texttt{- (false)} \\
+  \hline
+\end{tabular}
+  \vspace{0.3cm}
+  \begin{tablenotes}
+    \item[1]
+      The {\tt-f (modelfile)} option can also be specified without the {\tt-f}
+      flag if no other options are needed, i.e., the command
+      {\tt fedem mymodel.fmm} is equivalent to {\tt fedem -f mymodel.fmm}.
+  \end{tablenotes}
+\end{threeparttable}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Section{Reducer options (fedem\_reducer)}{reducer-options}
+
+\noindent{\footnotesize
+\begin{tabular}{|>{\raggedright} p{0.23\linewidth}| p{0.48\linewidth}| p{0.18\linewidth}|}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  \rule{0pt}{15pt}Cmd-line option & Description & Default  \\
+  \hline\hline
+
+  \texttt{-autoMassScale} &  Scale factor for auto-added masses & \texttt{1e-009}   \\
+  \hline
+  \texttt{-autoStiffMethod} &   Method for automatic stiffness computations
+                                in auto-added springs\newline
+                                = 1: k = Min(diag(K)) * 0.1/$<$tolFactorize$>$\newline
+                                = 2: k = Mean(diag(K)) * $<$autoStiffScale$>$\newline
+                                = 3: k = Max(diag(K)) * $<$autoStiffScale$>$   & \texttt{3}   \\
+  \hline
+  \texttt{-autoStiffScale} &    Scale factor for auto-added springs & \texttt{100}  \\
+  \hline
+  \texttt{-Bmatfile} &  Name of B-matrix file &  \\
+  \hline
+  \texttt{-Bmatprecision} &  Storage precision of the B-matrix on disk\newline
+                             = 1: Single precision\newline
+                             = 2: Double precision & \texttt{2}  \\
+  \hline
+  \texttt{-Bramsize} &  In-core size (MB) of displacement recovery matrix
+                        $\le 0$: Store full matrix in core & \texttt{-1}  \\
+  \hline
+  \texttt{-bufsize\_rigid} &  Buffer size (in DP-words) per rigid element
+                              $\le 0$: Use conservative estimate computed internally & \texttt{0}  \\
+  \hline
+  \texttt{-cachesize} &  Cache size (KB) to be used by the SPR
+                         solver. Applies to the stiffness matrix only
+                         when lumped mass is used. & \texttt{0}  \\
+  \hline
+  \texttt{-consolemsg} &  Output error messages to console & \texttt{- (false)}  \\
+  \hline
+  \texttt{-cwd} &  Change working directory &   \\
+  \hline
+  \texttt{-datacheck} &  Do data check only (exiting after data input) & \texttt{- (false)}  \\
+  \hline
+  \texttt{-debug} &  Debug print switch & \texttt{0}  \\
+  \hline
+  \texttt{-denseSolver} &  Use LAPACK dense matrix equation solver & \texttt{- (false)}  \\
+  \hline
+  \texttt{-dispfile} &  Name of displacement vector file &   \\ \hline
+  \texttt{-drillingStiff} &  Fictitious drilling DOF stiffness & \texttt{1e-006}  \\
+  \hline
+  \texttt{-eigenshift} &  Shift value for eigenvalue analysis (target
+                          frequency for generalized DOFs) & \texttt{0}  \\
+  \hline
+  \texttt{-eigfile} &  Name of eigenvector file &   \\
+  \hline
+  \texttt{-extNodes} &  List of external nodes to use in the reduction
+                       (in addition to the nodes specified in the FE data file &   \\
+  \hline
+  \texttt{-factorMass} &  Factorize mass matrix in the eigensolver & \texttt{- (false)}  \\
+  \hline
+  \texttt{-fao} &  Read additional options from this file &   \\
+  \hline
+  \texttt{-fco} &  Read calculation options from this file &  \\
+  \hline
+  \texttt{-fop} &  Read output options from this file &   \\
+  \hline
+  \texttt{-frsfile} &   Name of results database file for mode shapes &   \\
+  \hline
+  \texttt{-ftlout} &   Name of part output file in FTL-format  &   \\
+  \hline
+  \texttt{-gravfile} &   Name of gravity force vector file  &   \\
+  \hline
+  \texttt{-help} &   Print out this help text  & \texttt{- (false)}  \\
+  \hline
+  {\tt-linkId} & Part base-ID number & 1 \\
+  \hline
+  {\tt-linkfile} & Name of FE data file (must be specified) & \\
+  \hline
+  {\tt-loadfile} & Name of load vector file & \\
+  \hline
+  {\tt-lumpedmass} & Use lumped element mass matrices & {\tt- (false)}  \\
+  \hline
+  {\tt-massfile} & Name of mass matrix file & \\
+  \hline
+\end{tabular}}
+
+\clearpage
+
+%%% increasing row width for header line with \rule
+\noindent{\footnotesize
+\begin{tabular}{|>{\raggedright} p{0.23\linewidth}| p{0.48\linewidth}| p{0.18\linewidth}|}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  \rule{0pt}{15pt}Cmd-line option & Description & Default  \\
+  \hline\hline
+  \texttt{-neval} &   Number of eigenvalues/eigenvectors to compute   & \texttt{0}  \\
+  \hline
+  \texttt{-nevred} &   Number of eigenvalues to compute for reduced system & \texttt{12}  \\
+  \hline
+  \texttt{-ngen} &   Number of generalized modes   &  \texttt{0}  \\
+  \hline
+  \texttt{-nograv} &   Skip gravity force calculation and mass matrix reduction    & \texttt{ - (false)}  \\
+  \hline
+  \texttt{-nomass} &   Skip mass matrix reduction    &  \texttt{- (false)}  \\
+  \hline
+  \texttt{-printArray} &   Additional debug print switch for certain arrays    &  \texttt{0}  \\
+  \hline
+  \texttt{-rdbinc} &   Increment number for the results database files    &  \texttt{1}  \\
+  \hline
+  \texttt{-resfile} &   Name of result output file   &  \\
+  \hline
+  \texttt{-samfile} &   Name of SAM data file   &   \\
+  \hline
+  \texttt{-singularityHandler} &   Option on how to treat singular matrices\newline
+                                   = 0: Abort on all occurring singularities\newline
+                                   = 1: Suppress true zero pivots, abort on reduced-to-zero pivots\newline
+                                   > 1: Suppress all occurring singularities of any kind    &  \texttt{1}  \\
+  \hline
+  \texttt{-skylinesolver} &   Use the skyline equation solver    &  \texttt{- (false)}  \\
+  \hline
+  \texttt{-stiffile}     &   Name of stiffness matrix file  & \\
+  \hline
+  \texttt{-terminal}     &   File unit number for terminal output    &  \texttt{6}  \\
+  \hline
+  \texttt{-tolEigval}    &   Max acceptable relative error in eigenvalues    &  \texttt{1e-008}  \\
+  \hline
+  \texttt{-tolFactorize} &   Equation solver singularity criterion (smaller values are less restrictive).
+                             The lowest value allowed is 1e-020.    &  \texttt{1e-012}  \\
+  \hline
+  \texttt{-tolWAVGM} &   Geometric tolerance for WAVGM elements    &  \texttt{0.0001}  \\
+  \hline
+  \texttt{-version} &   Print out program version   &   \texttt{- (false)}  \\
+  \hline
+\end{tabular}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Section{Dynamics solver options (fedem\_solver)}{solver-options}
+
+\noindent{\footnotesize
+\begin{tabular}{|>{\raggedright} p{0.23\linewidth}| p{0.48\linewidth}| p{0.18\linewidth}|}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  \rule{0pt}{15pt}Cmd-line option & Description & Default  \\
+  \hline\hline
+  \texttt{-addBC\_eigensolver} &   Use additional BCs on eigensolver   &      \texttt{- (false)}  \\
+  \hline
+  \texttt{-allAccVars} &   Output all acceleration variables   &      \texttt{- (false)}  \\
+  \hline
+  {\tt-allAlgorVars} & Output all algorithm variables & {\tt- (false)} \\
+  \hline
+  \texttt{-allBeamForces} &   Output all beam sectional forces   &      \texttt{- (false)}  \\
+  \hline
+  \texttt{-allCGVars}  &   Output all centre of gravity variables   &      \texttt{- (false)}  \\
+  \hline
+  \texttt{-allControlVars} &   Output all control variables   &      \texttt{- (false)}  \\
+  \hline
+  \texttt{-allDampCoeff} &   Output all damper coefficients   &      \texttt{- (false)}  \\
+  \hline
+  \texttt{-allDamperVars} &   Output all damper variables   &      \texttt{- (false)}  \\
+  \hline
+  \texttt{-allDefVars} &   Output all deflection variables   &      \texttt{- (false)}  \\
+  \hline
+  \texttt{-allEnergyVars} &   Output all energy quantities   &      \texttt{- (false)}  \\
+  \hline
+  \texttt{-allEngineVars} &   Output all engine values   &      \texttt{- (false)}  \\
+  \hline
+  \texttt{-allForceVars} &   Output all force variables   &      \texttt{- (false)}  \\
+  \hline
+  \texttt{-allFrictionVars} &   Output all friction variables   &      \texttt{- (false)}  \\
+  \hline
+  \texttt{-allGages} &   Output all strain gages   &      \texttt{- (false)}  \\
+  \hline
+  \texttt{-allGenDOFVars} &   Output all generalized DOF variables   &      \texttt{- (false)}  \\
+  \hline
+  \texttt{-allHDVars} &   Output all hydrodynamics variables   &      \texttt{- (false)}  \\
+  \hline
+  \texttt{-allJointVars} &   Output all joint variables   &      \texttt{- (false)}  \\
+  \hline
+  \texttt{-allLengthVars} &   Output all length variables   &      \texttt{- (false)}  \\
+  \hline
+  \texttt{-allLoadVars} &   Output all external load variables   &      \texttt{- (false)}  \\
+  \hline
+  \texttt{-allPrimaryVars} &   Output all primary variables   &    \texttt{+ (true)}  \\
+  \hline
+  \texttt{-allRestartVars} &   Output all variables needed for restart   &       \texttt{- (false)}  \\
+  \hline
+  \texttt{-allSecondaryVars} &   Output all secondary variables   &       \texttt{- (false)}  \\
+  \hline
+  \texttt{-allSpringVars} &   Output all spring variables   &       \texttt{- (false)}  \\
+  \hline
+  \texttt{-allStiffVars} &   Output all spring stiffnesses   &       \texttt{- (false)}  \\
+  \hline
+  \texttt{-allSupelVars} &   Output all superelement variables   &       \texttt{- (false)}  \\
+  \hline
+  \texttt{-allSystemVars} &   Output all system variables   &       \texttt{- (false)}  \\
+  \hline
+  \texttt{-allTireVars} &   Output all tire variables   &       \texttt{- (false)}  \\
+  \hline
+  \texttt{-allTriadVars} &   Output all triad variables   &       \texttt{- (false)}  \\
+  \hline
+  \texttt{-allVelVars} &   Output all velocity variables   &       \texttt{- (false)}  \\
+  \hline
+  \texttt{-alphaNewmark} &   Time integration parameters   &     \texttt{0.1}  \\
+  \hline
+  \texttt{-alpha1} &   Global mass-proportional damping factor   &     \texttt{0.0}  \\
+  \hline
+  \texttt{-alpha2} &   Global stiffness-proportional damping factor   &     \texttt{0.0}  \\
+  \hline
+  \texttt{-autoTimeStep} &   Time stepping procedure\newline
+                             = 0: Fixed time step size\newline
+                             = 1: Automatically computed time step size   &     \texttt{0}  \\
+  \hline
+  \texttt{-Bramsize} &   In-core size (MB) of the displacement recovery matrix\newline
+                        $< 0$: Use the same as in the reducer\newline
+                        $= 0$: Store full matrix in core   &  \texttt{-1}  \\
+  \hline
+  {\tt-centripForceCorr} & Use centripetal force correction & {\tt- (false)} \\
+  \hline
+  {\tt-consolemsg} & Output error messages to console & {\tt- (false)} \\
+  \hline
+\end{tabular}}
+
+% second solver page
+\clearpage
+\noindent{\footnotesize
+\begin{tabular}{|>{\raggedright} p{0.23\linewidth}| p{0.48\linewidth}| p{0.18\linewidth}|}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  \rule{0pt}{15pt}Cmd-line option & Description & Default  \\
+  \hline\hline
+
+  \texttt{-ctrlTol} &    Control system tolerance parameters       &            \\
+                    &    (1)=Absolute iteration tolerance           &    \texttt{0.002}   \\
+                    &    (2)=Relative iteration tolerance           &    \texttt{0.002}   \\
+                    &    (3)=Accuracy parameter                     &    \texttt{0.5}     \\
+                    &    (4)=Relative perturbation for numerical    &    \texttt{1e-005}  \\
+                    &    Jacobian computation                       &            \\
+  \hline
+  \texttt{-ctrlfile} &   Name of control system database file    &   \texttt{ctrl.frs}  \\
+  \hline
+  \texttt{-curveFile} &   Name of curve definition file          &   \texttt{\scriptsize{response.bak.fmm}}  \\
+  \hline
+  \texttt{-curvePlotFile} &   Name of curve export output file  &   \\
+  \hline
+  \texttt{-curvePlotPrec} &   Output precision for exported curve data files & \texttt{0}  \\
+                          &    = 0 : half precision (int*2)    &       \\
+                          &    = 1 : single precision (real*4)    &              \\
+                          &    = 2 : double precision (real*8)   &               \\
+  \hline
+  \texttt{-curvePlotType} &    Format of curve export output file    &   \texttt{0} \\
+                          &    = 0 : ASCII (separate file for each curve)     &      \\
+                          &    = 1 : DAC, Windows (separate file for each curve) &   \\
+                          &    = 2 : DAC, UNIX (separate file for each curve)    &   \\
+                          &    = 3 : RPC, Windows (all curves in one file)       &   \\
+                          &    = 4 : RPC, UNIX (all curves in one file)          &    \\
+                          &    = 5 : ASCII (all curves in one file)              &   \\
+  \hline
+  \texttt{-cutbackFactor} &    Time step reduction factor in cut-back    &   \texttt{1}  \\
+  \hline
+  \texttt{-cutbackNegPiv} &    Try cut-back when detecting negative pivots    &   \texttt{100}  \\
+  \hline
+  \texttt{-cutbackSing} &      Try cut-back when detecting singularities  &   \texttt{- (false)}  \\
+  \hline
+  \texttt{-cutbackSteps} &     Number of cut-back steps   &   \texttt{0}  \\
+  \hline
+  \texttt{-cwd} &    Change working directory  &    \\
+  \hline
+  {\tt-damped} & Solve the damped eigenproblem using LAPACK & {\tt- (false)} \\
+  \hline
+  \texttt{-debug} &    Debug print switch  & \texttt{0}  \\
+  \hline
+  \texttt{-delayBuffer} &    Initial buffer size for delay elements  & \texttt{1000}  \\
+  \hline
+  \texttt{-densesolver} &    Use LAPACK dense matrix equation solver  &   \texttt{- (false)}  \\
+  \hline
+  \texttt{-diffraction} &    Target number of diffraction panels &  0  \\
+  \hline
+  \texttt{-displacementfile} &    Name of file with boundary displacements &   \\
+  \hline
+  \texttt{-double1} &    Save primary variables in double precision  & \texttt{+ (true) } \\
+  \hline
+  \texttt{-double2} &    Save secondary variables in double precision &   \texttt{- (false)}  \\
+  \hline
+  \texttt{-effModalMass}  &    Compute the effective mass for each mode  & \texttt{- (false)}  \\
+  \hline
+ \texttt{-eigenshift}  &     Shift value for vibration eigenvalue analysis
+                              (negative value captures zero frequency modes)   & \texttt{0}  \\
+  \hline
+  \texttt{-eiginc}  &     Time between each eigenvalue analysis  & 0  \\
+  \texttt{-externalfuncfile}  &     Name of external function value file &   \\
+  \hline
+  \texttt{-factorMass\_}  &   Factor mass matrix in eigensolver   & \texttt{- (false)} \\
+  \texttt{ eigensolver}   &                                       &                    \\
+  \hline
+  \texttt{-fao}  &     Read additional options from this file &   \\
+  \hline
+  \texttt{-fco}  &     Read calculation options from this file &   \\
+  \hline
+\end{tabular}}
+
+% third solver page
+\clearpage
+\noindent{\footnotesize
+\begin{tabular}{|>{\raggedright} p{0.23\linewidth}| p{0.48\linewidth}| p{0.18\linewidth}|}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  \rule{0pt}{15pt}Cmd-line option & Description & Default  \\
+  \hline\hline
+  \texttt{-flushinc}  &     Time between each database file flush\newline
+                            $<$ 0.0: Don't flush results database (OS decides)\newline
+                            $=$ 0.0: Flush at each time step, no external buffers\newline
+                            $>$ 0.0: Flush at specified time interval, use external buffers   &  0  \\
+  \hline
+  \texttt{-fop}  &     Read output options from this file & \\
+  \hline
+  \texttt{-frequency\_domain}  &     Switch for frequency domain solution   &    \texttt{- (false)}  \\
+  \hline
+  \texttt{-freqfile}  &     Name of frequency response database file  &  \\
+  \hline
+  \texttt{-frs1file}  &     Name of primary response database file   &  \texttt{th\_p.frs}  \\
+  \hline
+  \texttt{-frs2file}  &     Name of secondary response database file   &  \texttt{th\_s.frs}  \\
+  \hline
+  \texttt{-frs3file}  &     Name of stress- and gage recovery database files  &   \\
+  \hline
+  \texttt{-fsi2file}  &     Name of additional solver input file  &   \\
+  \hline
+  \texttt{-fsifile}  &     Name of solver input file   &  \texttt{\scriptsize{fedem\_solver.fsi}}  \\
+  \hline
+  \texttt{-help}  &     Print out this help text    &   \texttt{- (false)}  \\
+  \hline
+  {\tt-ignoreIC} & Ignore initial conditions from the fsi-file & \texttt{\tt- (false)} \\
+  \hline
+  \texttt{-initEqAD}  &     Initial equilibrium with aerodynamic loads   &    \texttt{- (false)}  \\
+  \hline
+  \texttt{-initEquilibrium}  &     Initial static equilibrium iterations   &    \texttt{- (false)}  \\
+  \hline
+  \texttt{-lancz1}  &     Use the LANCZ1 eigensolver   &    \texttt{- (false)}  \\
+  \hline
+  \texttt{-limInitEquilStep}  &     Initial equilibrium step size limit   &  \texttt{1}  \\
+  \hline
+  \texttt{-lineSearch}  &     Use line search in the nonlinear iterations   &    \texttt{- (false)}  \\
+  \hline
+  \texttt{-maxInc}  &     Maximum time increment   &  \texttt{0.05}  \\
+  \hline
+  \texttt{-maxSeqNoUpdate}  &     Max number of sequential iterations without
+                                  system matrix update   &   \texttt{100}  \\
+  \hline
+  \texttt{-maxit}  &     Maximum number of iterations   &  \texttt{15}  \\
+  \hline
+  \texttt{-minInc}  &     Minimum time increment  &   \texttt{0.001}  \\
+  \hline
+  \texttt{-minit}  &     Minimum number of iterations   &  \texttt{1}  \\
+  \hline
+  \texttt{-modesfile}  &     Name of primary modes database file  &   \texttt{ev\_p.frs}  \\
+  \hline
+  \texttt{-monitorIter}  &     Number of iterations to monitor before maxit   &   \texttt{2}  \\
+  \hline
+  \texttt{-monitorWorst}  &     Number of DOFs to monitor on poor convergence   &  \texttt{6}  \\
+  \hline
+  \texttt{-NewmarkFlag}  &     Newmark time integration option (= cba)\newline
+                               a $>$ 0: Compute inertia force from residual
+                               of previous increment in calculation of the
+                               right-hand-side vector\newline
+                               b $>$ 0: Use total solution increment in configuration
+                               update\newline
+                               c = 1: Use HHT-alpha algorithm equivalent
+                               to FENRIS\newline
+                               c = 2: Use generalized-alpha algorithm\newline
+                               with interpolated internal forces        &   \texttt{0}  \\
+  \hline
+  \texttt{-noBeamForces}  &     Suppress all beam sectional force output    &    \texttt{- (false)}  \\
+  \hline
+  \texttt{-nosolveropt}  &     Switch off equation system reordering    &    \texttt{- (false}  \\
+  \hline
+  \texttt{-nrModes}  &     Switch between modal or direct frequency
+                           response solution, if 0 direct solution    &   \texttt{0}  \\
+  \hline
+  \texttt{-numEigModes}  &     Number of eigenmodes to calculate   &   \texttt{0}  \\
+  \hline
+\end{tabular}}
+
+% fourth solver page
+\clearpage
+\noindent{\footnotesize
+\begin{tabular}{|>{\raggedright} p{0.23\linewidth}| p{0.48\linewidth}| p{0.18\linewidth}|}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  \rule{0pt}{15pt}Cmd-line option & Description & Default  \\
+  \hline\hline
+  \texttt{-num\_damp\_energy\_skip}  &    Number of steps without calculation of
+                                       energy from stiffness proportional damping    &  \texttt{1}  \\
+  \hline
+  \texttt{-numit}  &     Fixed number of iterations   &   \texttt{0}  \\
+  \hline
+  {\tt-nupdat} & Number of iterations with system matrix update & 0 \\
+  \hline
+  \texttt{-pardiso}  &     Use the Pardiso sparse equation solver  &  \texttt{- (false)}  \\
+  \hline
+  \texttt{-pardisoIndef}  &     Use Pardiso, indefinite system matrices  &     \texttt{- (false)}  \\
+  \hline
+  \texttt{-partDeformation}  &     Output recovered part deformations
+                                   (0=off, 1=local, 2=total, 3=local and total)    & \texttt{1} \\
+  \hline
+  \texttt{-partVMStress}  &     Output recovered von Mises stresses on parts (0=off, 1=on)   & \texttt{1} \\
+  \hline
+  \texttt{-plugin}     &     Plugin(s) for user-defined elements and functions  &  \\
+  \hline
+  \texttt{-printFunc}  &     Option for function output.\newline
+                             1: Print wave spectrum to result output file\newline
+                             2: Print function evaluation to separate file   &  \texttt{0} \\
+  \hline
+  \texttt{-printTriad}  &    Print some triads to result output file &  \\
+  \hline
+  \texttt{-printinc}  &     Time between each print to result output file   &  \texttt{0} \\
+  \hline
+  \texttt{-quasiStatic}  &     Do a quasi-static simulation to this time   &  \texttt{0} \\
+  \hline
+  \texttt{-rampData}  &     Ramp-up function parameters   &  \\
+                      &      (1)=max speed during ramp-up stage          &          \texttt{1.0} \\
+                      &      (2)=total length (in time) of ramp-up stage    &       \texttt{2.0} \\
+                      &      (3)=time after ramp-up before new load        &        \texttt{0.0} \\
+  \hline
+  \texttt{-rampGravity}  &     Ramp up gravity forces also    &   \texttt{- (false)}  \\
+  \hline
+  \texttt{-rampSteps}  &     Number of increments in ramp-up stage   &  \texttt{0}  \\
+  \hline
+  \texttt{-rdbinc}  &     Increment number for the results database files   &   \texttt{1}  \\
+  \hline
+  \texttt{-rdblength}  &     Maximum time length of results database files   &  \texttt{0}  \\
+  \hline
+  \texttt{-recovery}  &     Recovery option (0=off, 1=stress, 2=gage, 3=both)   &  \texttt{0}  \\
+  \hline
+  \texttt{-resfile}  &     Name of result output file   &  \texttt{\scriptsize{fedem\_solver.res}}  \\
+  \hline
+  \texttt{-restartfile}  &     Response database file(s) to restart from   & \\
+  \hline
+  \texttt{-restarttime}  &     Physical time for restart\newline
+                               $<$ 0: No restart, but regular simulation   &  \texttt{-1} \\
+  \hline
+  \texttt{-rpcFile}  &     Get number of repeats, averages, and
+                           points per frame and group, from this RPC-file  &  \\
+  \hline
+  \texttt{-sample\_freq}  &     Define sampling frequency  & \texttt{100.0}  \\
+  \hline
+  \texttt{-saveinc2}  &     Time between each save of secondary variables  & \texttt{0}  \\
+  \hline
+  \texttt{-saveinc3}  &     Time between each save for external recovery  & \texttt{0}\tnote{1}  \\
+  \hline
+  \texttt{-saveinc4}  &     Time between each save of control system data & \texttt{0}  \\
+  \hline
+  \texttt{-savestart}  &     Time for first save to response database & \texttt{ 0}  \\
+  \hline
+  \texttt{-scaleToKG}  &     Scaling factor to SI mass unit [kg] & \texttt{ 1}  \\
+  \hline
+  \texttt{-scaleToM}  &     Scaling factor to SI length unit [m] & \texttt{ 1}  \\
+  \hline
+  \texttt{-scaleToS}  &     Scaling factor to SI time unit [s] & \texttt{ 1}  \\
+  \hline
+  \texttt{-skylinesolver}  &     Use skyline solver   & \texttt{- (false)}  \\
+  \hline
+\end{tabular}}
+
+% fifth solver page
+\clearpage
+\noindent{\footnotesize
+\begin{tabular}{|>{\raggedright} p{0.23\linewidth}| p{0.48\linewidth}| p{0.18\linewidth}|}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  \rule{0pt}{15pt}Cmd-line option & Description & Default  \\
+  \hline\hline
+  \texttt{-stiffDamp}\textbackslash\newline\texttt{Filtering}  &    Rigid body filtering of stiffness-proportional damping\newline
+                                                      = 0: Deactivated\newline
+                                                      = 1: Use first-order approximation of deformational velocity\newline
+                                                      = 2: Use second-order approximation of deformational velocity\newline
+                                                      (based on Newmark update formula) &   \texttt{1}  \\
+  \hline
+  \texttt{-stopGlbDmp}  &     Stop time for global structural damping factors  & \texttt{-1.0}  \\
+  \hline
+  \texttt{-stopOnDivergence}  &     Number of warnings on possible divergence before the
+                                    dynamics simulation is aborted (0 = no limit)  & \texttt{ 0}  \\
+  \hline
+  \texttt{-stressStiff}\newline\texttt{DivergSkip}  &    Number of iterations without stress stiffening
+                                        on cut-back with same step size    & \texttt{0}  \\
+  \hline
+  \texttt{-stressStiffDyn}  &     Use geometric stiffness for dynamics  &  \texttt{- (false)}  \\
+  \hline
+  \texttt{-stressStiffEig}  &     Use geometric stiffness for eigenvalue analysis &  \texttt{- (false)}  \\
+  \hline
+  \texttt{-stressStiffEqu}  &     Use geometric stiffness for statics &  \texttt{- (false)}  \\
+  \hline
+  \texttt{-stressStiff}\textbackslash\newline\texttt{UpdateSkip}  &    Number of iterations without updating & \\
+                                   &    stress stiffening (always updated in predictor step) &  \texttt{0} \\
+  \hline
+  \texttt{-targetFrequency}\textbackslash\newline\texttt{Rigid}  &     Target frequency for auto-stiffness calculation & \texttt{10000}  \\
+  \hline
+  \texttt{-terminal}  &     File unit number for terminal output & \texttt{6}  \\
+  \hline
+  \texttt{-timeEnd}  &     Stop time  & \texttt{0}  \\
+  \hline
+  \texttt{-timeInc}  &     Initial time increment & \texttt{0}  \\
+  \hline
+  \texttt{-timeStart}  &     Start time  & \texttt{0}  \\
+  \hline
+\end{tabular}}
+
+% sixth solver page
+\begin{threeparttable}[b]
+\footnotesize
+\begin{tabular}{|>{\raggedright} p{0.23\linewidth}| p{0.48\linewidth}| p{0.16\linewidth}|}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  \rule{0pt}{15pt}Cmd-line option & Description & Default \\
+  \hline\hline
+  \texttt{-tolAccGen}  &     Max generalized acceleration tolerance & \texttt{0\tnote{1}}  \\
+  \hline
+  \texttt{-tolAccNorm}  &     Acceleration vector tolerance & \texttt{0\tnote{1}}  \\
+  \hline
+  \texttt{-tolAccRot}  &     Max angular acceleration tolerance & \texttt{0\tnote{1}}  \\
+  \hline
+  \texttt{-tolAccTra}  &     Max acceleration tolerance  & \texttt{0\tnote{1}}  \\
+  \hline
+  \texttt{-tolDispGen}  &     Max generalized DOF tolerance  & \texttt{0\tnote{1}}  \\
+  \hline
+  \texttt{-tolDispNorm}  &     Displacement vector tolerance  & \texttt{0\tnote{1}}  \\
+  \hline
+  \texttt{-tolDistRot}  &     Max rotation tolerance  & \texttt{0\tnote{1}}  \\
+  \hline
+  \texttt{-tolDispTra}  &     Max displacement tolerance  & \texttt{0\tnote{1}}  \\
+  \hline
+  \texttt{-tolEigval}  &     Max acceptable relative error in eigenvalues  & \texttt{1e-008}  \\
+  \hline
+  \texttt{-tolEigvector}  &     Orthogonality limit for the eigenvectors 1e &  \texttt{1e-008}  \\
+  \hline
+  \texttt{-tolEnerMax}  &     Max energy in a single DOF tolerance   & \texttt{0\tnote{1}}  \\
+  \hline
+  \texttt{-tolEnerSum}  &     Energy norm convergence tolerance   & \texttt{0\tnote{1}}  \\
+  \hline
+  \texttt{-tolFactorize}  &     Linear solver singularity criteria & \\
+                          &     (1)=time domain simulation         &      \texttt{1e-012} \\
+                          &     (2)=initial static equilibrium and eigenvalue analysis  & \texttt{1e-009} \\
+                          &     (3)=control system integration  & \texttt{1e-012} \\
+                          &     (smaller values less restrictive)   & \\
+  \hline
+  \texttt{-tolInitEquil}  &     Convergence tolerance for initial equilibrium iterations  & \texttt{  0.001}  \\
+  \hline
+  \texttt{-tolResGen}  &     Max residual generalized DOF force tolerance  & \texttt{0\tnote{1}}  \\
+  \hline
+  \texttt{-tolResNorm}  &     Residual force vector tolerance  & \texttt{0\tnote{1}}  \\
+  \hline
+  \texttt{-tolResRot}  &     Max residual torque tolerance  & \texttt{0\tnote{1}}  \\
+  \hline
+  \texttt{-tolResTra}  &     Max residual force tolerance  & \texttt{0\tnote{1}}  \\
+  \hline
+  \texttt{-tolUpdateFactor}  &     Convergence criterion for continuing matrix updates  & \texttt{0\tnote{1}}  \\
+  \hline
+  \texttt{-tolVelGen}  &     Max generalized velocity tolerance  & \texttt{0\tnote{1}}  \\
+  \hline
+  \texttt{-tolVelNorm}  &     Velocity vector convergence tolerance   & \texttt{0\tnote{1}}  \\
+  \hline
+  \texttt{-tolVelRot}  &     Max angular velocity tolerance  & \texttt{0\tnote{1}}  \\
+  \hline
+  \texttt{-tolVelTra}  &     Max velocity tolerance   & \texttt{0\tnote{1}}  \\
+  \hline
+  \texttt{-version}  &     Print out program version  & \texttt{- (false)}  \\
+  \hline
+  \texttt{-VTFfile}  &     Name of VTF output file & \\
+  \hline
+  \texttt{-windowSize}  &    Defines the window size in samplesfor frequency response analysis  &  \texttt{0}   \\
+  \hline
+  \texttt{-yamlFile}  &  YAML file prefix for system mode shape export &   \\
+  \hline
+\end{tabular}
+  \begin{tablenotes}
+    \item[1] { For all the convergence tolerance options, its value is interpreted as follows:\newline
+      $=$ 0 : This tolerance is ignored\newline
+      $>$ 0 : This tolerance is in a set of tests where all must be satisfied\newline
+      $<$ 0 : This tolerance is in a set of tests where only one must be satisfied\newline
+      (using the absolute value as the actual tolerance value)}
+  \end{tablenotes}
+\end{threeparttable}
+
+\clearpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Section{Stress recovery options (fedem\_stress)}{stress-options}
+
+\noindent{\footnotesize
+\begin{tabular}{|>{\raggedright} p{0.23\linewidth}| p{0.48\linewidth}| p{0.20\linewidth}|}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  \rule{0pt}{15pt}Cmd-line option & Description & Default  \\
+  \hline\hline
+  \texttt{-Bmatfile} &   Name of B-matrix file  &  \\
+  \hline
+  \texttt{-Bramsize} &   In-core size (MB) of displacement recovery matrix\newline
+                         $<$ 0: Use the same as in the reducer\newline
+                         $=$ 0: Store full matrix in core  & \texttt{-1}   \\
+  \hline
+  \texttt{-consolemsg} &   Output error messages to console   & \texttt{- (false)}   \\
+  \hline
+  \texttt{-cwd} &   Change working directory  &  \\
+  \hline
+  \texttt{-debug} &   Debug print switch   & \texttt{0}   \\
+  \hline
+  \texttt{-deformation} &   Save deformations to results database   & \texttt{- (false)}   \\
+  \hline
+  \texttt{-double} &   Save all results in double precision   & \texttt{- (false)}   \\
+  \hline
+  \texttt{-dumpDefNas} &   Save deformations to Nastran bulk data files   & \texttt{- (false)}   \\
+  \hline
+  \texttt{-dispfile} &   Name of gravitation displacement file  &  \\
+  \hline
+  \texttt{-eigfile} &   Name of eigenvector file  &  \\
+  \hline
+  \texttt{-fao} &   Read additional options from this file  &  \\
+  \hline
+  \texttt{-fco} &   Read calculation options from this file  &  \\
+  \hline
+  \texttt{-fop} &   Read output options from this file  &  \\
+  \hline
+  \texttt{-frsfile} &   Name of solver results database file  &  \\
+  \hline
+  \texttt{-fsifile} &   Name of solver input file   & \texttt{fedem\_solver.fsi}   \\
+  \hline
+  \texttt{-group} &   List of element groups to do calculations for  &  \\
+  \hline
+  \texttt{-help} &   Print out this help text   & \texttt{- (false)}   \\
+  \hline
+  \texttt{-linkId} &   Part base-ID number   & \texttt{0}   \\
+  \hline
+  \texttt{-linkfile} &   Name of FE data file  &  \\
+  \hline
+  \texttt{-maxPStrain} &   Save max principal strain to results database    & \texttt{- (false)}   \\
+  \hline
+  \texttt{-maxPStress} &   Save max principal stress to results database    & \texttt{- (false)}   \\
+  \hline
+  \texttt{-maxSStrain} &   Save max shear strain to results database   & \texttt{- (false)}   \\
+  \hline
+  \texttt{-maxSStress} &   Save max shear stress to results database   & \texttt{- (false)}   \\
+  \hline
+  \texttt{-minPStrain} &   Save min principal strain to results database    & \texttt{- (false)}   \\
+  \hline
+  \texttt{-minPStress} &   Save min principal stress to results database    & \texttt{- (false)}   \\
+  \hline
+  \texttt{-nodalForces} &   Compute and print nodal forces   & \texttt{- (false)}   \\
+  \hline
+  \texttt{-rdbfile} &   Name of stress results database file  &  \\
+  \hline
+  \texttt{-rdbinc} &   Increment number for the results databasefile    & \texttt{1}   \\
+  \hline
+  \texttt{-resfile} &   Name of result output file  &  \\
+  \hline
+  \texttt{-resStressFile} &   Name of residual stress input file  &  \\
+  \hline
+  \texttt{-resStressSet} &   Name of residual stress set  &  \\
+  \hline
+  \texttt{-samfile} &   Name of SAM data file  &  \\
+  \hline
+  \texttt{-SR} &   Save stress resultants to results database   & \texttt{- (false)}   \\
+  \hline
+  \texttt{-statm} &   Start time   & \texttt{0}   \\
+  \hline
+  \texttt{-stotm} &   Stop time   & \texttt{1}   \\
+  \hline
+  \texttt{-strain} &   Save strain tensors to results database   & \texttt{- (false)}   \\
+  \hline
+  \texttt{-stress} &   Save stress tensors to results database   & \texttt{- (false)}   \\
+  \hline
+  {\tt-terminal} & File unit number for terminal output & 6 \\
+  \hline
+  {\tt-tinc} & Time increment (= 0.0: process all time steps) & 0.1 \\
+  \hline
+  {\tt-version} & Print out program version & {\tt- (false)} \\
+  \hline
+  {\tt-vmStrain} & Save von Mises strain to results database & {\tt- (false)} \\
+  \hline
+  {\tt-vmStress} & Save von Mises stress to results database & {\tt- (false)} \\
+  \hline
+\end{tabular}}
+
+\clearpage
+\noindent{\footnotesize
+\begin{tabular}{|>{\raggedright} p{0.23\linewidth}| p{0.48\linewidth}| p{0.18\linewidth}|}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  \rule{0pt}{15pt}Cmd-line option & Description & Default  \\
+  \hline\hline
+  \texttt{-VTFavgelm} &   Write averaged element results to VTF-file   & \texttt{+ (true)}   \\
+  \hline
+  \texttt{-VTFdscale} &   Deformation scaling factor for VTF output   & \texttt{1}   \\
+  \hline
+  \texttt{-VTFfile} &   Name of VTF output file  &   \\
+  \hline
+  \texttt{-VTFinit} &   Write initial state to VTF-file   & \texttt{- (false)}   \\
+  \hline
+  \texttt{-VTFoffset} &   VTF result block id offset   & \texttt{0}   \\
+  \hline
+  \texttt{-VTFparts} &   Number of parts in VTF-file   & \texttt{0}   \\
+  \hline
+  \texttt{-write\_nodes} &   Save deformations as nodal data   & \texttt{+ (true)}   \\
+  \hline
+  \texttt{-write\_vector} &   Save deformations as vector data   & \texttt{- (false)}   \\
+  \hline
+\end{tabular}}
+
+\clearpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Section{Mode shape recovery options (fedem\_modes)}{mode-options}
+
+\noindent{\footnotesize
+\begin{tabular}{|>{\raggedright} p{0.23\linewidth}| p{0.48\linewidth}| p{0.18\linewidth}|}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  \rule{0pt}{15pt}Cmd-line option & Description & Default  \\
+  \hline\hline
+  \texttt{-Bmatfile} &   Name of B-matrix file  &  \\
+  \hline
+  \texttt{-Bramsize} &   In-core size (MB) of displacement recovery matrix\newline
+                         $<$ 0: Use the same as in the reducer\newline
+                         $=$ 0: Store full matrix in core  & \texttt{-1}   \\
+  \hline
+  \texttt{-consolemsg} &   Output error messages to console   & \texttt{- (false)}   \\
+  \hline
+  \texttt{-cwd} &  Change working directory  &  \\
+  \hline
+  \texttt{-damped} &   Complex modes are calculated & \texttt{- (false)}   \\
+  \hline
+  \texttt{-debug} &   Debug print switch & \texttt{0} \\
+  \hline
+  \texttt{-dispfile} &   Name of gravitation displacement file  &  \\
+  \hline
+  \texttt{-double} &   Save all results in double precision  & \texttt{- (false)}   \\
+  \hline
+  \texttt{-eigfile} &   Name of eigenvector file  &  \\
+  \hline
+  \texttt{-energy\_density} &   Save scaled strain energy density  & \texttt{- (false)}   \\
+  \hline
+  \texttt{-fao} &   Read additional options from this file  &  \\
+  \hline
+  \texttt{-fco} &   Read calculation options from this file  &  \\
+  \hline
+  \texttt{-fop} &   Read output options from this file  &  \\
+  \hline
+  \texttt{-frsfile} &   Name of solver results database file  &  \\
+  \hline
+  \texttt{-fsifile} &   Name of solver input file  & \texttt{\scriptsize{fedem\_solver.fsi}}   \\
+  \hline
+  \texttt{-help} &   Print out this help text  & \texttt{- (false)}   \\
+  \hline
+  \texttt{-linkId} &   Part base-ID number  & \texttt{0}   \\
+  \hline
+  \texttt{-linkfile} &   Name of FE data file  &  \\
+  \hline
+  \texttt{-rdbfile} &   Name of modes results database file  &  \\
+  \hline
+  \texttt{-rdbinc} &   Increment number for the results database file  & \texttt{1}   \\
+  \hline
+  \texttt{-recover\_modes} &   List of mode numbers to expand  &  \\
+  \hline
+  \texttt{-resfile} &   Name of result output file  &  \\
+  \hline
+  \texttt{-samfile} &   Name of SAM data file  &  \\
+  \hline
+  \texttt{-terminal} &   File unit number for terminal output  & \texttt{6}   \\
+  \hline
+  \texttt{-version} &   Print out program version  & \texttt{- (false)}   \\
+  \hline
+  \texttt{-VTFdscale} &   Deformation scaling factor for VTF output  & \texttt{1}   \\
+  \hline
+  \texttt{-VTFexpress} &   Write express VTF-files (one file per mode)  & \texttt{- (false)}   \\
+  \hline
+  \texttt{-VTFfile} &   Name of VTF output file  &  \\
+  \hline
+  \texttt{-VTFoffset} &   VTF result block id offset  & \texttt{0}   \\
+  \hline
+  \texttt{-VTFparts} &   Number of parts in VTF-file  & \texttt{0}   \\
+  \hline
+  \texttt{-write\_nodes} &   Save results as nodal data  & \texttt{- (false)}   \\
+  \hline
+  \texttt{-write\_vector} &   Save results as vector data  & \texttt{+ (true)}   \\
+  \hline
+\end{tabular}}
+
+\clearpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Section{Strain rosette recovery options (fedem\_gage)}{gage-options}
+
+\noindent
+\begin{threeparttable}[b]
+\footnotesize
+\begin{tabular}{|>{\raggedright} p{0.23\linewidth}| p{0.48\linewidth}| p{0.18\linewidth}|}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  \rule{0pt}{15pt}Cmd-line option & Description & Default  \\
+  \hline\hline
+  \texttt{-binSize} &    Bin size for stress cycle counting [MPa] & \texttt{10}   \\
+  \hline
+  \texttt{-Bmatfile} &   Name of B-matrix file &   \\
+  \hline
+  \texttt{-Bramsize} &   In-core size (MB) of displacement recovery matrix\newline
+                         $<$ 0: Use the same as in the reducer\newline
+                         $=$ 0: Store full matrix in core  & \texttt{-1}   \\
+  \hline
+  \texttt{-consolemsg} &   Output error messages to console   & \texttt{- (false)}   \\
+  \hline
+
+  \texttt{-cwd} &   Change working directory &  \\
+  \hline
+  \texttt{-dac\_sampleinc} &    Sampling increment for dac output files & \texttt{0.001}   \\
+  \hline
+  \texttt{-debug} &    Debug print switch & \texttt{0}   \\
+  \hline
+  \texttt{-deformation} &    Save nodal deformations to results database  & \texttt{- (false)}   \\
+  \hline
+  \texttt{-displfile} &    Name of gravitation displacement file &  \\
+  \hline
+  \texttt{-eigfile} &    Name of eigenvector file &  \\
+  \hline
+  \texttt{-fao} &    Read additional options from this file &  \\
+  \hline
+  \texttt{-fatigue} &    Perform damage calculation on the gage stresses  & \texttt{0}   \\
+  \hline
+  \texttt{-fco} &       Read calculation options from this file &  \\
+  \hline
+  \texttt{-flushinc} &    Time between each database file flush\newline
+                          $<$ 0.0: Do not flush results database (let the OS decide)\newline
+                          $=$ 0.0: Flush at each time step, no external buffers\newline
+                          $>$ 0.0: Flush at specified time interval, use external buffers  & \texttt{-1}   \\
+  \hline
+  \texttt{-fop} &    Read output options from this file &  \\
+  \hline
+  \texttt{-frsfile} &    Name of solver results database file &  \\
+  \hline
+  \texttt{-fsifile} &    Name of solver input file  & \scriptsize{\texttt{fedem\_solver.fsi}}   \\
+  \hline
+  \texttt{-gate} &    Stress gate value for the damage calculation[MPa]  & \texttt{25}   \\
+  \hline
+  \texttt{-help} &    Print out this help text  & \texttt{- (false)}   \\
+  \hline
+  \texttt{-linkId} &    Part base-ID number  & \texttt{0}   \\
+  \hline
+  \texttt{-linkfile} &    Name of FE data file &  \\
+  \hline
+  \texttt{-littleEndian} &    Use Little Endian formatting of DAC files  & \texttt{- (false)\tnote{1}}   \\
+  \hline
+  \texttt{-loga1} &    Parameter log(a1) of the S-N curve  & \texttt{15.117}   \\
+  \hline
+  \texttt{-loga2} &    Parameter log(a2) of the S-N curve  & \texttt{17.146}   \\
+  \hline
+  \texttt{-m1} &    Parameter m1 of the S-N curve  & \texttt{4}   \\
+  \hline
+  \texttt{-nullify\_start\_}\newline\texttt{rosettestrains} &    Set start strains to zero for the rosettes  & \texttt{- (false)}   \\
+  \hline
+  {\tt-rdbfile} & Name of strain gage results database file & \\
+  \hline
+  {\tt-rdbinc} & Increment number for the results database file & 1 \\
+  \hline
+  {\tt-resfile} & Name of result output file & \\
+  \hline
+  {\tt-rosfile} & Name of strain rosette input file & \\
+  \hline
+\end{tabular}
+  \begin{tablenotes}
+    \item[1] { This is the default value on UNIX platforms. On Windows, the default is + (true).
+    Thus, the default formatting of the DAC files will be suitable for the platform the
+    recovery is run on.}
+  \end{tablenotes}
+\end{threeparttable}
+
+% second page strain rosette recovery options
+\clearpage
+\noindent{\footnotesize
+\begin{tabular}{|>{\raggedright} p{0.23\linewidth}| p{0.48\linewidth}| p{0.16\linewidth}|}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  \rule{0pt}{15pt}Cmd-line option & Description & Default  \\
+  \hline\hline
+  \texttt{-samfile} &    Name of SAM data file &  \\
+  \hline
+  \texttt{-statm} &    Start time  & \texttt{0}   \\
+  \hline
+  \texttt{-stotm} &    Stop time  & \texttt{1}   \\
+  \hline
+  \texttt{-stressToMPaScale} &    Scale factor scaling stresses to MPa  & \texttt{1e-006}   \\
+  \hline
+  \texttt{-terminal} &    File unit number for terminal output  & \texttt{6}   \\
+  \hline
+  \texttt{-tinc} &    Time increment (= 0.0: process all time steps)  & \texttt{0}   \\
+  \hline
+  \texttt{-version} &    Print out program version  & \texttt{- (false)}   \\
+  \hline
+  \texttt{-writeAsciiFiles} &    Write rosette results to ASCII files  & \texttt{- (false)}   \\
+  \hline
+\end{tabular}}
+
+\clearpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Section{Strain coat recovery options (fedem\_fpp)}{strain-coat-options}
+
+\noindent{\footnotesize
+\begin{tabular}{|>{\raggedright} p{0.23\linewidth}| p{0.48\linewidth}| p{0.18\linewidth}|}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  \rule{0pt}{15pt}Cmd-line option & Description & Default  \\
+  \hline\hline
+  \texttt{-angleBins} &   Number of bins in search for most popular angle   & \texttt{541}   \\
+  \hline
+  \texttt{-biAxialGate} &   Gate value for the biaxiality calculation  & \texttt{10}   \\
+  \hline
+  \texttt{-blockSize} &   Max number of elements processed together   & \texttt{2000}   \\
+  \hline
+  \texttt{-Bmatfile} &   Name of B-matrix file  &  \\
+  \hline
+  \texttt{-Bramsize} &   In-core size (MB) of displacement recovery matrix
+                         $<$ 0: Use the same as in the reducer\newline
+                         $=$ 0: Store full matrix in core  & \texttt{-1}   \\
+  \hline
+  \texttt{-BufSizeInc} &   Buffer increment size  & \texttt{20}   \\
+  \hline
+  \texttt{-consolemsg} &   Output error messages to console  & \texttt{- (false)}   \\
+  \hline
+  \texttt{-cwd} &   Change working directory  &  \\
+  \hline
+  \texttt{-debug} &   Debug print switch  & \texttt{0}   \\
+  \hline
+  \texttt{-dispfile} &   Name of gravitation displacement file  &  \\
+  \hline
+  \texttt{-double} &   Save results in double precision  & \texttt{- (false)}   \\
+  \hline
+  \texttt{-eigfile} &   Name of eigenvector file  &  \\
+  \hline
+  \texttt{-fao} &   Read additional options from this file  &  \\
+  \hline
+  \texttt{-fco} &   Read calculation options from this file  &  \\
+  \hline
+  \texttt{-fop} &   Read output options from this file  &  \\
+  \hline
+  \texttt{-fppfile} &   Name of fpp output file  &  \\
+  \hline
+  \texttt{-frsfile} &   Name of solver results database file  &  \\
+  \hline
+  \texttt{-fsifile} &   Name of solver input file  & \scriptsize{\texttt{fedem\_solver.fsi}}   \\
+  \hline
+  \texttt{-group} &   List of element groups to do calculations for  &  \\
+  \hline
+  \texttt{-help} &   Print out this help text  & \texttt{- (false)}   \\
+  \hline
+  \texttt{-HistDataType} &   Histogram data type\newline
+                             = 0: None\newline
+                             = 1: Signed abs max stress\newline
+                             = 2: Signed abs max strain   & \texttt{0}   \\
+  \hline
+  \texttt{-HistXBins} &   Histogram number of X-bins  & \texttt{64}   \\
+  \hline
+  \texttt{-HistXMax} &   Histogram max X-value  & \texttt{100}   \\
+  \hline
+  \texttt{-HistXMin} &   Histogram min X-value  & \texttt{-100}   \\
+  \hline
+  \texttt{-HistYBins} &   Histogram number of Y-bins  & \texttt{64}   \\
+  \hline
+  \texttt{-HistYMax} &   Histogram max Y-value  & \texttt{100}   \\
+  \hline
+  \texttt{-HistYMin} &    Histogram min Y-value  & \texttt{-100}   \\
+  \hline
+  \texttt{-linkId} &    Part base-ID number  & \texttt{0}   \\
+  \hline
+  \texttt{-linkfile} &    Name of FE data file  &  \\
+  \hline
+  \texttt{-PVXGate} &    Gate value for the Peak Valley extraction (MPa or microns depending on HistData-Type)  & \texttt{10}   \\
+  \hline
+  \texttt{-rdbfile} &    Name of strain coat results database file  &  \\
+  \hline
+  \texttt{-rdbinc} &    Increment number for the results database file   & \texttt{1} \\
+  \hline
+  {\tt-resfile} & Name of result output file & \\
+  \hline
+  {\tt-resStressFile} & Name of residual stress input file & \\
+  \hline
+  {\tt-resStressSet} & Name of residual stress set & \\
+  \hline
+  {\tt-samfile} & Name of SAM data file & \\
+  \hline
+  {\tt-SNfile} & Name of SN-curve definition file & \\
+  \hline
+\end{tabular}}
+
+% 2nd page strain coat recovery page
+\noindent{\footnotesize
+\begin{tabular}{|>{\raggedright} p{0.23\linewidth}| p{0.48\linewidth}| p{0.18\linewidth}|}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  \rule{0pt}{15pt}Cmd-line option & Description & Default  \\
+  \hline\hline
+  \texttt{-statm} &    Start time  & \texttt{0}   \\
+  \hline
+  \texttt{-stotm} &    Stop time  & \texttt{1}   \\
+  \hline
+  \texttt{-stressToMPaScale} &    Stress conversion factor to MPa  & \texttt{1e-06}   \\
+  \hline
+  \texttt{-surcface} &    Surface selection option\newline
+                         = 0: All element surfaces\newline
+                         = 1: Bottom shell surfaces only\newline
+                         = 2: Middle shell surfaces only\newline
+                         = 3: Top shell surfaces only     & \texttt{0}   \\
+  \hline
+  \texttt{-terminal} &    File unit number for terminal output  & \texttt{6}   \\
+  \hline
+  \texttt{-tinc}     &    Time increment (= 0.0: process all time steps)  & \texttt{0}   \\
+  \hline
+  \texttt{-version}  &    Print out program version  & \texttt{- (false)}   \\
+  \hline
+\end{tabular}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Section{Curve export options (fedem\_graphexp)}{curve-export-options}
+
+\noindent
+\begin{threeparttable}[b]
+\footnotesize
+\begin{tabular}{|>{\raggedright} p{0.23\linewidth}| p{0.48\linewidth}| p{0.16\linewidth}|}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  \rule{0pt}{15pt}Cmd-line option & Description & Default  \\
+  \hline\hline
+  \texttt{-curvePlotFile}  &   Name of curve export output file & \texttt{response.rsp}  \\
+  \hline
+  \texttt{-curvePlotPrec}  &   Output precision for curve data files\newline
+                               = 0 : half precision (int*2)\newline
+                               = 1 : single precision (real*4)\newline
+                               = 2 : double precision (real*8)  & \texttt{0\tnote{1}}  \\
+  \hline
+  \texttt{-curvePlotType}  &   Format of curve export output file\newline
+                               = 0 : ASCII (separate file for each curve)\newline
+                               = 1 : DAC, Windows (separate file for each curve)\newline
+                               = 2 : DAC, UNIX (separate file for each curve)\newline
+                               = 3 : RPC, Windows (all curves in one file)\newline
+                               = 4 : RPC, UNIX (all curves in one file)\newline
+                               = 5 : ASCII (all curves in one file)  & \texttt{3}  \\
+  \hline
+  \texttt{-cwd}  &   Change working directory & \\
+  \hline
+  \texttt{-fao}  &   Read additional options from this file & \\
+  \hline
+  \texttt{-fco}  &   Read calculation options from this file & \\
+  \hline
+  \texttt{-fop}  &   Read output options from this file & \\
+  \hline
+  \texttt{-frsFile}  &   List of results database files & \\
+  \hline
+  \texttt{-help}     &   Display this help and exit & \texttt{- (false)}  \\
+  \hline
+  \texttt{-modelFile}    &   Name of model file with curve definitions & \\
+  \hline
+  \texttt{-rpcFile}      &   Get number of repeats, averages, and points per frame and group, from this RPC-file & \\
+  \hline
+  \texttt{-version}      &   Display program version and exit & \texttt{- (false)}  \\
+  \hline
+\end{tabular}
+  \begin{tablenotes}
+    \item[1] {The {\tt-curvePlotPrec} option is effective for multi-column ASCII and RPC files only.
+      The default value 0 (half precision) is applicable to RPC files only. For ASCII files,
+      the default value is 1 (single precision). DAC files and single-column ASCII files
+      are always written in single precision. This footnote also applies to the
+      {\tt-curvePlotPrec} option of the Dynamics Solver
+      (see \refSection{solver-options}{Dynamics solver options (fedem\_solver)}).}
+  \end{tablenotes}
+\end{threeparttable}

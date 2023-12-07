@@ -1,0 +1,52 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_dialogbox_solver-basic"></a>Solver (Basic)</h1>
+
+<p>The Dynamics Solver dialog box (shown below) can be opened by choosing
+"Dynamics Solver (Basic Mode).." on the "Solve" menu.
+This is the basic version of the solver setup dialog box and contains the following settings:</p>
+
+<p><img src="../../img/dlg-solver-basic1.png"></p>
+
+<p><ol>
+<li>You can enable/disable a calculation of an initial static equilibrium
+configuration before starting the dynamics simulation.
+<li>You can enable/disable a time history response analysis.
+If enabled, you can define the Time domain of the simulation through the
+<i>Start time</i>, <i>Stop time</i> and <i>Time increment</i> fields.
+If the <i>Stop time</i> toggle is disabled, the simulation will continue to
+run indefinitly or until it is stopped due to other reasons.
+<li>You can enable/disable a quasistatic analysis.
+Either for the whole time domain, or up to the specified time.
+<li>You can enable/disable natural frequency analyses
+and specify the number of eigenmodes to calculate in each analysis.
+<li>You can enable/disable a frequency response analysis if
+the model contains loads defined as frequency domain input.
+<li>Click the "Advanced" button to switch to the
+<a href="solver-advanced.htm">advanced version</a>
+of the solver setup dialog box for more settings.
+The same button will take you back to the basic version if clicked again.
+<li>Click the "Run!" button to start the dynamics solver.</ol></p>
+
+</body>
+</html>

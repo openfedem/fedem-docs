@@ -1,0 +1,277 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:Consolas;
+	panose-1:2 11 6 9 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:8.0pt;
+	margin-left:1.0cm;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+.MsoChpDefault
+	{font-family:"Calibri",sans-serif;}
+.MsoPapDefault
+	{margin-bottom:8.0pt;
+	line-height:107%;}
+@page WordSection1
+	{size:612.0pt 792.0pt;
+	margin:72.0pt 72.0pt 72.0pt 72.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+-->
+</style>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_mainui_userdef-functions"></a>
+User-Defined Functions</h1>
+
+<p>FEDEM also supports a simplified .NET interface for user-defined functions through the FunctionsInterface plug-in.</p>
+
+<p>You can use this interface by enabling "FunctionsInterface" in the "Plug-Ins" dialog box in FEDEM.
+Please note that you must also uncheck any other user-defined function plug-ins since FEDEM supports
+loading only one such plug-in at a time.</p>
+
+<p>The main benefit of this interface is that you easily can write your own functions using the
+Microsoft C# or VB programming languages, and that you at any time can add more function types
+just by adding new DLL's in the "plugins/functions" subfolder of the FEDEM installation.</p>
+
+<p>Please perform the following steps in Visual Studio 2012/2013 to create a user-defined function DLL in C#:
+<ol>
+<li>Start Microsoft Visual Studio 2012/2013.
+<li>Choose "File > New Project..." on the menu.
+<li>In the dialog box, choose "Visual C# > Windows Desktop > Class Library".
+<li>Set an appropriate Name and Location for the project.
+<li>Uncheck "Create directory for solution".
+<li>Click "OK", and a new empty DLL-project is created!
+<li>Rename "Class1" to an appropriate grouping name for all functions in this DLL, e.g. "Trigonometry".<br>
+    Please note that this name will show up in FEDEM as the grouping name for the functions.
+<li>Add functions to the class (see below).<br>
+    The functions must be static public, return double, and have double parameters.<br>
+	Arguments must start with "arg" but can continue to form a logical name (e.g. "argAngle1").<br>
+	Parameters can have any name you wish. They can also have default values.<br>
+	Arguments must come first, then parameters.
+<li>Build the DLL ("Build > Build Solution").
+</ol>
+</p>
+
+<p>C# code listing:</p>
+
+<div class=WordSection1>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+normal;text-autospace:none'><span style='font-size:9.5pt;font-family:Consolas;
+color:blue;background:white'>using</span><span style='font-size:9.5pt;
+font-family:Consolas;color:black;background:white'> System;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+normal;text-autospace:none'><span style='font-size:9.5pt;font-family:Consolas;
+color:blue;background:white'>using</span><span style='font-size:9.5pt;
+font-family:Consolas;color:black;background:white'> System.Collections.Generic;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+normal;text-autospace:none'><span style='font-size:9.5pt;font-family:Consolas;
+color:blue;background:white'>using</span><span style='font-size:9.5pt;
+font-family:Consolas;color:black;background:white'> System.Linq;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+normal;text-autospace:none'><span style='font-size:9.5pt;font-family:Consolas;
+color:blue;background:white'>using</span><span style='font-size:9.5pt;
+font-family:Consolas;color:black;background:white'> System.Text;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+normal;text-autospace:none'><span style='font-size:9.5pt;font-family:Consolas;
+color:blue;background:white'>using</span><span style='font-size:9.5pt;
+font-family:Consolas;color:black;background:white'> System.Threading.Tasks;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+normal;text-autospace:none'><span style='font-size:9.5pt;font-family:Consolas;
+color:black;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+normal;text-autospace:none'><span style='font-size:9.5pt;font-family:Consolas;
+color:blue;background:white'>namespace</span><span style='font-size:9.5pt;
+font-family:Consolas;color:black;background:white'> MyUserDefinedFunctionDLL</span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+normal;text-autospace:none'><span style='font-size:9.5pt;font-family:Consolas;
+color:black;background:white'>{</span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+normal;text-autospace:none'><span style='font-size:9.5pt;font-family:Consolas;
+color:black;background:white'>    </span><span style='font-size:9.5pt;
+font-family:Consolas;color:blue;background:white'>public</span><span
+style='font-size:9.5pt;font-family:Consolas;color:black;background:white'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:blue;background:white'>class</span><span
+style='font-size:9.5pt;font-family:Consolas;color:black;background:white'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#2B91AF;background:white'>Trigonometry</span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+normal;text-autospace:none'><span style='font-size:9.5pt;font-family:Consolas;
+color:black;background:white'>    {</span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+normal;text-autospace:none'><span style='font-size:9.5pt;font-family:Consolas;
+color:black;background:white'>        </span><span style='font-size:9.5pt;
+font-family:Consolas;color:blue;background:white'>public</span><span
+style='font-size:9.5pt;font-family:Consolas;color:black;background:white'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:blue;background:white'>static</span><span
+style='font-size:9.5pt;font-family:Consolas;color:black;background:white'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:blue;background:white'>double</span><span
+style='font-size:9.5pt;font-family:Consolas;color:black;background:white'>
+Sinus(</span><span style='font-size:9.5pt;font-family:Consolas;color:blue;
+background:white'>double</span><span style='font-size:9.5pt;font-family:Consolas;
+color:black;background:white'> arg1, </span><span style='font-size:9.5pt;
+font-family:Consolas;color:blue;background:white'>double</span><span
+style='font-size:9.5pt;font-family:Consolas;color:black;background:white'>
+Amplitude = 5, </span><span style='font-size:9.5pt;font-family:Consolas;
+color:blue;background:white'>double</span><span style='font-size:9.5pt;
+font-family:Consolas;color:black;background:white'> Frequency = 10, </span><span
+style='font-size:9.5pt;font-family:Consolas;color:blue;background:white'>double</span><span
+style='font-size:9.5pt;font-family:Consolas;color:black;background:white'>
+PhaseShift = 0)</span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+normal;text-autospace:none'><span style='font-size:9.5pt;font-family:Consolas;
+color:black;background:white'>        {</span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+normal;text-autospace:none'><span style='font-size:9.5pt;font-family:Consolas;
+color:black;background:white'>            </span><span style='font-size:9.5pt;
+font-family:Consolas;color:blue;background:white'>return</span><span
+style='font-size:9.5pt;font-family:Consolas;color:black;background:white'>
+Amplitude * </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#2B91AF;background:white'>Math</span><span style='font-size:9.5pt;
+font-family:Consolas;color:black;background:white'>.Sin(Frequency * arg1 * 2 * </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#2B91AF;background:white'>Math</span><span
+style='font-size:9.5pt;font-family:Consolas;color:black;background:white'>.PI -
+PhaseShift);</span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+normal;text-autospace:none'><span style='font-size:9.5pt;font-family:Consolas;
+color:black;background:white'>        }</span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+normal;text-autospace:none'><span style='font-size:9.5pt;font-family:Consolas;
+color:black;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+normal;text-autospace:none'><span style='font-size:9.5pt;font-family:Consolas;
+color:black;background:white'>        </span><span style='font-size:9.5pt;
+font-family:Consolas;color:blue;background:white'>public</span><span
+style='font-size:9.5pt;font-family:Consolas;color:black;background:white'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:blue;background:white'>static</span><span
+style='font-size:9.5pt;font-family:Consolas;color:black;background:white'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:blue;background:white'>double</span><span
+style='font-size:9.5pt;font-family:Consolas;color:black;background:white'>
+Atan(</span><span style='font-size:9.5pt;font-family:Consolas;color:blue;
+background:white'>double</span><span style='font-size:9.5pt;font-family:Consolas;
+color:black;background:white'> arg1)</span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+normal;text-autospace:none'><span style='font-size:9.5pt;font-family:Consolas;
+color:black;background:white'>        {</span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+normal;text-autospace:none'><span style='font-size:9.5pt;font-family:Consolas;
+color:black;background:white'>            </span><span style='font-size:9.5pt;
+font-family:Consolas;color:blue;background:white'>return</span><span
+style='font-size:9.5pt;font-family:Consolas;color:black;background:white'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#2B91AF;background:white'>Math</span><span
+style='font-size:9.5pt;font-family:Consolas;color:black;background:white'>.Atan(arg1);</span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+normal;text-autospace:none'><span style='font-size:9.5pt;font-family:Consolas;
+color:black;background:white'>        }</span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+normal;text-autospace:none'><span style='font-size:9.5pt;font-family:Consolas;
+color:black;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+normal;text-autospace:none'><span style='font-size:9.5pt;font-family:Consolas;
+color:black;background:white'>        </span><span style='font-size:9.5pt;
+font-family:Consolas;color:blue;background:white'>public</span><span
+style='font-size:9.5pt;font-family:Consolas;color:black;background:white'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:blue;background:white'>static</span><span
+style='font-size:9.5pt;font-family:Consolas;color:black;background:white'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:blue;background:white'>double</span><span
+style='font-size:9.5pt;font-family:Consolas;color:black;background:white'>
+LeastNumber(</span><span style='font-size:9.5pt;font-family:Consolas;
+color:blue;background:white'>double</span><span style='font-size:9.5pt;
+font-family:Consolas;color:black;background:white'> arg1, </span><span
+style='font-size:9.5pt;font-family:Consolas;color:blue;background:white'>double</span><span
+style='font-size:9.5pt;font-family:Consolas;color:black;background:white'>
+arg2)</span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+normal;text-autospace:none'><span style='font-size:9.5pt;font-family:Consolas;
+color:black;background:white'>        {</span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+normal;text-autospace:none'><span style='font-size:9.5pt;font-family:Consolas;
+color:black;background:white'>            </span><span style='font-size:9.5pt;
+font-family:Consolas;color:blue;background:white'>return</span><span
+style='font-size:9.5pt;font-family:Consolas;color:black;background:white'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#2B91AF;background:white'>Math</span><span
+style='font-size:9.5pt;font-family:Consolas;color:black;background:white'>.Min(arg1,
+arg2);</span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+normal;text-autospace:none'><span style='font-size:9.5pt;font-family:Consolas;
+color:black;background:white'>        }</span></p>
+
+<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:
+normal;text-autospace:none'><span style='font-size:9.5pt;font-family:Consolas;
+color:black;background:white'>    }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.5pt;line-height:107%;font-family:
+Consolas;color:black;background:white'>}</span></p>
+
+</div>
+
+<p>Notes:
+<ul>
+<li>The built DLL must be copied to the "plugins/functions" subfolder of the
+FEDEM installation in order for it to be available in a FEDEM model.
+<li>It is possible to also have an illustrative picture for each function that will
+show up in FEDEM on the right side of the properties area of the function. You must
+make a ".xpm" file with the same file name (as the function name) in the functions-
+folder (e.g. Trigonometry.Sinus.xpm). The picture must be 200x150 pixels.
+<a href="http://www.gimp.org">Gimp</a> is a free image editor software
+that can export xpm-files.
+</ul>
+</p>
+
+</body>
+</html>

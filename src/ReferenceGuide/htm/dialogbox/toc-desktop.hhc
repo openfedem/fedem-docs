@@ -1,0 +1,34 @@
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="Dialog Box Reference">
+	<param name="ImageNumber" value="1">
+	</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Model Export">
+			<param name="Local" value="htm\dialogbox\dt-export.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Model Preferences">
+			<param name="Local" value="htm\dialogbox\model-preferences.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Object Browser">
+			<param name="Local" value="htm\dialogbox\object-browser.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Solver Advanced">
+			<param name="Local" value="htm\dialogbox\solver-advanced.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Solver Basic">
+			<param name="Local" value="htm\dialogbox\solver-basic.htm">
+			</OBJECT>
+	</UL>

@@ -1,0 +1,375 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Model Reduction}
+\label{chap:CMS}
+
+Dynamic analysis is generally more expensive than static analysis, because the solution involves
+repeated computations of the same form, whereas static analysis requires only a single computation.
+The introduction of Component Mode Synthesis (CMS) model reduction and superelement techniques,
+however, reduces the cost of dynamic computations.
+
+The CMS reduction technique reduces the cost of the analysis by decreasing the number DOFs
+used. The fundamental assumption is that the low-frequency modes of vibration are the most
+important; in other words, the higher the frequency mode, the less significant it is in the
+dynamic analysis. It is also true that for any numerical model, and especially an FE model,
+the high-frequency modes are less accurate in comparison to underlying differential equation
+solutions.
+
+The form of applied loads is important when deciding upon the required complexity of the FE
+models. If a harmonic load is applied and the steady-state response is required, a peak response
+is achieved if the load has a frequency component close to a resonant frequency. In this case,
+the accuracy of the FE model must be sufficient to represent the resonant frequencies over
+the entire range of the load's frequencies so that no significant resonant frequencies are
+missed.
+
+If the loads are not periodic \mdash{}as is the case, for example, in deployment and latching
+simulations\mdash then there is no simple relationship between the structural resonant frequencies
+and the frequency content of the loads. However, there is an effective frequency within the
+loads defined by the rate of change from one state to another, that is, the rise time of the
+input. If the force changes rapidly, it has a short rise time and the input has a high-frequency
+content. This requires a relatively large number of DOFs in the model. If the force input changes
+relatively slowly (it has a long rise time), it will have a lower frequency content, and fewer
+modes are therefore required in the analysis.
+
+The number of nodes in a mesh basically controls the number of DOFs in the model. When a dynamic
+model is constructed, the mesh used can reflect the results. For instance, if only the displacement
+or the first few resonant frequencies are required, a coarse mesh can be used. This mesh can
+be much coarser than the mesh used in an equivalent static stress analysis. If, however, dynamic
+stresses are required, a finer mesh density of the kind used for static stressing is necessary.
+In this case, the mesh can be graduated in regions of stress concentration in exactly the same
+manner as in static stress analysis.
+
+The most expensive dynamic computation is performed for impact and wave propagation models.
+Here, the short rise times of the forcing function require a relatively large number of DOFs.
+In addition, the large stress and displacement changes at the front of the wave need a fine
+mesh to model the wave front accurately. However, the wave front moves through the complete
+model as the wave propagates, so a uniformly fine mesh is necessary throughout the model to
+accurately address wave propagation problems.
+
+There are various methods of condensing static models into smaller dynamic models automatically,
+but for the various reasons outlined above, these methods must be used with care because they
+are only applicable in certain cases, depending upon the required response. In some cases,
+typically when calculating dynamic stresses, the degree to which a model can be condensed depends
+partly upon the reduction process used, and the method of recovering stresses after the displacements
+have been determined. These two factors must be considered together when determining the degree
+of condensation to be employed within the analysis.
+
+\section{Review of model reduction methods}
+
+All reduction methods are based on the same principle: to reduce the effective number of DOFs
+in order to reduce computational costs. However, because these methods are approximate and
+different approximations can be used, the range of dynamic reduction methods is extensive.
+In addition, each of these methods has sub-variants.
+
+Most of the dynamic model reduction techniques available can be classified into
+one of the following four categories:
+%
+\begin{itemize}
+\item \textit{Modal Reduction} \mdash only a small number of the possible modes
+of vibration\mdash{}typically those with lowest eigenfrequency\mdash{}are used
+in the dynamic analysis.
+%
+\item \textit{Static Condensing (Guyan reduction)} \mdash this method of reducing the effective
+number of DOFs is based entirely upon static considerations. Fedem uses this classic FE reduction
+technique when no additional component modes are specified. In static reduction, the nodes
+(and corresponding DOFs) are split into master/external and slave/internal nodes. Only master/external
+nodes are retained after the static reduction.
+%
+\item \textit{Dynamic Condensing} \mdash the method of reducing the effective number of DOFs
+is based upon both static and dynamic considerations. The CMS reduction implemented in Fedem
+is one example of dynamic condensing.
+%
+\item \textit{Dynamic Substructuring} \mdash the complete structure is formed by establishing
+a reduced set of equations for a set of components, or substructures, that comprises the total
+structure or mechanism. One of the techniques above is used for each substructure.
+\end{itemize}
+
+All reduction (or condensing) methods can be written in terms of a coordinate transformation
+of the form
+
+\begin{equation}
+{\mf v} \;=\; {\mf H}\,{\mf q}
+\end{equation}
+
+\noindent
+where $\mf v$ is the full set of displacements of size $n$, $\mf q$ is the reduced or condensed
+set of displacements of size $m$ where $m < n$, and $\mf H$ is a transformation matrix relating
+the two sets of coordinates. The various reduction techniques can then be viewed as different
+methods for constructing a suitable transformation matrix.
+
+There are many ways to define the transformation matrix $\mf H$, but they are not all equally
+accurate for dynamic analysis. Various factors must be considered, and most methods of condensing
+the equations result in a compromise in the requirements. The first and most important considerations
+are that dynamic behavior is largely controlled by the lowest static and component vibration
+modes, and that any condensation method should allow the lower modes to be recovered with a
+smaller error than the higher ones.
+
+Secondly, the higher vibration modes still contribute to the dynamic response.
+However, if the maximum frequency content of the acting loads is significantly
+lower than a particular resonant frequency, the contribution of that high
+resonance to the overall response will be in terms of a constant (static) value.
+This is illustrated in Figure~\ref{fig:freq_response}.
+%
+\begin{figure}[t]
+\center{
+\setlength{\unitlength}{3pt}
+\begin{picture}(90,55)(-10,-8)
+\thicklines
+% Axis system
+\put(-10,0){\vector(1,0){90}}
+\put( 0,-5){\vector(0,1){45}}
+\put(-5,45){\textsl{Response}}
+\put(65,-9){\textsl{Frequency}}
+%The actual friction function
+\thinlines
+%Mode 1
+\qbezier(   0, 8)(14, 8)(18.5,32)
+\qbezier(18.5,32)(20,45)(21.5,32)
+\qbezier(21.5,32)(25, 3)(67  , 1)
+%Mode 2
+\qbezier( 0, 6)(35  , 6  )(43,25)
+\qbezier(43,25)(47.5,36  )(51,25)
+\qbezier(51,25)(56  ,10.5)(67, 6.5)
+%
+\put(24,-1){\line(0,1){40}}
+\put(23,-4){$\omega$}
+\put( 6,33){\textsl{Mode 1}}
+\put(52,28){\textsl{Mode 2}}
+\end{picture}
+}
+\caption{Individual modal response}
+\label{fig:freq_response}
+\end{figure}
+%
+Mode 2 here has a substantially constant response up to the frequency $\omega$,
+and its contribution to the overall response is defined almost entirely by its
+stiffness over this range. This is not the case for mode 1, which requires dynamic behavior
+because it varies considerably over the frequency range 0 to $\omega$. If a frequency of $2\omega$
+or higher is necessary, mode 2 must also be modeled dynamically.
+
+In general, the transformation matrix, $\mf H$, must be constructed in such
+a way that the high-frequency modes can be defined by their static response.
+Once the transformation has been defined, the equation of motion can be
+condensed from the full set of $n$ equations to the smaller set, $m$,
+by means of the transformation matrix $\mf H$.
+
+In static analysis, a solution achieved by means of substructuring is exact. If the full structure
+is analyzed directly and then as a series of substructures, it is found that apart from round-off
+error the two solutions are identical. There is no approximation involved in static substructuring.
+
+This is not the case with dynamic analysis. When the equations of any individual substructure
+are reduced in size, information regarding the dynamic response \mdash{}that is, information
+regarding the higher resonant frequencies and mode shapes\mdash is lost. The solution can be
+organized to preserve the stiffness but not the mass characteristics associated with the high-frequency
+modes. Thus, a static substructure solution is exact, but a dynamic substructure solution is
+only approximate.
+
+\subsection{Modal reduction}
+
+In general, modal reduction is only carried out when the set of modes used in dynamic analysis
+is reduced. In this case, each column in the transformation matrix, $\mf H$, is an eigenvector
+of the system. The transformation to the reduced set of equations has the added computational
+advantage that the reduced stiffness and mass matrices are both diagonal. For the assumption
+of either proportional damping or modal damping, the reduced damping matrix is also diagonal.
+This is used to solve the forced response of the equations, as the reduced equations are a
+set of $m$ uncoupled single-DOF equations. Proportional damping is described in Section~\ref{sec:PropDamping}.
+
+In modal reduction, the contribution of all the modes included in the transformation is exact.
+The response, however, is not exact, even for a low-frequency input, because the static contributions
+of the high-frequency modes have not been included. This is not important if the excitation
+is near one of the low resonance frequencies, because the response of this mode will then dominate.
+However, at a distance from a resonance it can lead to significant error.
+
+\subsection{Static condensing (Guyan reduction)}
+
+A common form of dynamic reduction is static condensing or Guyan reduction. In this form of
+reduction, the stiffness properties of the structure are preserved at the expense of its dynamic
+properties. The nodes (and corresponding DOFs) are split into master/external and slave/internal
+nodes; only master DOFs are retained after reduction. This form of reduction is widely used,
+being simple and relatively inexpensive to carry out; however, it should be used with some
+caution.
+
+For static condensing, a set of master/external DOFs are defined that become the $\mf q$~displacements
+in the transformation equations. The remaining displacements are called the slave/internal
+DOFs (and nodes), and these are eventually eliminated from the solution process. There are
+many more slave than master DOFs. The transformation matrix, $\mf H$, is constructed by applying
+a unit displacement to each master DOF in turn, while setting all the other master DOFs to
+zero. The resulting slave displacements are used to define a column in $\mf H$. This is repeated
+for each master in turn to construct the complete transformation matrix.
+
+In Fedem, the master DOFs are defined implicitly by the selection of nodes for use as connection
+points between component FE models; these points are called Triads.
+
+This process of constructing the transformation matrix preserves rigid body inertias and the
+static behavior of the structure. However, it only approximates the dynamic behavior, since
+the process implicitly assumes that inertia forces on the slave freedoms are zero. This has
+the effect of redistributing the mass of slave freedoms onto the masters (Triads), thereby
+altering the distribution of structural mass. It is this assumption and its consequences that
+introduce the errors into the Guyan reduction process. Errors can be minimized, but not eliminated,
+by selecting an optimum set of master DOFs. The selection process and resulting problems are
+the subjects of the following sections.
+
+\subsubsection{Choice of master DOFs}
+
+Within a static/Guyan reduction, the slave freedoms should be those that do not contribute
+much to the inertia forces in the dynamic response. Inertia forces are the product of mass
+and acceleration; slave freedoms, therefore, should be those points of low mass or low acceleration.
+Expressed differently, the master freedoms should be defined at points where the inertia forces
+are greatest; these correspond to points of high mass and low stiffness.
+
+\subsubsection{Problems of static reduction}
+
+It is very difficult to quantify the errors associated with static reduction. Generally, the
+error in a given resonant frequency or mode shape increases with eigenvalue number: the lower
+eigenvalues are predicted more accurately than the higher ones. However, this rule is not absolute,
+and occasionally some higher modes are predicted more accurately than lower ones. Any predicted
+mode shape can only be a linear combination of the columns of the transformation matrix, $\mf
+H$. If $\mf H$ is deficient in the pattern of displacement required by a given mode shape,
+that mode will not be predicted accurately. If this is the case, the eigenvalues of the condensed
+system will be greater than those of the original uncondensed system, resulting in a stiffer
+system than that of the original.
+
+The fewer the number of master freedoms (Triads), the greater the potential error. To minimize
+error, the user must choose a sufficient number of masters \mdash{}preferably between two and
+ten times the number of required modes. However, even with a factor of ten it is very difficult
+to predict more than general consequences of the reduction. A choice of too many masters can
+increase computational costs.
+
+The original finite element equation system is heavily banded, and its sparse nature enables
+efficient handling of large sets of equations. However, the reduced, transformed set is fully
+populated, so that although fewer equations are involved, they are much more densely packed
+and therefore more costly to solve. If the original set of equations were of size~$n$ and average
+bandwidth~$b$, then the number of master freedoms,~$m$, should satisfy $m^{2} < bn$. If not,
+it is less expensive computationally to work with the original set of equations without any
+reduction.
+
+\subsection{Dynamic condensing}
+
+Fedem uses a dynamic condensing technique that combines modal reduction and static condensing.
+The disadvantage of modal reduction (apart from the cost of determining the eigenvectors) is
+that it does not preserve the static behavior of the structure, because the stiffness contribution
+from the modes that have been ignored is never reinstated
+(refer to Figure~\ref{fig:freq_response}).
+Conversely, static condensing preserves static stiffness at the expense of dynamic effects.
+In dynamic condensing, the transformation matrix, $\mf H$, is largely based on the eigenvectors
+associated with the lowest frequencies, as is the case with modal reduction; but these eigenvectors
+are augmented by the static modes associated with master freedoms, as in static condensation.
+
+In dynamic condensing, static modes must be manipulated so that the stiffness associated with
+lower modes (stiffness accounted for by the presence of these modes) is not included twice.
+In Fedem, static modes are complemented by "fixed interface normal modes," and these normal
+modes (eigenvectors) are never included in the preserved static modes. Fixed interface modes
+are computed by eigenvector analysis of the structure with all the nodal DOFS (triad DOFS)
+fixed. A fixed DOF means defining its value as zero and (usually) removing it from the equation
+system.
+
+\subsection{Dynamic substructuring}
+
+Another method of improving the computational efficiency of a dynamic analysis is to use dynamic
+substructuring. However, its use also compromises accuracy. The structure or mechanism is divided
+into a series of smaller structures or substructures; in Fedem, these are called Links. The
+division into Links in Fedem is based on physical identification of the various mechanism components.
+
+The transformation matrix in Fedem is defined in such a way as to preserve the original freedoms
+and takes the following form for each Link:
+%
+\begin{namelist}{${\mf v}_1$\ }
+\item[{${\mf v}_e$}] represents the freedoms that connect to other Links or applied springs,
+dampers, and loads.
+%
+\item[{${\mf v}_i$}] represents the internal freedoms that are internal to a single Link.
+%
+\item[{$\mf q$}] represents the generalized freedoms, internal to the reduced Link, that are
+included to augment and improve the dynamic response (fixed interface normal/component modes).
+\end{namelist}
+%
+It is important to note that with this definition of $\mf H$ the connection freedoms are preserved
+across the transformation, making assembly of the complete mechanism relatively simple. However,
+this approach does place restrictions upon the method of transformation.
+
+The simplest way of forming the subcomponent is to base the transformation upon Guyan reduction.
+Here the master freedoms are not chosen arbitrarily, but are defined at the connection nodes
+(Triads) between Links and the nodes at which springs, dampers, and loads are applied. There
+are no augmenting freedoms $\mf q$, and the transformation matrix is identical to that of a
+Guyan reduction with the connection nodes/freedoms selected as the master freedoms.
+
+\subsubsection{Internal component modes in dynamic substructuring}
+
+The accuracy of the dynamic behavior of a substructure can be improved considerably by including
+extra terms in the augmenting freedoms, $\mf q$, of the transformation matrix. These terms
+are usually based on some of the system eigenvectors, thus the process becomes very similar
+to that of the dynamic condensing method described above. There are many ways of including
+these terms, all of which lead to different variations of the dynamic substructure method.
+
+It is difficult to say which is the best method, as they all produce similar results and their
+relative accuracy is dependent upon the specific problem being analyzed. The various forms
+of dynamic substructuring can be classified in one of two categories, depending on the way
+in which the eigenvectors are formed. The most direct method is to calculate the substructure
+eigenvectors with the connection nodes/freedoms fixed; this is the method employed in Fedem.
+The alternative method is to calculate the eigenvectors of the substructure with the connection
+freedoms free.
+
+\subsubsection{Fixed boundary dynamic substructure}
+
+If the eigenvectors of the substructure are calculated while the connection
+freedoms are held fixed, the coordinate transformation matrix $\mf H$ contains
+the first few eigenvectors of the fixed boundary substructure
+\mdash{}the $\tf\Phi$ term in \eqnref{eqCMS:Hdef}.
+The number of augmenting freedoms is then equal to the number of these fixed
+interface modes.
+The static modes can be taken directly from the Guyan reduction process with the
+connection freedoms as masters \mdash{}the $\mf B$ term in \eqnref{eqCMS:Hdef}.
+This means that the behavior of the substructure is defined by the static
+behavior of its connection freedoms and the internal dynamic behavior
+of its augmenting freedoms.
+The representation of the dynamic behavior of the substructure still includes
+some approximations, but these become progressively less significant as more
+eigenvectors are added to the augmenting set.
+
+This combined approach, which is the method used in Fedem,
+is referred to as the Component Mode Synthesis (CMS) method.
+The user can also add extra Triads, which need not be connection nodes,
+for the purpose of improving the dynamic behavior of the substructure.
+
+\subsubsection{Free boundary dynamic substructure}
+
+The alternative to the fixed boundary substructure is the free boundary form. In this case
+the connection freedoms, ${\mf v}_1$, are left free, and the transformation matrix is defined
+in terms of the eigenvectors. If the substructure has no natural supports, the eigenvectors
+will include the rigid body modes to represent the rigid body mass of the structure. The free
+boundary substructure generally requires more calculations to form the transformation matrix.
+This form of dynamic substructure ensures that the mass description of the component is correct;
+the stiffness description, however, will only be approximate. To recover correct stiffness
+behavior, at least for the connection freedoms, the dynamic modes can be augmented by static
+modes\footnote{There are some indications that free boundary dynamic substructure methods
+are more accurate than fixed boundary methods, depending upon the manner of implementation
+for each method and the type of problem being solved.}.
+
+\subsection{Summary}
+
+Fedem uses a state-of-the-art dynamic condensing method, Component Mode Synthesis (CMS), which
+combines static and fixed-interface normal modes. Fedem  can also increase accuracy by including
+an additional distribution of master DOFs (Triads). The CMS method is also well suited to flexible
+mechanism analysis because it preserves the effective masses and inertias.
+
+Depending on complexity and modeling detail, the finite element model of a substructure can
+consist of a large or small number of FE nodes. These nodes are divided into internal and external
+nodes. The external nodes are defined during mechanism modeling as the connection points for
+joints, springs, dampers, external loads, control input, points of interest, and so on. These
+nodes are retained as so-called "supernodes" during the reduction of the substructure to a
+superelement.
+
+\input{cms_trans}
+\iftoggle{publicedition}{}{% in-house edition only
+\input{inertia_force_corr}
+}

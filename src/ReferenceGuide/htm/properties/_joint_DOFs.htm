@@ -1,0 +1,157 @@
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+The available options here depend on the selected <i>Constraint Type</i>,
+which can be as follows:<ul>
+<li><i>Free</i> - This DOF is free to move and no constraint is applied.
+This is the default setting.
+<li><i>Fixed</i> - This DOF is fixed and can not be moved at all.
+It is eliminated from the system of equations (condensed out).
+<li><i>Prescribed</i> - This DOF can be assigned a time-dependent prescribed
+motion, and is thus condensed out from the system of equations.
+<li><i>Spring-Damper</i> - This DOF is free to move, but a spring and/or damper
+may be applied to constrain the motion.
+</ul></p>
+
+<p><img src="../../img/prp/joint-2.png"></p>
+
+<p>The figure above illustrates the <i>Free</i> joint DOF properties,
+and consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Additional BC</td><td>When this toggle is enabled, the movement in this
+joint DOF is fixed during the initial equilibrium analysis and optionally also
+in the eigenmode analysis.
+(See the <a href="../dialogbox/solver-advanced.htm#Eigenmode">Eigenmode tab</a>,
+and the FEDEM Theory Guide, Section 7.8 "Quasistatic equilibrium".)</td></tr>
+<tr><td>Load magnitude</td><td>You can apply a Load in this joint DOF.
+This will be a torque or a force depending on whether this DOF is
+a rotation or translation.
+<tr><td>Initial velocity</td><td>You may specify a velocity
+that should be applied as initial condition in this joint DOF,
+i.e., the actual velocity at the start time of dynamics simulation.</td></tr>
+<tr><td>Length/Angle in model</td><td>This field shows the initial value
+of this joint DOF as modeled. For rotational DOFs the value can be edited to
+set a different initial rotation state. The 3D modeller view will then update
+instantly, showing the new orientation of the joint symbol.</td></tr>
+<tr><td>Apply in frequency domain</td><td>If a <a href="function.htm">Function</a>
+is specified in the <i>Load magnitude</i> field, this toggle will enable the
+load to be applied in the frequency domain instead of the time domain,
+if the <i>Frequency response analysis</i> toggle is enabled in the
+<a href="../dialogbox/solver-basic.htm">Solver setup</a> dialog.</td></tr>
+</table></p>
+
+<p><img src="../../img/prp/joint-3.png"></p>
+
+<p>The <i>Fixed</i> joint DOF properties are the same as for <i>Free</i> DOFs,
+except that the <i>Additional BC</i> toggle here is always inactive,
+and the <i>Load magnitude</i> and <i>Initial velocity</i> fields,
+as well as the <i>Apply in frequency domain</i> toggle, all are absent,
+as illustrated in the figure above.</p>
+
+<p><img src="../../img/prp/joint-4.png"></p>
+
+<p>The figure above illustrates the <i>Prescribed</i> joint DOF properties,
+and consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Prescribed quantity</td><td>You may choose whether you want to prescribe
+the Deflection, the Velocity or the Acceleration for the joint DOF.</td></tr>
+<tr><td>Initial velocity</td><td>You may specify a velocity
+that should be applied as initial condition in this joint DOF,
+i.e., the actual velocity at the start time of dynamics simulation.</td></tr>
+<tr><td>Length/Angle in model</td><td>This field shows the initial value
+of this joint DOF as modeled, and has the same interpretation as when the
+joint DOF is <i>Free</i> (see above).</td></tr>
+<tr><td>Constant length/angle, Constant displacement/rotation</td><td>
+These buttons and fields work together to allow you to set a constant
+prescribed value of the joint DOF during the dynamics simulation.
+You can choose to enter the constant length/angle either as an absolute value,
+or relative to the Length/Angle in model, if the Prescribed quantity is set to
+Deflection. For prescribed Velocity or Acceleration, you enter the constant
+velocity/acceleration that should be applied in the first of these two fields
+(the other field is inactive).</td></tr>
+<tr><td>Length/Angle change</td><td>You can prescribe the evolution of the
+motion during the simulation through a function. The function controls the
+change in the DOF valie relative to the Constant length/angle, or the
+change of the velocity/acceleration relative to the Constant
+velocity/acceleration, in case Velocity or Acceleration is prescribed.</td></tr>
+<tr><td>Apply in frequency domain</td><td>If a <a href="function.htm">Function</a>
+is specified in the <i>Length/Angle change</i> field, this toggle will enable the
+prescribed motion to be applied in the frequency domain instead of the time domain,
+if the <i>Frequency response analysis</i> toggle is enabled in the
+<a href="../dialogbox/solver-basic.htm">Solver setup</a> dialog.</td></tr>
+</table></p>
+
+<p>Note that if you prescribe a length/angle that differs from the Length/Angle
+in model, this difference will be accounted for in the very first iteration of
+the dynamics simulation and thus lead to a dynamic shock effect. However, when
+the initial <a href="../dialogbox/solver-advanced.htm#Initial-Equilibrium">
+Static equilibrium analysis</a> is enabled, the force due to this difference is
+taken as a pure static load and the transient shock should be avoided.</p>
+
+<p><img src="../../img/prp/joint-5.png"></p>
+
+<p>The figure above illustrates the <i>Spring-Damper</i> joint DOF properties,
+and consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Additional BC</td><td>When this toggle is enabled, the movement in this
+joint DOF is fixed during the initial equilibrium analysis and optionally
+also in the eigenmode analysis. It has the same interpretation as when the
+joint DOF is "Free" (see above).</td></tr>
+<tr><td>Load magnitude</td><td>You can apply a Load in the joint DOF,
+similarly as when the joint DOF is <i>Free</i> (see above).</td></tr>
+<tr><td>Initial velocity</td><td>You may specify a velocity that should be
+applied as initial condition in this joint DOF, similarly as when the joint DOF
+is <i>Free</i> (see above).</td></tr>
+<tr><td>Length/Angle in model</td><td>This field shows the initial value
+of this joint DOF as modeled, and has the same interpretation as when the
+joint DOF is <i>Free</i> (see above).</td></tr>
+<tr><td>Constant stress free length/angle, Constant deflection</td><td>
+These buttons and fields work together allowing you to introduce prestress in
+the spring, by setting a constant stress free length/angle different from the
+Length/Angle in model. You can chose to enter this property either as an
+absolute value, using the Constant stress free length/angle option,
+or relative to the Length/Angle in model by selecting the Constant deflection
+option.</td></tr>
+<tr><td>Stress free length/angle change</td><td> You can select a
+<a href="function.htm">Function</a> to change the stress free length/angle of
+the spring during the simulation. The value of the function will be used as an
+addition to the constant stress free length/angle defined above.</td></tr>
+<tr><td>Stiffness</td><td>In this field either a constant spring stiffness
+can be entered, or you can select a defined spring characteristic
+from the pull-down list.</td></tr>
+<tr><td>Spring properties; Scale</td><td>The spring force or torque can be
+scaled by a function.
+This can for instance be used to switch the spring on and off during the
+simulation. When no function is selected the scale is set to 1.0.</td></tr>
+<tr><td>Damping coefficient</td><td>In this field either a constant damping
+coefficient can be entered, or you can select a defined damper characteristic
+from the pull-down list.</td></tr>
+<tr><td>Damper properties; Scale</td><td>The damper force or torque can be
+scaled by a function.
+This can for instance be used to switch the damper on and off during the
+simulation. When no function is selected the scale is set to 1.0.</td></tr>
+<tr><td>Use deformational velocity</td><td> This option is available if
+the damper is acting together with a spring with a forced change in its stress
+free length. The option enables the usage of the deformational velocity of
+the connected spring, when evaluating the damper. The deformational velocity is
+the spring velocity without the velocity component coming from a forced change
+in the stress free length.</td></tr>
+</table></p>
+
+<p>Note that if prestress is introduced in a joint DOF spring, it will be
+accounted for in the very first iteration of the dynamics simulation and
+may thus lead to a dynamic shock effect. However, when the initial
+<a href="../dialogbox/solver-advanced.htm#Initial-Equilibrium">
+Static equilibrium analysis</a> is enabled, the prestress force is taken as a
+pure static load and the transient shock should be avoided.</p>

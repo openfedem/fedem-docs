@@ -1,0 +1,160 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Convergence criteria}
+\label{subs:Convergence criteria}
+
+Some criteria for terminating the equilibrium iterations governed by
+\meqsref{eq:NewtonDynEq}{eq:317}, must be established.
+They are typically based on some {\it norms} of the vector quantities involved.
+When computing the norms, we have the problem of dealing with different units.
+There are rotational and translational DOFs (typically measured in radians and
+meters), as well as generalized DOFs associated with the component modes.
+
+Changing the modeling units of length and translation from [m] to [mm] changes
+the size of the translations with 3 orders of magnitude, whereas the rotations
+remain the same.
+Such a change of units should not affect the relative contribution of rotation
+and translations to the norm of a displacement vector.
+
+\subsubsection{Scaled vector norms}
+
+In order to make the vector norms unit independent, we choose to use rotations
+as the ``base'' displacement quantity since they are always measured in radians.
+With a rigid rotation of unit magnitude as guiding displacement, an appropriate
+scaling of the translations is then assumed to be $\frac{1}{L_\text{model}}$,
+where $L_\text{model}$ is the largest dimension of the model itself.
+
+Based on this, we define the scaled vector norm as
+%
+\begin{equation}
+% Corrected by KMO 19.08.04 (see TT #2074)
+\left\| {\mf v} \right\|_\text{scaled} \;=\;
+\sqrt{\frac{\sum_i(w_i v_i)^2}{\sum_i w_i^2}}
+\end{equation}
+%
+\begin{equation*}
+\text{where}\quad\left\{\begin{array}{ll}
+w_i = 1 & \text{if $i$ is rotational DOF} \\
+w_i = \frac{1}{L_\text{model}} & \text{if $i$ is translational DOF} \\
+w_i = 1 & \text{if $i$ is generalized DOF}
+\end{array}\right.
+\end{equation*}
+%
+Convergence criterias are now defined as
+%
+\begin{equation}
+\left\| {\mf v} \right\|_\text{scaled} \leq \varepsilon_\textit{tol}
+\end{equation}
+%
+where the vector ${\mf v}$ can be one of the following
+%
+\clearpage
+\begin{namelist}{XXX}
+%
+\item[$\ls{i}\dr_k$] displacement correction
+defined by \eqsref{eq:NewtonDynEq}{eq:NewmarkDispCorr}
+%
+\item[$\ls{i}\ddr_k$] velocity correction
+defined by \eqsref{eq:NewtonDynEq}{eq:NewmarkVelAndAccCorr}\footnote{
+For the scaled vector norm of the velocity correction we also have the option of
+``relaxing'' the convergence criterion when the overall velocity of the
+mechanism is large, i.e.,
+\begin{equation*}
+\varepsilon_{tol} \;=\; \varepsilon_{abs} +
+\varepsilon_{vel}\left\|\dot{\mf v}\right\|
+\end{equation*}}
+%
+\item[$\ls{i}\dddr_k$] acceleration correction
+defined by \eqsref{eq:NewtonDynEq}{eq:NewmarkVelAndAccCorr}
+%
+\item[$\ls{i}\hat{\mf R}_k$] residual vector (unbalanced forces)
+defined by \eqsref{eq:NewtonDynEq}{eq:residual}
+%
+\end{namelist}
+%
+The scaling factors are inverted for the force residual vector.
+
+\remark{Velocity and acceleration corrections are computed from the displacement
+correction as time step dependent scalings proportional to
+$\frac{1}{h}$ and $\frac{1}{h^2}$ respectively,
+as given by \eqnref{eq:NewmarkVelAndAccCorr}.
+For small time steps, any noise in the displacement corrections gets greatly
+magnified in the velocity and acceleration terms, and can lead to convergence
+problems if the convergence criterion involves testing on the
+velocity and acceleration corrections.}
+
+\subsubsection{DOF type selective infinite norms}
+
+The infinite norm of a vector is defined as
+%
+\begin{equation}
+\left\|{\mf v}\right\|_{\infty} \;=\; \lim_{n\to\infty} \sqrt[n]{\sum_i |v_i^n|}
+ \;=\; \max_{\forall i} |v_i|
+\end{equation}
+%
+Because of the different DOF types (rotation, translation and component modes),
+we define three different infinite norms of a mixed vector ${\mf v}$ as
+%
+\begin{equation}
+\begin{array}{lcll}
+\left\| {\mf v} \right\|_{\infty,\text{tran}} &=& \max|v_i| &
+:\;\forall\; i \text{~being a translational DOF} \\
+\left\| {\mf v} \right\|_{\infty,\text{rot}} &=& \max|v_i| &
+:\;\forall\; i \text{~being a rotational DOF} \\
+\left\| {\mf v} \right\|_{\infty,\text{gen}} &=& \max|v_i| &
+:\;\forall\; i \text{~being a component mode DOF}
+\end{array}
+\end{equation}
+%
+Convergence criterias based on these norms are now defined as
+%
+\begin{equation}
+\left\|{\mf v}\right\|_{\infty,\text{tran}} \leq \varepsilon_\textit{tol},\quad
+\left\|{\mf v}\right\|_{\infty,\text{rot}} \leq \varepsilon_\textit{tol},\quad
+\left\|{\mf v}\right\|_{\infty,\text{gen}} \leq \varepsilon_\textit{tol}
+\end{equation}
+%
+where ${\mf v}$ can be the correction to the displacements $\ls{i}\dr_k$,
+velocity $\ls{i}\ddr_k$, acceleration $\ls{i}\dddr_k$,
+as well as the residual vector $\ls{i}\hat{\mf R}_k$.
+
+\subsubsection{Energy norms}
+
+The product of residual vector $\ls{i}\hat{\mf R}_k$ and displacement
+correction $\ls{i}\dr_k$ form an incremental energy term.
+The advantage of using this quantity in convergence testing is the automatic
+same unit of energy for all DOFs regardless of translation/force,
+rotation/torque, or generalized DOF/generalize force.
+
+We define energy norm analogous to the infinite and scaled vector norms
+respectively, as the max DOF energy and average energy
+%
+\begin{eqnarray}
+\text{Max DOF energy:} &
+E_{\max} =& \max_{j=1,n}
+\left| \ls{i}\delta r_{kj} \ls{i}\hat{R}_{kj} \right| \\
+\text{Average energy:} &
+E_\text{avg} \;=& \frac{1}{n} \sum_{j=1,n}
+\left| \ls{i}\delta r_{kj} \ls{i}\hat{R}_{kj} \right|
+\end{eqnarray}
+%
+\remark{Structures close to a buckling state will often be close to force
+equilibrium (low residual norm), while the displacements are largely
+undetermined (high displacement correction norm).
+Similarly, structures with very stiff members often are close to the correct
+position (low displacement correction norm), whereas the unbalanced forces are
+high (high residual norm).
+Both of these cases can lead to convergence problems when the convergence
+criterion is based on displacements and/or force equilibrium.
+In these cases the energy norms often give a more ``balanced'' picture and can
+improve stability in passing problem areas in the dynamics simulation.}

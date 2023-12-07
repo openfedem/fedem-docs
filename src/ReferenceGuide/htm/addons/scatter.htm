@@ -1,0 +1,114 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_addons_scatter"></a>
+Scatter</h1>
+
+<p>The Scatter application is used to import and manage wave scatter diagrams 
+for the FEDEM event system.</p>
+
+<p>Blocking can be performed on the scatter data to reduce the number of low
+probability events (i.e. unnecessary events) in the FEDEM model. A large number
+of events will take a long time to simulate in FEDEM. By blocking out the low
+probability events, you can reduce the number of events, and reduce the amount
+of time needed by the FEDEM solvers.</p>
+
+
+<h2>Paste from Excel</h2>
+
+<p>You start by copying and pasting a scatter diagram from Excel (see example below):
+<ul> 
+<li>The top row must contain the Tp-values (midpoint values). 
+<li>The left-most column must contain the Hs-values (midpoint values).
+<li>The data must contain the probability values for each Hs-Tp combination.</ul></p>
+
+
+<h2>Blocking methods</h2>
+
+<p>The "auto-block" and "block selected" buttons (see below) use <i>blocking methods</i>
+on a range of cells. The blocking methods start by calculating the weighted average, &lt;Hs&gt;, 
+of the Hs values; and the weighted average, &lt;Tp&gt;, of the Tp values. The probability
+values will be summed and moved to the (&lt;Hs&gt;,&lt;Tp&gt;) cell. Blocking is an effective
+technique for reducing the number of low-probability events in the FEDEM model.<p>
+
+<p>The weighted average, &lt;Hs&gt;, of the Hs values is calculated as follows 
+(in order of increasing conservatism):
+<ol>
+<li><b>Straight average.</b> The weighted average of Hs is:<br>
+<img src="../../img/addons/scatter-hs-avg1.png">
+<li><b>Fifth power average.</b> The weighted average of Hs is:<br>
+<img src="../../img/addons/scatter-hs-avg5.png">
+<li><b>Maximum.</b> Uses the maximum Hs value in the block.
+</ol></p>
+
+<p>The weighted average, &lt;Tp&gt;, of the Tp values is always calculated as follows:<br>
+<img src="../../img/addons/scatter-tp-avg.png"></p>
+
+
+<h2>Auto-block</h2>
+
+<p>The Auto-block function merges cells within the same column, 
+i.e. they have same Tp. 
+The blocking method determines the target (&lt;Hs&gt;,&lt;Tp&gt;) cell.
+The number of cells getting merged into one are limited by 
+the following user settings:<br>
+1. <i>Limit probability:</i> The max probability allowed for the resulting cell.<br>
+2. <i>Max rows blocked:</i> The total number of rows that that are allowed merged.</p>
+
+
+<h2>Block selected</h2>
+
+<p>The selected range of cells are merged into one cell (within the selected range).
+The blocking method determines the target (&lt;Hs&gt;,&lt;Tp&gt;) cell.</p>
+
+
+<h2>Normalize</h2>
+
+<p>The scatter diagram shows probabilities in percentage. 
+Press Normalize in order to normalize the data so that the sum of 
+probabilities becomes 100.</p>
+
+
+<h2>Move cell</h2>
+
+<p>Move cell will sum the contents of two selected cells and put the
+sum in the left or bottom cell. The right or top cell will become blank.</p>
+
+
+<h2>Generate events or output event file</h2>
+
+<p>You can Generate Events directly in the currently open FEDEM model, 
+or you can save events as an event input file for FEDEM.</p>
+
+
+<h2>Example</h2>
+
+<p>The figure below illustrates an example wave scatter diagram (in Microsoft Excel).
+Here you can see that the first row (or header row) contains the Hs values 
+(i.e. significant wave height [m]), and the left-most column (or header column)
+contains the Tp values (i.e. peak period [s]). The data cells contain the probability
+values (in percent) for each Hs-Tp combination. Empty cells have zero probability.</p>
+
+<p><img src="../../img/addons/scatter-example.png"></p>
+
+</body>
+</html>

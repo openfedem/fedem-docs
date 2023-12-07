@@ -1,0 +1,55 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_dialogbox_beamstring-pair-definition"></a>Beamstring Pair Definition</h1>
+
+<p>The Beamstring Pair Definition tool is used to generate Free Joints between the Triads of two Beamstrings.</p>
+
+<p>This tool is typically used when you have a pipe-in-pipe construction, and you would like the inner pipe to
+able to move inside the outer pipe. This tool will basically set up Free Joints between the overlapping Triads
+of the two pipes. The Free Joints will be assigned a Contact stiffness function that will limit the movement
+of the inner pipe with respect to the outer pipe.</p>
+
+<p><img src="../../../img/beamstring-pair-definition.png" width="632" height="291"></p>
+
+<p>The fields are as follows:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>First beamstring</td><td>Specifies the master beamstring, i.e.,
+	the master triads of the genereated Free joints are connected to this object.
+	This can be a Subassembly of type <i>Beamstring</i> or <i>Soil Pile</i>.</td></tr>
+<tr><td>Second beamstring</td><td>Specifies the slave beamstring, i.e.,
+	the slave triads of the genereated Free joints are connected to this object.
+	This can only be a Subassembly of type Beamstring.</td></tr>
+<tr><td>Contact stiffness function</td><td>Specifies the contact stiffness function.
+	This can be a function of type <i>Stiffness-Translation</i> or <i>Force-Translation</i>.
+	It is possible to use an <i>Adv. Spring Characteristics, Translation</i> function as well.</td></tr>
+<tr><td>Use radial springs</td><td>Specifies whether to use radial contact springs or not.</td></tr>
+</table></p>
+
+<p>Please note that the two beamstrings must be overlapping,
+i.e., have the same number of triads, and the triads must all be in the same position.
+A tolerance value of 0.1 is used when checking if triads are co-located.</p>
+
+</body>
+</html>

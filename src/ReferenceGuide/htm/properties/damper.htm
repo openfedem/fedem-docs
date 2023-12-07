@@ -1,0 +1,55 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_properties_damper"></a>Damper</h1>
+
+<p>The Damper object is used to introduce discrete damping in a FEDEM model.
+There are two types of dampers in FEDEM: Axial- and joint dampers.
+Axial dampers apply relative forces between two
+<a href="triad.htm">Triads</a> along the direction axis between the triads,
+whereas Joint dampers are integrated in the Joint, and act on the joint
+triads along one of the unconstrained DOFs of the Joint.</p>
+
+<p><img src="../../img/prp/damper-1.png"></p>
+
+<p>The figure above illustrates the Damper properties,
+which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Damping coefficient</td><td>In this field either a constant damping
+coefficient can be entered, or you can select a defined damper
+characteristic from the pull-down list.
+<tr><td>Scale</td><td> The damper force can be scaled by a function.
+This can for instance be used to switch the damper on and off during
+the simulation. When no function is selected the scale is set to 1.0.
+The Scale can not be a function of the damper velocity or length.</td></tr>
+<tr><td>Use deformational velocity</td><td> This option is available if
+the damper is acting together with a spring with a forced change in its stress
+free length. The option enables the usage of the deformational velocity of
+the connected spring, when evaluating the damper. The deformational velocity is
+the spring velocity without the velocity component coming from a forced change
+in the stress free length.</td></tr>
+</table></p>
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+\newcommand{\namelistlabel}[1]{\mbox{#1}\hfil}
+\newenvironment{namelist}[1]
+{
+  \begin{list}{}
+  {
+    \let\makelabel\namelistlabel
+    \settowidth{\labelwidth}{#1}
+    \setlength{\leftmargin}{\labelwidth}
+    \addtolength{\leftmargin}{\parindent}
+    \addtolength{\leftmargin}{\labelsep}
+    \setlength{\itemsep}{0pt}
+    \setlength{\topsep}{0pt}
+    \setlength{\parsep}{\parskip}
+  }
+}
+{
+  \end{list}
+}
+
+\newcounter{myEnumC1}
+\renewenvironment{enumerate}
+{
+  \begin{list}{\arabic{myEnumC1}.}
+  {
+    \usecounter{myEnumC1}
+    \setlength{\itemsep}{0pt}
+    \setlength{\topsep}{0pt}
+    \setlength{\parsep}{\parskip}
+  }
+}
+{
+  \end{list}
+}
+
+\renewenvironment{itemize}
+{
+  \begin{list}{\labelitemi}
+  {
+    \usecounter{myEnumC1}
+    \setlength{\itemsep}{0pt}
+    \setlength{\topsep}{0pt}
+    \setlength{\parsep}{\parskip}
+  }
+}
+{
+  \end{list}
+}

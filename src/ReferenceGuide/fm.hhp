@@ -1,0 +1,18 @@
+[OPTIONS]
+Auto Index=Yes
+Compatibility=1.1 or later
+Compiled file=Fedem.chm
+Contents file=fm_.hhc
+Default Window=MainWindow
+Default topic=htm/introduction/default.htm
+Display compile progress=No
+Error log file=fm_.log
+Full-text search=Yes
+Index file=fm.hhk
+Language=0x409 English (United States)
+Title=FEDEM 8.0 Help Reference
+
+[WINDOWS]
+MainWindow=,"fm_.hhc","fm.hhk","htm/introduction/default.htm","htm/introduction/default.htm",,,,,0x63520,,0x386c,,,,,,,,0
+
+[INFOTYPES]

@@ -1,0 +1,98 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_dialogbox_sea-environment"></a>Sea Environment</h1>
+
+<p>The Sea Environment dialog is accessed from the <i>Marine</i> pull down menu
+in the main window. It is used to specify the global sea environment properties
+that are used in the calculation of Hydrodynamic loads on the FEDEM mechanism.</p>
+
+<p><img src="../../../img/sea-environment.png" width="318" height="351"></p>
+
+<p>The data fields of the Sea Environment dialog box are as follows:<ul>
+<li><i>Water density</i> - Specifies the mass density of the sea water.
+<li><i>Mean sea level</i> - Specifies the mean sea water level (MSL).
+That is, the distance from the global origin to the sea surface at calm sea,
+in the opposite direction of the gravitation vector.
+<li><i>Water depth</i> - Specifies the water depth.
+That is, the distance from the calm sea surface to the sea bed,
+in the direction of the gravitation vector. This value affects how the water
+particle velocity and acceleration decays exponentially from the sea surface.
+A zero or negative value signals an infinite water depth formulation.
+<li><i>Gravitation</i> - Specifies the gravity vector.
+Its direction also defines the inward normal vector of the calm sea surface.
+<li><i>Wave direction</i> - Specifies the global wave propagation direction.
+This vector is used to construct the reference coordinate system that is
+used for the wave kinematics calculations.
+See <a href="#_wave-coordinate-system">Wave coordinate system</a> below.
+<li><i>Marine growth</i> - Specifies properties that are used to calculate
+additional mass due to marine growth on submerged structures.
+<li><i>Wave function</i> - Specifies a function of type
+<a href="../../properties/Marine/wave-function.htm">Wave Function</a>
+that describes the sea surface elevation (above the specified mean sea level) and the water particle motion.
+<li><i>Current function</i> - Specifies a function of type
+<a href="../../properties/Marine/current-function.htm">Current Function</a>
+that describes the current magnitude (i.e., the non-periodic water particle velocity).
+<li><i>Current direction</i> - Specifies a function of type
+<a href="../../properties/Marine/current-function.htm">Current Function</a>
+that defines the angle (in radians) between the wave propagation direction
+and the current direction.
+<li><i>Current scale</i> - Specifies an optional scaling of the current magnitude.
+Any defined general <a href="../../properties/function.htm">Function</a>
+can be specified here.
+<li><i>Hydrodynamic force scale</i> - Specifies an optional scaling of the computed
+hydrodynamic forces. Any defined general
+<a href="../../properties/function.htm">Function</a> can be given here.
+This can be used to, e.g., ramp up the hydrodynamic forces in the beginning
+of a simulation with a sensitive structure.
+</ul>
+
+NOTE: The gravity vector may also be defined in the
+<a href="../model-preferences.htm">Model Preferences</a> dialog.
+If the gravity vector is changed in that dialog, it will automatically be updated
+in the Sea environment dialog also, and vice versa.</p>
+
+<h3><a name="_wave-coordinate-system"></a>Wave coordinate system</h3>
+
+<p>The wave kinematics (i.e., water particle velocities and accelerations)
+is defined through the specified Wave and Current functions in the
+Sea Environment dialog described above. These are spatial functions
+referring to a coordinate system which is defined as follows:
+<ul>
+<li>Its origin is the projection of the global origin along the gravity vector onto the MSL surface.
+<li>Its local Z-axis coincides with the normal vector (<b>n</b>) of the MSL surface,
+which is defined from the gravity vector (<b>g</b>) through <b>n</b> = -<b>g</b>/|<b>g</b>|.
+<li>Its local X-axis is the projection of the specified Wave direction vector
+onto the MSL surface, unless an RAO is used. In the latter case,
+the local X-axis of the Vessel Triad in the initial configuration is instead
+projected onto the MSL surface. This projected vector is then rotated the selected
+Wave direction angle about the local Z-axis to become the resulting local X-axis.
+<li>Its local Y-axis is the cross product of the local Z- and X-axes.
+</ul>
+
+<p>Notice that the Z-coordinate of the wave coordinate system is negative
+downwards towards the sea bed, starting from zero at the MSL. Therefore, the
+<a href="../../properties/Marine/current-function.htm">Current Function</a>s
+needs to be defined for negative argument values only.</p>
+
+</body>
+</html>

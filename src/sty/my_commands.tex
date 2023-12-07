@@ -1,0 +1,49 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+\newcommand{\bm}[1]{\mbox{\boldmath $#1$}}  %
+\newcommand{\bs}[1]{\boldsymbol{#1}}        %AMS-tex: bold and it
+\newcommand{\mf}[1]{\bf #1}                 %MatrixFont: bold upright, not for greek
+\newcommand{\tf}[1]{\boldsymbol{#1}}        %TensorFont: bold slanted, also for greek
+
+\newcommand{\beqnarr}{\begin{eqnarray}}
+\newcommand{\eeqnarr}{\end{eqnarray}}
+\newcommand{\barr}{\begin{array}}
+\newcommand{\earr}{\end{array}}
+
+%Command to make remarks in small print
+\newcommand{\remark}[1]
+{
+\medskip
+{\indent
+\begin{minipage}[t]{0.9\textwidth}
+   \noindent\footnotesize{\textbf{Remark:} \textit{#1}}
+\end{minipage}\hfill}
+\medskip
+}
+
+\newcommand{\Spin}{\text{Spin}}
+\newcommand{\sign}{\text{sign}}
+\newcommand{\eqnref}[1]{equation~\eqref{#1}}
+\newcommand{\eqsref}[2]{equations~\eqref{#1} and~\eqref{#2}}
+\newcommand{\meqsref}[2]{equations~\eqref{#1}--\eqref{#2}}
+\newcommand{\bslash}{$\backslash$}
+\newcommand{\mdash}{$-$}
+
+%Command to make item like descriptive text
+\newlength{\descrwidth}
+\newcommand{\itembx}[3]{\medskip\indent\parbox[t]{#1}{#2}
+\setlength{\descrwidth}{\textwidth}
+\addtolength{\descrwidth}{-#1}
+\addtolength{\descrwidth}{-1.6\parindent}
+\parbox[t]{\descrwidth}{#3}\hfill}
+
+%\newcommand{\itembx[2]{\item[{\makebox[#1][l]{#2}}]}}
+
+%Extra spacing above and below lines in tabular environment
+\newcommand{\spaceup}    {\rule[0ex]{0mm}{2.4ex}}
+\newcommand{\spacedown}  {\rule[-1.2ex]{0mm}{2.2ex}}
+\newcommand{\spaceupdown}{\rule[-1.2ex]{0mm}{3.6ex}}

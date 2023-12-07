@@ -1,0 +1,107 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM User Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[10pt]{book}
+
+\def\FedemVer{Fedem~8.0}
+\def\FedemTG{\FedemVer~User Guide}
+\def\FedemTGuide#1{\FedemVer~Theory Guide, {\sl#1}}
+\def\ReferenceImg{../ReferenceGuide/img}
+
+\setlength{\paperwidth}{7.5in}
+\setlength{\paperheight}{9.0in}
+\setlength{\oddsidemargin}{1.25in}  % 1.0+1.0 = 2.25in
+\setlength{\evensidemargin}{0.75in} % 1.0+0.0 = 1.75in
+\setlength{\topmargin}{-0.5in}      % 1.0-0.5 = 0.5in
+\setlength{\headheight}{0.5in}
+\setlength{\headsep}{0.275in}
+\setlength{\textwidth}{4.75in}
+\setlength{\marginparwidth}{1.0in}
+\setlength{\marginparsep}{0.25in}
+\setlength{\footskip}{0.5in}
+
+\setlength{\textheight}{\paperheight}
+\addtolength{\textheight}{-1.0in}
+\addtolength{\textheight}{-\topmargin}
+\addtolength{\textheight}{-\headheight}
+\addtolength{\textheight}{-\headsep}
+\addtolength{\textheight}{-\footskip}
+\addtolength{\textheight}{-0.35in} % Desired space at bottom of page
+
+\setlength{\itemsep}{0pt}
+\setlength{\topsep}{0pt}
+\setlength{\parsep}{\parskip}
+
+\usepackage{parskip}
+\usepackage{graphpap}
+\usepackage{amsmath,amssymb}
+\usepackage{amstext}
+\usepackage{graphicx}
+\usepackage{tikz}
+
+\usepackage{wrapfig}
+\usepackage{colortbl}
+\usepackage{float}
+\usepackage{threeparttable}
+\usepackage{tabto}
+
+\usepackage[backref]{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\hypersetup{pdftitle=\FedemTG,pdfauthor=Knut Morten Okstad - SAP SE}
+\hypersetup{pdfsubject=User Guide for the FEDEM Simulation Software}
+\hypersetup{pdfkeywords=FEM Model reduction Multi-body dynamics}
+\usepackage{../sty/chappg} % Set up page numbering with chapter and page number
+\usepackage{../sty/my_sections}
+\usepackage{../sty/my_headings}
+\usepackage{../sty/my_chapter}
+\input{../sty/my_lists}
+\input{ug_macros}
+
+\renewcommand{\bottomfraction}{1.0}
+
+%\includeonly{title_and_contents}
+%\includeonly{introduction,learning_basics}
+%\includeonly{mechanism_modeling}
+%\includeonly{mechanism_elements}
+%\includeonly{control_system_modeling}
+%\includeonly{mechanism_analysis}
+%\includeonly{postprocessing_results}
+%\includeonly{managing_results}
+
+%\includeonly{fe_model_interface}
+%\includeonly{file_types_usage}
+%\includeonly{cmd_line_options}
+%\includeonly{beta_feature_doc}
+
+\begin{document}
+\include{title_and_contents}
+\setlength{\parskip}{0.35em}
+\pagenumbering{arabic}
+\raggedright
+%\include{nomenclature}
+\include{introduction}
+\include{learning_basics}
+\include{mechanism_modeling}
+\include{mechanism_elements}
+\include{control_system_modeling}
+\include{mechanism_analysis}
+\include{postprocessing_results}
+\include{managing_results}
+% Make Appendix thumb indices continue below the regular chapters
+\setcounter{thumbstart}{\value{thumbpos}}
+\appendix
+\include{fe_model_interface}
+\include{file_types_usage}
+\include{cmd_line_options}
+\include{beta_feature_doc}
+%\include{biblio}
+\end{document}

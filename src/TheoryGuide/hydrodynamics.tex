@@ -1,0 +1,331 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\rhow{\rho_{\rm w}}
+\def\Db{D_{\rm b}}
+\def\Dd{D_{\rm d}}
+\def\Cd{C_{\rm d}}
+\def\Ca{C_{\rm a}}
+\def\Cm{C_{\rm m}}
+\def\Cda{C_{\rm d,axial}}
+\def\Caa{C_{\rm a,axial}}
+\def\Cma{C_{\rm m,axial}}
+
+\chapter{Hydrodynamic loads}
+\label{chap:Hydrodynamics}
+
+In this Appendix, the additional loads acting on mechanism models due to a
+marine environment are described.
+These loads are treated as external forces in the dynamics simulation, in the
+same manner as described in Section~\ref{subs:External forces}.
+
+\section{Buoyancy of beam elements}
+
+The buoyancy force per unit length of a uniform and linear beam element immersed
+in sea water can be computed as
+%
+\begin{equation}
+\label{eq:buoyancy force}
+f_{\rm b} = \frac{\pi}{4}\Db^2 \rhow g
+\end{equation}
+%
+where $\Db$ is the effective buoyancy diameter of the beam cross section,
+$\rhow$ is the specified mass density of the sea water, and $g=\|{\bf g}\|$
+is the gravitation constant, with {\bf g} being the gravitation vector.
+
+For a beam element with length $L_e$ that is totally submerged in water, i.e.,
+both of its end points are below the water surface, the total buoyancy force
+vector attacking at each end node of the element is
+%
+\begin{equation}
+{\bf F}_{{\rm b}_i}^e = -f_{\rm b} \frac{L_e}{2} \frac{\bf g}{g} =
+-\frac{\pi}{8}\Db^2 L \rhow {\bf g} \quad i=1,2
+\end{equation}
+
+\section{Drag and added mass}
+
+Forces due to drag and added mass on a beam element immersed in a fluid (water)
+can be computed based on the Morison equation, see e.g.~\cite{Chakrabarti},
+pages 169--194 for an elaboration.
+This is a semi-empirical load model valid only for slender beams with circular
+outer cross sections.
+The drag and added mass forces per unit length of the beam are here given as,
+respectively.
+%
+\begin{eqnarray}
+\label{eq:drag force}
+f_{\rm d} &=& \frac{1}{2}\Dd \rhow \Cd \left(u-v\right)|u-v| \\
+\label{eq:added mass force}
+f_{\rm a} &=& \frac{\pi}{4}\Dd^2 \rhow \left(\Cm\dot{u}-\Ca\dot{v}\right)
+\end{eqnarray}
+%
+where $u$ and $v$ denote the fluid and structure velocities, respectively,
+and $\dot{u}$ and $\dot{v}$ are corresponding time derivatives (accelerations),
+$\Dd$ is the effective drag diameter of the cross section, $\Cd$ is the drag
+coefficient, whereas $\Cm$ and $\Ca$ are inertia and added mass coefficients,
+respectively, which normally are related to each other through $\Cm = 1 + \Ca$.
+
+\subsection{Drag forces and associated damping matrix terms}
+
+The drag force, $f_{\rm d}$, is assumed to act normal to the beam axis at any
+time, and in the opposite direction of the relative fluid velocity, $u-v$.
+It is clear from equation~(\ref{eq:drag force}) that $f_{\rm d}$ is a nonlinear
+function of the velocity, and thus we need to calculate the magnitude of the
+drag force resultant in the normal plane of the beam, and then transform this
+resultant onto the element axes of the beam, rather than applying
+equation~(\ref{eq:drag force}) in each coordinate direction.
+
+Let $\bm{u}_i$ and $\bm{v}_i$ denote the global fluid- and structure velocities,
+respectively, evaluated at the two nodes, $i=1,2$, of the beam element $e$.
+The coordinate vectors of these velocities, referred to the local axes of the
+beam element are then calculated as
+%
+\begin{equation}
+\bm{u}_i^e =
+\left[\begin{array}{c} u_x \\ u_y \\ u_z \end{array}\right]^e_i =\;
+{\bf R}_e^T\bm{u}_i
+\quad\mbox{and}\quad
+\bm{v}_i^e =
+\left[\begin{array}{c} v_x \\ v_y \\ v_z \end{array}\right]^e_i =\;
+{\bf R}_e^T\bm{v}_i
+\end{equation}
+%
+where ${\bf R}_e$ is the local-to-global transformation matrix of beam element
+$e$, which is equivalent to the rotational part of its updated position matrix.
+Since the local $x$-axis of the beam element is always coincident with the axis
+passing through the two element nodes, the magnitude of the normal fluid
+velocity relative to the structure at an element node is equal to
+%
+\begin{equation}
+\label{eq:u_rel}
+u_{\rm rel} = \sqrt{\left(u_y-v_y\right)^2 + \left(u_z-v_z\right)^2}
+\end{equation}
+
+The magnitude of the nodal drag force intensity can now be computed as
+%
+\begin{equation}
+\label{eq:drag force magnitude}
+f_{{\rm d}_i} = \frac{1}{2}\Dd \rhow \Cd u_{\rm rel}^2
+\end{equation}
+%
+The direction of this force in the local $yz$-plane, defined through the angle
+$\theta$ between the local $y$-axis and the force vector, is given by
+%
+\begin{equation}
+\label{eq:drag force direction}
+\tan\theta = \frac{u_z - v_z}{u_y - v_y}
+\end{equation}
+%
+such that the drag force vector, expressed in the element coordinate system,
+can be computed as
+%
+\begin{equation}
+\label{eq:drag force vector}
+\bm{f}_{{\rm d}_i}^e = \left[\begin{array}{c}
+0 \\ f_{{\rm d}y} \\ f_{{\rm d}z} \end{array}\right]_i^e =
+f_{{\rm d}_i} \left[\begin{array}{c}
+0 \\ \cos\theta \\ \sin\theta \end{array}\right]
+\end{equation}
+%
+Using the identities $\cos(\arctan x) = \frac{1}{\sqrt{1+x^2}}$
+and $\sin(\arctan x) = \frac{x}{\sqrt{1+x^2}}$, the combination of
+equations~(\ref{eq:u_rel}--\ref{eq:drag force direction}) with
+equation~(\ref{eq:drag force vector}) results in
+%
+\begin{equation}
+\left[\begin{array}{c}
+f_{{\rm d}y} \\ f_{{\rm d}z} \end{array}\right]_i^e =
+\frac{1}{2}\Dd \rhow \Cd u_{\rm rel}
+\left[\begin{array}{c} u_y - v_y \\ u_z - v_z \end{array}\right]
+\end{equation}
+%
+In addition, we may account for drag in the axial direction (skin friction),
+through a separate drag coefficient $\Cda$ for that direction.
+We then use equation~(\ref{eq:drag force}) directly, viz.
+%
+\begin{equation}
+f_{{{\rm d}x}_i}^e = \frac{1}{2}\Dd\rhow\Cda|u_x-v_x|\left(u_x-v_x\right)
+\end{equation}
+%
+such that the total drag force vector at node $i$ of element $e$ in its local
+coordinate system becomes
+%
+\begin{equation}
+\label{eq:local drag force vector}
+\bm{f}_{{\rm d}_i}^e = \frac{1}{2}\Dd\rhow \left[\begin{array}{r}
+\Cda\, |u_x-v_x|\,\left(u_x-v_x\right) \\
+\Cd\, u_{\rm rel}\, \left(u_y-v_y\right) \\
+\Cd\, u_{\rm rel}\, \left(u_z-v_z\right) \end{array}\right]
+\end{equation}
+
+The tangent matrix terms associated with this drag force are obtained by taking
+the variation of equation~(\ref{eq:local drag force vector}) with respect to the
+local structural velocities, $\bm{v}_i^e$, i.e.,
+(omitting the indices $e$ and $i$)
+%
+\begin{equation}
+\delta\bm{f}_{\rm d} =
+\frac{\partial\bm{f}_{\rm d}}{\partial\bm{v}} \delta\bm{v} =
+-{\bf c}_{{\rm d}_i}^e \delta\bm{v}
+\end{equation}
+%
+where ${\bf c}_{{\rm d}_i}^e$ is a $3\times3$ damping matrix with the non-zero
+terms as follows:
+%
+\begin{eqnarray}
+c_{{\rm d}11} = -\frac{\partial f_{{\rm d}x}}{\partial v_x} &=&
+\Dd\rhow \Cda |u_x - v_x| \\
+%
+c_{{\rm d}22} = -\frac{\partial f_{{\rm d}y}}{\partial v_y} &=&
+-\frac{1}{2}\Dd\rhow \Cd \left(
+\frac{\partial u_{\rm rel}}{\partial v_y}\left(u_y-v_y\right) - u_{\rm rel}
+\right) \\
+%
+c_{{\rm d}33} = -\frac{\partial f_{{\rm d}z}}{\partial v_z} &=&
+-\frac{1}{2}\Dd\rhow \Cd \left(
+\frac{\partial u_{\rm rel}}{\partial v_z}\left(u_z-v_z\right) - u_{\rm rel}
+\right) \\
+%
+c_{{\rm d}32} = -\frac{\partial f_{{\rm d}z}}{\partial v_y} &=&
+-\frac{1}{2}\Dd\rhow \Cd
+\frac{\partial u_{\rm rel}}{\partial v_y}\left(u_z-v_z\right) \\
+%
+c_{{\rm d}23} = -\frac{\partial f_{{\rm d}y}}{\partial v_z} &=&
+-\frac{1}{2}\Dd\rhow \Cd
+\frac{\partial u_{\rm rel}}{\partial v_z}\left(u_y-v_y\right)
+\end{eqnarray}
+%
+From equation~(\ref{eq:u_rel}) it follows that
+%
+\begin{equation}
+\frac{\partial u_{\rm rel}}{\partial v_i} = -\frac{u_i-v_i}{u_{\rm rel}}
+\;,\quad i=y,z
+\end{equation}
+%
+which results in
+%
+\begin{eqnarray}
+c_{{\rm d}11} &=& \Dd\rhow\Cda |u_x - v_x| \\
+%
+c_{{\rm d}22} &=& \frac{1}{2}\Dd\rhow\Cd \left(
+\frac{\left(u_y-v_y\right)^2}{u_{\rm rel}} + u_{\rm rel}
+\right) \\
+%
+c_{{\rm d}33} &=& \frac{1}{2}\Dd\rhow\Cd \left(
+\frac{\left(u_z-v_z\right)^2}{u_{\rm rel}} + u_{\rm rel}
+\right) \\
+%
+c_{{\rm d}23} = c_{{\rm d}32} &=& \frac{1}{2}\Dd\rhow\Cd
+\frac{\left(u_y-v_y\right)\left(u_z-v_z\right)}{u_{\rm rel}}
+\end{eqnarray}
+
+\subsection{Added mass forces and associated mass matrix terms}
+
+The added mass force, $f_{\rm a}$, is also assumed to act normal to the beam
+axis at any time.
+However, it is clear the $f_{\rm a}$ is a linear function of the acceleration,
+and thus we may compute the added mass force resultant by using
+equation~(\ref{eq:added mass force}) in each coordinate direction, as follows:
+%
+\begin{equation}
+\label{eq:local added mass force vector}
+\bm{f}_{{\rm a}_i}^e = \frac{\pi}{4}\Dd^2\rhow \left(\left[\begin{array}{r}
+C_{\rm m,axial}\dot{u}_x \\ \Cm\dot{u}_y \\ \Cm\dot{u}_z
+\end{array}\right] - \left[\begin{array}{r}
+\Caa\dot{v}_x \\ \Ca\dot{v}_y \\ \Ca\dot{v}_z
+\end{array}\right]\right)
+\end{equation}
+%
+where $\Cma$ and $\Caa$ are inertia and added mass coefficients for motion in
+the axial direction of the beam element.
+Normally these coefficients are both zero.
+
+The tangent matrix terms associated with this added mass force are obtained by
+taking the variation of equation~(\ref{eq:local added mass force vector}) with
+respect to the local structural accelerations, $\dot{\bm{v}}_i^e$, i.e.,
+(omitting the indices $e$ and $i$)
+%
+\begin{equation}
+\delta\bm{f}_{\rm a} =
+\frac{\partial\bm{f}_{\rm a}}{\partial\dot{\bm{v}}} \delta\dot{\bm{v}} =
+-{\bf m}_{{\rm a}_i}^e \delta\dot{\bm{v}}
+\end{equation}
+%
+where ${\bf m}_{{\rm a}_i}^e$ is a $3\times3$ diagonal mass matrix with the
+non-zero terms as follows:
+%
+\begin{eqnarray}
+m_{{\rm a}11} = -\frac{\partial f_{{\rm a}x}}{\partial\dot{v}_x} &=&
+\frac{\pi}{4}\Dd^2\rhow\Caa \\
+%
+m_{{\rm a}22} = -\frac{\partial f_{{\rm a}y}}{\partial\dot{v}_y} &=&
+\frac{\pi}{4}\Dd^2\rhow\Ca \\
+%
+m_{{\rm a}33} = -\frac{\partial f_{{\rm a}z}}{\partial\dot{v}_z} &=&
+\frac{\pi}{4}\Dd^2\rhow\Ca
+\end{eqnarray}
+
+\section{Hydrodynamic element load vectors}
+
+The above expressions for drag and added mass forces denote forces per unit
+length of the beam element, evaluated at each end node of the element.
+To get the total force vector for a given element we must integrate these forces
+along the element.
+We do that by assuming a linear variation of the hydrodynamic forces along each
+element between the two end point values, i.e.
+%
+\begin{equation}
+\bm{f}_{\rm hd}^e(\xi) := (1-\xi)(\bm{f}_{{\rm d}_1}^e+\bm{f}_{{\rm a}_1}^e) +
+\xi(\bm{f}_{{\rm d}_2}^e+\bm{f}_{{\rm a}_2}^e)\quad\forall\;\xi\in[0,1]
+\end{equation}
+%
+The consistent hydrodynamic element load vectors may then be calculated as
+%
+\begin{equation}
+\eqalign{
+{\bf F}^e =
+\left[\begin{array}{c} {\bf F}_1^e \\ {\bf F}_2^e \end{array}\right] = &
+\int\limits_0^1 \left[\begin{array}{l}
+\bm{f}_{\rm hd}^e(\xi) (1-\xi) \\
+\bm{f}_{\rm hd}^e(\xi) \xi
+\end{array}\right] L_e{\rm d}\xi \cr = & \left[\begin{array}{l}
+\frac{1}{3}(\bm{f}_{{\rm d}_1}^e+\bm{f}_{{\rm a}_1}^e) +
+\frac{1}{6}(\bm{f}_{{\rm d}_2}^e+\bm{f}_{{\rm a}_2}^e) \\[1mm]
+\frac{1}{6}(\bm{f}_{{\rm d}_1}^e+\bm{f}_{{\rm a}_1}^e) +
+\frac{1}{3}(\bm{f}_{{\rm d}_2}^e+\bm{f}_{{\rm a}_2}^e)
+\end{array}\right] L_e}
+\end{equation}
+
+Similarly, the element drag damping matrix becomes
+%
+\begin{equation}
+{\bf C}_{\rm d}^e \;= \left[\begin{array}{cc}
+{\bf C}_{{\rm d}_1}^e & {\bf 0} \\ {\bf 0} & {\bf C}_{{\rm d}_2}^e
+\end{array}\right] = \left[\begin{array}{cc}
+\frac{1}{3}{\bf c}_{{\rm d}_1}^e +
+\frac{1}{6}{\bf c}_{{\rm d}_2}^e & {\bf 0} \\[1mm] {\bf 0} &
+\frac{1}{6}{\bf c}_{{\rm d}_1}^e +
+\frac{1}{3}{\bf c}_{{\rm d}_2}^e
+\end{array}\right] L_e
+\end{equation}
+%
+and the same for the added mass matrix, ${\bf M}_{\rm a}^e$.
+However, since ${\bf m}_{{\rm a}_1}^e = {\bf m}_{{\rm a}_2}^e$,
+it follows that the element added mass matrix can be written
+%
+\begin{equation}
+{\bf M}_{\rm a}^e \;= \left[\begin{array}{cc}
+{\bf M}_{{\rm a}_1}^e & {\bf 0} \\ {\bf 0} & {\bf M}_{{\rm a}_2}^e
+\end{array}\right] = \left[\begin{array}{cc}
+{\bf m}_{{\rm a}_1}^e & {\bf 0} \\[1mm] {\bf 0} & {\bf m}_{{\rm a}_2}^e
+\end{array}\right] \frac{L_e}{2}
+\end{equation}

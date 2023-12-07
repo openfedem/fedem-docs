@@ -1,0 +1,947 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM User Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\LinkFormatText#1{
+  \medskip
+  {\raggedright\tt#1}
+  \medskip}
+
+\Chapter{FE Model Interface}{fe-model-interface}
+
+Finite Element (FE) models are generated in external
+Computer Aided Engineering (CAE) systems and stored in separate files,
+which Fedem refers to as {\sl FE data files}.
+Fedem stores these files in the Fedem Technology Link format (\File{.ftl}), and
+has import filters for the Nastran Bulk Data Format (\File{.nas} \File{.bdf}),
+the SESAM Input Interface File format (\File{.fem}),
+and the older Fedem Link Model format (\File{.flm}).
+This appendix describes these files and their formats.
+
+Sections in this appendix address the following topics:
+
+\begin{itemize}
+\item
+  \protect\hyperlink{fedem-technology-link-format}
+                    {Fedem Technology Link format}
+\item
+  \protect\hyperlink{nastran-bulk-data-file-format}
+                    {Nastran Bulk Data File format}
+\item
+  \protect\hyperlink{sesam-input-interface-file-format}
+                    {SESAM Input Interface File format}
+\end{itemize}
+
+\clearpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Section{Fedem Technology Link format}{fedem-technology-link-format}
+
+In Release 2.5, Fedem Technology introduced the new \File{.ftl} file format
+for the definition of FE parts. This format is designed to be flexible,
+powerful, and extensible for adding new entries in the model. The file
+is defined in ASCII format and can be easily edited using a text editor.
+
+
+\SubSection{Syntax}{syntax}
+
+An \File{.ftl} file contains a set of identifiers (nodes, elements, control
+data, and attributes) and parameters expressed with the same overall syntax:
+
+\LinkFormatText{identifier\{id value1 \ldots{} valueN \{reference id text\}\}}
+
+\noindent
+\begin{tabular}{| m{0.25\textwidth} | m{0.67\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Name             & Description \\
+  \hline\hline
+  {\tt identifier} & Specifies field type (e.g., element type, attribute type)\\
+  \hline
+  {\tt id} & Unique ID for the field (relative to the other fields with
+             the same identifier) \\
+  \hline
+  {\tt value1\ldots valueN} & Primary values for the object
+                              (can be text, integers, or decimal digits). \\
+  \hline
+  {\tt references} & Additional data or other fields can be referred to
+                     \newline using this field. \\
+  \hline
+  {\tt reference and id} & Field reference (field type specified in
+                           combination with a valid ID). \\
+  \hline
+  {\tt text} & Can be used as additional information for a field
+               \newline reference or as an optional tag (e.g., a group name) \\
+  \hline
+\end{tabular}
+
+\medskip
+The following are examples:
+
+\LinkFormatText{TET4\{4 22 34 12 32 \{PMAT 1\}\}}
+
+\noindent
+A 4-noded tetrahedron element with ID 4, referring to nodes 22, 34, 12 and 32.
+The element uses an attribute of type PMAT with ID 1.
+
+\LinkFormatText{PMAT\{1 2.10e+11 8.00e+10 2.90oe-01 7.82e+03\}}
+
+\noindent
+A material property entry with ID 1 and four decimal numbers describing
+the different parameters in the material.
+
+\Note{All text between a comment symbol ({\tt\#}) and the end of the line
+is ignored.}
+
+
+\SubSection{Nodes}{nodes}
+
+Nodes are expressed by the following syntax:
+
+\LinkFormatText{NODE\{id state x y z\}}
+
+\noindent
+\begin{tabular}{| m{0.12\textwidth} | m{0.15\textwidth} | m{0.62\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter   & Value Type & Description  \\
+  \hline\hline
+  {\tt id}    & Integer & External node identifier \\
+  \hline
+  {\tt state} & Integer & Internal/external state flag \\
+              &         & \small%\footnotesize
+   $=0$ : an internal node condensed out in the reduction \newline
+   $=1$ : an external node retained in the reduction \newline
+   $<0$ : an internal node with constraints, the value is
+   \newline\mbox{}\hskip24pt a binary coding of the fixed DOFs \\
+  \hline
+  \texttt{x y z} &  Real & Global nodal coordinates \\
+  \hline
+\end{tabular}
+
+
+\SubSection{Structural elements}{structural-elements}
+
+Elements are expressed in different ways depending on the element type,
+using the statements in the table below.
+
+\noindent
+  \begin{tabular}{| m{0.96\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Element statements \\
+  \hline\hline
+  {\tt BEAM2\{id n1 n2 \{PMAT pid\}\{PBEAMSECTION gid\}} \\\hskip11mm
+  {\tt[\{PORIENT oid\}][\{PBEAMECCENT eid\}][\{PBEAMPIN bpid\}]} \\\hskip11mm
+  {\tt[\{PEFFLENGTH lid\}][\{PNSM nid\}]\}} \\
+  \hline
+  {\tt BEAM3\{id n1 n2 n3 \{PMAT pid\}\{PBEAMSECTION gid\}} \\\hskip11mm
+  {\tt[\{PORIENT oid\}|\{PORIENT3 oid\}][\{PBEAMECCENT eid\}]} \\\hskip11mm
+  {\tt[\{PBEAMPIN bpid\}][\{PEFFLENGTH lid\}][\{PNSM nid\}]\}} \\
+  \hline
+  {\tt TRI3\{id n1 n2 n3 \{PMAT pid\}\{PTHICK gid\}[\{PNSM nid\}]\}} \\
+  \hline
+  {\tt TRI6\{id n1 n2 ... n6 \{PMAT pid\}\{PTHICK gid\}[\{PNSM nid\}]\}} \\
+  \hline
+  {\tt QUAD4\{id n1 n2 n3 n4 \{PMAT pid\}\{PTHICK gid\}[\{PNSM nid\}]\}} \\
+  \hline
+  {\tt QUAD8\{id n1 n2 ... n8 \{PMAT pid\}\{PTHICK gid\}[\{PNSM nid\}]\}} \\
+  \hline
+  {\tt TET4\{id n1 n2 n3 n4 \{PMAT pid\}\}} \\
+  \hline
+  {\tt TET10\{id n1 n2 ... n10 \{PMAT pid\}\}} \\
+  \hline
+  {\tt WEDG6\{id n1 n2 ... n6 \{PMAT pid\}\}} \\
+  \hline
+  {\tt WEDG15\{id n1 n2 ... n15 \{PMAT pid\}\}} \\
+  \hline
+  {\tt HEX8\{id n1 n2 ... n8 \{PMAT pid\}\}} \\
+  \hline
+  {\tt HEX20\{id n1 n2 ... n20 \{PMAT pid\}\}} \\
+  \hline
+  {\tt BUSH\{id n1 n2 [\{PBUSHCOEFF bcid\}][\{PBUSHECCENT beid\}]} \\\hskip9mm
+  {\tt[\{PORIENT oid\}|\{PCOORDSYS csid\}]\}} \\
+  \hline
+  {\tt SPRING\{id n1 n2 \{PSPRING sid\}\}} \\
+  \hline
+  {\tt RSPRING\{id n1 n2 \{PSPRING sid\}\}} \\
+  \hline
+  {\tt CMASS\{id n1 [\{PMASS mid\}]\}} \\
+  \hline
+\end{tabular}
+
+\noindent
+\begin{tabular}{| m{0.96\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Element statements   \\
+  \hline\hline
+  {\tt RBAR\{id n1 n2 \{PRBAR rid\}\}}\\
+  \hline
+  {\tt RGD\{id n1 n2 ... nn [\{PRGD rid\}]\}} \\
+  \hline
+  {\tt WAVGM\{id n1 n2 ... nn \{PWAVGM wid\}\}} \\
+  \hline
+\end{tabular}
+
+\Note{The identifiers correspond to the element types defined in the
+  \FedemTGuide{Appendix A, "Finite Element library"}.}
+
+\Note{The square brackets ([]) denote optional parameters. The vertical
+  bar (\textbar) means that either one of the two parameters on each side
+  of it may be specified, but not both.}
+
+\Note{All element types listed above may have the reference field
+  \{\tt VDETAIL vid\} in addition to the property references listed.}
+
+\Note{The elements {\tt BUSH} and {\tt CMASS} may exist without any associated
+  properties ({\tt PBUSHCOEFF} and {\tt PMASS} , respectively)
+  in the \File{.ftl} file.
+  Such elements are created automatically by Fedem during modeling, e.g.,
+  when a mechanism joint is attached to a slave FE node in a part (see
+  \refSection{attaching-and-detaching-elements}{Attaching and detaching elements}).
+  When the Fedem Reducer encounters such property-less elements, some
+  stiffness/mass properties are computed automatically for these elements
+  based on the assembled stiffness/mass matrix of the whole part, such that
+  the element can be regarded as nearly mass-less and rigid. Refer to the
+  \FedemTGuide{Appendix A, "Finite Element library"} for details on this computation.}
+
+Parameters for element statements are given in the table below.
+
+\noindent
+\begin{tabular}{| m{0.08\textwidth} | m{0.85\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Param. & Description  \\
+  \hline\hline
+  {\tt id} & External element identifier \\
+  \hline
+  {\tt ni} & Reference to the ith node connected to this element \\
+  \hline
+  {\tt bcid} & Reference to a stiffness coefficient field for bushing elements \\
+  \hline
+  {\tt beid} & Reference to an eccentricity field for bushing elements \\
+  \hline
+  {\tt bpid} & Reference to a pin flag field for beam elements \\
+  \hline
+  {\tt csid} & Reference to a local coordinate system field \\
+  \hline
+  {\tt eid} & Reference to an eccentricity field for beam elements \\
+  \hline
+  {\tt gid} & Reference to a geometric property field for beam and shell elements \\
+  \hline
+  {\tt lid} & Reference to an effective length field for beam elements \\
+  \hline
+  {\tt mid} & Reference to a mass property field for concentrated mass elements \\
+  \hline
+  {\tt nid} & Reference to a non-structural mass field for beam and shell elements \\
+  \hline
+  {\tt oid} & Reference to an orientation field for this element \\
+  \hline
+  {\tt pid} & Reference to a material field for this element \\
+  \hline
+  {\tt rid} & Reference to a component numbers field for rigid elements \\
+  \hline
+\end{tabular}
+
+\noindent
+\begin{tabular}{| m{0.08\textwidth} | m{0.85\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter & Description  \\
+  \hline\hline
+  {\tt sid} & Reference to a stiffness matrix field for spring elements.\newline
+              For {\tt SPRING} elements it refers to a {\tt PSPRING}
+              entry with {\tt type}=1,
+              whereas for {\tt RSPRING} elements it refers to a {\tt PSPRING}
+              entry with {\tt type}=2. \\
+  \hline
+  {\tt vid} & Reference to a visibility status field for this element \\
+  \hline
+  {\tt wid} & Reference to a weight- and component numbers field for
+              weighted averaged motion elements \\
+  \hline
+\end{tabular}
+
+
+\SubSection{Properties}{properties}
+
+The various properties that are used in the structural element expressions
+have the following syntax:
+
+% PMat
+\LinkFormatText{PMAT\{pid $E$ $G$ $\nu$ $\rho$\}}
+
+\noindent
+\begin{tabular}{| m{0.12\textwidth} | m{0.15\textwidth} | m{0.62\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter & Value Type & Description \\
+  \hline\hline
+  {\tt pid} & Integer & Material property identifier \\
+  \hline
+  {\tt $E$} & Real & Young’s modulus \\
+  \hline
+  {\tt $G$} & Real & Shear modulus (used by beam elements only) \\
+  \hline
+  $\nu$     & Real &  Poisson’s ratio \\
+  \hline
+  $\rho$    & Real &  Material density \\
+  \hline
+\end{tabular}
+
+% PBeamSection
+\LinkFormatText{PBEAMSECTION\{gid a iyy izz ixx ky kz cy cz\}}
+
+\noindent
+\begin{tabular}{| m{0.12\textwidth} | m{0.15\textwidth} | m{0.62\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter & Value Type & Description  \\
+  \hline\hline
+  {\tt gid} & Integer & Geometric property identifier \\
+  \hline
+  {\tt a}   & Real & Cross-sectional area \\
+  \hline
+  {\tt iyy izz} & Real & Moments of inertia about the local
+                        $Y$- and $Z$-axes of the beam \\
+  \hline
+  {\tt ixx}   & Real & Torsional stiffness parameter \\
+  \hline
+  {\tt ky kz} & Real & Transverse shear reduction factors \\
+  \hline
+  {\tt cx cz} & Real & Local $Y$- and $Z$-coordinates of the shear center
+                of the beam cross section \\
+  \hline
+\end{tabular}
+
+%PBeamEccent
+\LinkFormatText{PBEAMECCENT\{eid ex1 ey1 ez1 ex2 ey2 ez2 [ex3 ey3 ez3]\}}
+
+\noindent
+\begin{tabular}{| m{0.18\textwidth} | m{0.15\textwidth} | m{0.56\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter   & Value Type & Description  \\
+  \hline\hline
+  {\tt eid}      & Integer & Eccentricity vectors identifier \\
+  \hline
+  {\tt ex1 ey1 ez1} & Real & Eccentricity vector at local node 1 \\
+  \hline
+  {\tt ex2 ey2 ez2} & Real & Eccentricity vector at local node 2 \\
+  \hline
+  {\tt ex3 ey3 ez3} & Real & Eccentricity vector at local node 3 \\
+  \hline
+\end{tabular}
+
+% PEFFLENGTH
+\LinkFormatText{PEFFLENGTH\{lid leff\}}
+
+\noindent
+\begin{tabular}{| m{0.13\textwidth} | m{0.15\textwidth} | m{0.61\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter  & Value Type & Description  \\
+  \hline\hline
+  {\tt lid}  & Integer & Effective length identifier \\
+  \hline
+  {\tt leff} & Real    & Effective beam length \\
+  \hline
+\end{tabular}
+
+% PBEAMPIN
+\LinkFormatText{PBEAMPIN\{bpid pa pb\}}
+
+\noindent
+\begin{tabular}{| m{0.13\textwidth} | m{0.15\textwidth} | m{0.61\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter  & Value Type & Description  \\
+  \hline\hline
+  {\tt bpid} & Integer & Beam pin flag identifier \\
+  \hline
+  {\tt pa}   & Integer & Local DOFs in end 1 that are released \\
+  \hline
+  {\tt pb}   & Integer & Local DOFs in end 2 that are released \\
+  \hline
+\end{tabular}
+
+% PNSM
+\LinkFormatText{PNSM\{nid rho flag\}}
+
+\noindent
+\begin{tabular}{| m{0.13\textwidth} | m{0.15\textwidth} | m{0.61\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter & Value Type & Description  \\
+  \hline\hline
+  {\tt nid} & Integer & Non-structural mass identifier \\
+  \hline
+  {\tt rho} & Real & The non-structural mass per unit length \newline
+                     if {\tt flag}=0, and per unit area if {\tt flag}=1 \\
+  \hline
+  {\tt flag} & Integer & Flag indicating if this entry is used by a beam or shell \\
+  \hline
+\end{tabular}
+
+% PTHICK
+\LinkFormatText{PTHICK \{gid t\}}
+
+\noindent
+\begin{tabular}{| m{0.13\textwidth} | m{0.15\textwidth} | m{0.61\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter & Value Type & Description \\
+  \hline\hline
+  {\tt gid} & Integer & Geometric property identifier \\
+  \hline
+  {\tt t} & Real & Shell thickness \\
+  \hline
+\end{tabular}
+
+% PBUSHCOEFF
+\LinkFormatText{PBUSHCOEFF\{bcid k1 k2 k3 k4 k5 k6\}}
+
+\noindent
+\begin{tabular}{| m{0.13\textwidth} | m{0.15\textwidth} | m{0.61\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter  & Value Type & Description \\
+  \hline\hline
+  {\tt bcid} & Integer & Bushing coefficients identifier \\
+  \hline
+  {\tt ki} & Real & Stiffness coefficients in local element directions \\
+  \hline
+\end{tabular}
+
+% PBUSHECCENT
+\LinkFormatText{PBUSHECCENT\{beid ex ey ez\}}
+
+\noindent
+\begin{tabular}{| m{0.13\textwidth} | m{0.15\textwidth} | m{0.61\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter & Value Type & Description  \\
+  \hline\hline
+  {\tt beid} & Integer & Eccentricity vector identifier \\
+  \hline
+  {\tt ex ey ez} & Real & Offset vector from local node 1 to the
+                          bushing element location \\
+  \hline
+\end{tabular}
+
+\clearpage
+% PORIENT
+\LinkFormatText{PORIENT\{oid ox oy oz\}}
+
+\noindent
+\begin{tabular}{| m{0.13\textwidth} | m{0.15\textwidth} | m{0.61\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter & Value Type & Description \\
+  \hline\hline
+  {\tt oid} & Integer & Orientation vector identifier \\
+  \hline
+  {\tt ox oy oz} & Real & Local z-axis of the element \\
+  \hline
+\end{tabular}
+
+% PORIENT3
+\LinkFormatText{PORIENT3\{oid ox1 oy1 oz1 ox2 oy2 oz2 ox3 oy3 oz3\}}
+
+\noindent
+\begin{tabular}{| m{0.18\textwidth} | m{0.15\textwidth} | m{0.56\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter & Value Type & Description \\
+  \hline\hline
+  {\tt oid} & Integer & Orientation vector identifier \\
+  \hline
+  {\tt ox1 oy1 oz1} & Real & Local $Z$-axis at element node 1 \\
+  \hline
+  {\tt ox2 oy2 oz2} & Real & Local $Z$-axis at element node 2 \\
+  \hline
+  {\tt ox3 oy3 oz3} & Real & Local $Z$-axis at element node 3 \\
+  \hline
+\end{tabular}
+
+% PCOORDSYS
+\LinkFormatText{PCOORDSYS\{csid ox oy oz zx zy zz px py pz\}}
+
+\noindent
+\begin{tabular}{| m{0.13\textwidth} | m{0.15\textwidth} | m{0.61\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter  & Value Type & Description \\
+  \hline\hline
+  {\tt csid} & Integer & Local coordinate system identifier \\
+  \hline
+  {\tt ox oy oz} & Real & Origin of the local coordinate system \\
+  \hline
+  {\tt zx zy zz} & Real & Local $Z$-axis in the coordinate system \\
+  \hline
+  {\tt px py pz} & Real & Point in the local $XZ$-plane \\
+  \hline
+\end{tabular}
+
+% PSPRING
+\LinkFormatText{PSPRING\{sid k11 k21 k22 k31 k32 k33 k41 k42 k43 k44
+\newline\mbox{}\hskip22mm k51 k52 k53 k54 k55 k61 k62 k63 k64 k65 k66 type\}}
+
+\noindent
+  \begin{tabular}{| m{0.13\textwidth} | m{0.15\textwidth} | m{0.61\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter  & Value Type & Description \\
+  \hline\hline
+  {\tt sid}  & Integer & Spring stiffness matrix identifier \\
+  \hline
+  {\tt kij}  & Real & Component $(i,j)$ of the symmetric $6\times6$
+               spring stiffness matrix \\
+  \hline
+  {\tt type} & Integer & Spring type flag \newline
+  (1 = Translatory spring, 2 = Rotational spring) \\
+  \hline
+\end{tabular}
+
+% PMASS
+\LinkFormatText{PMASS\{mid I11 I21 I22 I31 I32 I33 I41 I42 I43 I44
+\newline\mbox{}\hskip18.4mm I51 I52 I53 I54 I55 I61 I62 I63 I64 I65 I66\}}
+
+\noindent
+\begin{tabular}{| m{0.13\textwidth} | m{0.15\textwidth} | m{0.61\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter & Value Type & Description \\
+  \hline\hline
+  {\tt mid} & Integer & Mass property identifier \\
+  \hline
+  {\tt Iij} & Real & Component $(i,j)$ of the symmetric point-mass matrix \\
+  \hline
+\end{tabular}
+
+\clearpage
+% PRBAR
+\LinkFormatText{PRBAR\{rid cn1 cn2 cm1 cm2\}}
+
+\noindent
+\begin{tabular}{| m{0.13\textwidth} | m{0.15\textwidth} | m{0.61\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter & Value Type & Description \\
+  \hline\hline
+  {\tt rid} & Integer & Rigid bar property identifier \\
+  \hline
+  {\tt cn1 cn2} & Integer & Component numbers of independent DOFs in
+                            the part coordinate system for the element
+                            at end 1 and 2, respectively \\
+  \hline
+  {\tt cm1 cm2} & Integer & Component numbers of dependent DOFs in
+                            the part coordinate system assigned by the element
+                            at end 1 and 2, respectively \\
+  \hline
+\end{tabular}
+
+% PRGD
+\LinkFormatText{PRGD \{rid cm\}}
+
+\noindent
+\begin{tabular}{| m{0.13\textwidth} | m{0.15\textwidth} | m{0.61\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter & Value Type & Description \\
+  \hline\hline
+  {\tt rid} & Integer & Rigid body property identifier \\
+  \hline
+  {\tt cm}  & Integer & Component numbers of the dependent DOFs in
+                        the part coordinate system at all slave nodes of
+                        the rigid element \\
+  \hline
+\end{tabular}
+
+% PWAVGM
+\LinkFormatText{PWAVGM\{wid rc x1...x6 w11...w1n w21...w2n ...\}}
+
+\noindent
+\begin{tabular}{| m{0.13\textwidth} | m{0.15\textwidth} | m{0.61\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter & Value Type & Description \\
+  \hline\hline
+  {\tt wid} & Integer & Weighted averaged motion property identifier \\
+  \hline
+  {\tt rc}  & Integer & Component numbers of the dependent DOFs at the slave
+                        node of the weighted average motion element. \\
+  \hline
+  {\tt xi}  & Integer & Row index into the weighting matrix for local
+                        DOF $i$ at the slave node \\
+  \hline
+  {\tt wij} & Real & Weight factor at master node $j$ for the element,
+                     for all slave DOFs whose row index equals $i$ \\
+  \hline
+\end{tabular}
+
+% VDETAIL
+\LinkFormatText{VDETAIL\{vid visible\}}
+
+\noindent
+\begin{tabular}{ | m{0.13\textwidth} | m{0.15\textwidth} | m{0.61\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter     & Value Type & Description \\
+  \hline\hline
+  {\tt vid}     & Integer & Visibility status identifier \\
+  \hline
+  {\tt visible} & Integer & Visibility flag (value 0 means invisible element
+                            faces whereas 1 means visible element faces) \\
+  \hline
+\end{tabular}
+
+\clearpage
+
+
+\SubSection{Loads}{ftl-loads}
+
+Both concentrated point loads on nodes and distributed surface loads on shell
+and solid elements are supported. The \File{.ftl} syntax is as follows:
+
+\medskip{\tt\noindent
+CFORCE\{sid fx fy fz n$_1$ ... n$_n$\} \\[5pt]\noindent
+CMOMENT\{sid mx my mz n$_1$ ... n$_n$\} \\[5pt]\noindent
+SURFLOAD\{sid p$_1$ ... p$_n$ e$_1$ ... e$_n$ [\{PORIENT oid\}]\}\\[5pt]\noindent
+FACELOAD\{sid p$_1$ ... p$_n$ e$_1$ f$_1$ ... e$_n$ f$_n$ [\{PORIENT oid\}]\}}
+
+\medskip\noindent
+\begin{tabular}{| m{0.13\textwidth} | m{0.15\textwidth} | m{0.61\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter & Value Type & Description \\
+  \hline\hline
+  {\tt sid}   & Integer & Load set identifier \\
+  \hline
+  {\tt fx fy fz} & Real & Global force components \\
+  \hline
+  {\tt mx my mz} & Real & Global torque components \\
+  \hline
+  {\tt p$_i$} & Real    & Surface force intensity in local node $i$ \\
+  \hline
+  {\tt n$_i$} & Integer & Node IDs of load target points \\
+  \hline
+  {\tt e$_i$} & Integer & Element IDs \\
+  \hline
+  {\tt f$_i$} & Integer & Local face numbers \\
+  \hline
+\end{tabular}
+
+
+\SubSection{Strain Coat Elements}{strain-coat-lements}
+
+Four strain coat element types are supported, where the type names
+reflect the number of element nodes. The \File{.ftl} syntax is as follows:
+
+\medskip{\tt\noindent
+STRCT3\{id n$_1$ n$_2$ n$_3$
+\{PSTRC pid$_1$\} ... \{PSTRC pid$_n$\} \{FE eid\}\} \\[5pt]\noindent
+STRCT6\{id n$_1$ n$_2$ ... n$_6$
+\{PSTRC pid$_1$\} ... \{PSTRC pid$_n$\} \{FE eid\}\} \\[5pt]\noindent
+STRCQ4\{id n$_1$ n$_2$ n$_3$ n$_4$
+\{PSTRC pid$_1$\} ... \{PSTRC pid$_n$\} \{FE eid\}\} \\[5pt]\noindent
+STRCQ8\{id n$_1$ n$_2$ ... n$_8$
+\{PSTRC pid$_1$\} ... \{PSTRC pid$_n$\} \{FE eid\}\}}
+
+\medskip\noindent
+\begin{tabular}{| m{0.13\textwidth} | m{0.79\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter & Description \\
+  \hline\hline
+  {\tt id}  & External element identifier \\
+  \hline
+  {\tt n$_i$} & Reference to the ith node connected to this element \\
+  \hline
+  {\tt pid$_i$} & Reference to the property field of the $i^{th}$
+                  calculation point for this element \\
+  \hline
+  {\tt eid} & Reference to the underlying structural FE element \\
+  \hline
+\end{tabular}
+
+
+\SubSection{Strain Coat Properties}{strain-coat-properties}
+
+The property fields that are referred to by the strain coat element
+fields have the following syntax:
+
+\LinkFormatText{PSTRC\{pid name \{PMAT mid\}[\{PTHICKREF tid\}|\{PHEIGHT hid\}]\}}
+
+\noindent
+\begin{tabular}{| m{0.13\textwidth} | m{0.15\textwidth} | m{0.61\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter  & Value Type & Description \\
+  \hline\hline
+  {\tt pid}  & Integer & Strain coat property identifier \\
+  \hline
+  {\tt name} & String & Result set name to be displayed in the animation UI
+                        (one of {\sl Top}, {\sl Bottom} or {\sl Basic}) \\
+  \hline
+  {\tt mid}  & Integer & Reference to a material property field \\
+  \hline
+  {\tt tid}  & Integer & Reference to a thickness-relative z-position field \\
+  \hline
+  {\tt hid}  & Integer & Reference to an absolute z-position field \\
+  \hline
+\end{tabular}
+
+% PTHICKREF
+\LinkFormatText{PTHICKREF\{tid fact \{PTHICK gid\}\}}
+
+\noindent
+\begin{tabular}{| m{0.13\textwidth} | m{0.15\textwidth} | m{0.61\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter  & Value Type & Description \\
+  \hline\hline
+  {\tt tid}  & Integer & z-position identifier \\
+  \hline
+  {\tt fact} & Real & Location of the calculation point in the thickness
+                      direction of a shell as a fraction of the referenced
+                      shell thickness, i.e., the z-position is $z={\tt fact}*t$ \\
+             &      & where $t$ is the thickness referenced through the
+                      parameter {\tt gid}. \\
+  \hline
+  {\tt gid}  & Integer & Reference to a thickness field \\
+  \hline
+\end{tabular}
+
+% PHEIGHT
+\LinkFormatText{PHEIGHT \{hid h\}}
+
+\noindent
+\begin{tabular}{| m{0.13\textwidth} | m{0.15\textwidth} | m{0.61\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter & Value Type & Description \\
+  \hline\hline
+  {\tt hid} & Integer & $Z$-position identifier \\
+  \hline
+  {\tt h} & Real & Absolute location of the calculation point in the
+                   thickness direction of a shell, i.e.,
+                   the $Z$-position is $z=h$ \\
+  \hline
+\end{tabular}
+
+
+\SubSection{Other identifiers}{other-identifiers}
+
+The following identifiers are used to define element groups:
+
+\LinkFormatText{GROUP\{id e1 e2 ... en \{NAME name\}\}}
+
+\noindent
+\begin{tabular}{| m{0.13\textwidth} | m{0.15\textwidth} | m{0.61\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  Parameter & Value Type & Description \\
+  \hline\hline
+  {\tt id} & Integer & Group identifier \\
+  \hline
+  {\tt ei} & Integer & ID of the $i^{th}$ element in this group \\
+  \hline
+  {\tt name} & String & Name tag of this group \\
+  \hline
+\end{tabular}
+
+\clearpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Section{Nastran Bulk Data File format}{nastran-bulk-data-file-format}
+
+Fedem supports a wide range of Nastran bulk data entries (see table below).
+For most element types, implicit conversion to a known Fedem element type is
+performed. Refer to Nastran's Bulk Data File documentation for details about
+properties and syntax for each entry, and the
+\FedemTGuide{Appendix A, "Finite Element Library"}
+for details about the Finite Element library in Fedem.
+
+FE models in {\sl Nastran bulk data file} format can be
+directly imported as parts into Fedem using the Import Part command
+(see \refSection{creating-parts-by-file-import}{Creating parts by file import}).
+
+\Note{Each FE model to be imported into Fedem must be stored in a separate bulk
+  data file with the Bulk Data File extension (\File{.nas} or \File{.bdf}).}
+
+\begin{tabular}{| m{0.25\textwidth} |  m{0.5\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF} Nastran Bulk      & Comments \\
+  \rowcolor[HTML]{EFEFEF} Data Conversation &          \\
+  \hline\hline
+  {\tt BAROR}  & \\\hline
+  {\tt BEAMOR} & \\\hline
+  {\tt CBAR}   & \\\hline
+  {\tt CBEAM}  & Same as {\tt CBAR} \\\hline
+  {\tt CBUSH}  & \\\hline
+  {\tt CELAS1} & \\\hline
+  {\tt CELAS2} & Same as {\tt CELAS1} \\\hline
+  {\tt CHEXA}  & Supports both 8 and 20 nodes \\\hline
+  {\tt CONM1}  & \\\hline
+  {\tt CONM2}  & Same as {\tt CONM1} \\\hline
+  {\tt CONROD} & \\\hline
+  {\tt CORD1C} & \\\hline
+  {\tt CORD1R} & \\\hline
+  {\tt CORD1S} & \\\hline
+  {\tt CORD2C} & \\\hline
+  {\tt CORD2R} & \\\hline
+  {\tt CORD2S} & \\\hline
+  {\tt CPENTA} & Supports both 6 and 15 nodes \\\hline
+  {\tt CQUAD4} & \\\hline
+  {\tt CQUAD8} & \\\hline
+  {\tt CROD}   & Same as {\tt CONROD} \\\hline
+  {\tt CTETRA} & Supports both 4 and 10 nodes \\\hline
+  {\tt CTRIA3} & \\\hline
+  {\tt CTRIA6} & \\\hline
+\end{tabular}
+
+\begin{tabular}{| m{0.25\textwidth} |  m{0.5\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF} Nastran Bulk      & Comments \\
+  \rowcolor[HTML]{EFEFEF} Data Conversation &          \\
+  \hline\hline
+  {\tt CWELD}  & \\\hline
+  {\tt CORD2R} & \\\hline
+  {\tt CORD2S} & \\\hline
+  {\tt CPENTA} & Supports both 6 and 15 nodes \\\hline
+  {\tt CQUAD4} & \\\hline
+  {\tt CQUAD8} & \\\hline
+  {\tt CROD}   & Same as {\tt CONROD} \\\hline
+  {\tt CTETRA} & Supports both 4 and 10 nodes \\\hline
+  {\tt CTRIA3} & \\\hline
+  {\tt CTRIA6} & \\\hline
+  {\tt CWELD}  & \\\hline
+  {\tt FORCE}  & \\\hline
+  {\tt GRDSET} & \\\hline
+  {\tt GRID}   & \\\hline
+  {\tt INCLUDE} & \\\hline
+  {\tt MAT1}   & See below \\\hline
+  {\tt MOMENT} & \\\hline
+  {\tt PBAR}   & \\\hline
+  {\tt PBARL}  & See below \\\hline
+  {\tt PBEAM}  & \\\hline
+  {\tt PBEAML} & See below \\\hline
+  {\tt PBUSH}  & \\\hline
+  {\tt PELAS}  & \\\hline
+  {\tt PLOAD2} & \\\hline
+  {\tt PLOAD4} & \\\hline
+  {\tt PROD}   & \\\hline
+  {\tt PSHELL} & \\\hline
+  {\tt PSOLID} & \\\hline
+  {\tt PWELD}  & \\\hline
+  {\tt RBAR}   & \\\hline
+  {\tt RBE2}   & \\\hline
+  {\tt RBE3}   & \\\hline
+  {\tt ASET}   & Automatic definition of external nodes \\\hline
+  {\tt ASET1}  & Same as ASET \\\hline
+  {\tt SPC}    & See below \\\hline
+  {\tt SPC1}   & See below \\\hline
+\end{tabular}
+
+\Note{For the {\tt PBARL}/{\tt BPEAML} entries,
+  Fedem currently supports the following cross section types
+  (see the MSC/Nastran Reference guide for details):
+  {\tt ROD}, {\tt TUBE}, {\tt BAR}, {\tt BOX}, {\tt I} and {\tt T}.
+  Any other cross section types have to be manually replaced by equivalent
+  {\tt PBAR}/{\tt PBEAM} entries.}
+
+\Note{The shear modulus in the {\tt MAT1} bulk entry is only used by beam
+  elements. If the value on the Nastran file is zero for a {\tt MAT1} entry that
+  is used by a beam element, the shear modulus is automatically recomputed from
+  the Young's modulus and Poisson's ratio through the formula $G=E/(2+2\nu)$.
+  However, if $G=0$ is desired for a beam element, that is still possible by
+  editing the \File{.ftl} file created in the \File{link\_DB} directory when
+  the model is saved.}
+
+\Note{If the Poisson's ratio in the MAT1 bulk entry is not given or is outside
+  the valid range {\rm[0, 0.5\textgreater}, but the shear modulus is given,
+  the Poisson's ratio will be derived from the Young's modulus and the
+  shear modulus, through the expression $\nu=E/2G-1$, if that yields a
+  value within the valid range.}
+
+\Note{The {\tt SPC} (and {\tt SPC1}) bulk entry is used to specify fixed DOFs in
+  FE nodes and is an alternative to specify the node as external and constrain
+  it on the system level. Non-zero prescribed values are h owever treated as
+  zero in Fedem (always fixed).}
+
+\clearpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Section{SESAM Input Interface File format}{sesam-input-interface-file-format}
+
+Fedem supports the SESAM input interface file data entries as shown in the table
+below.
+
+\medskip
+\begin{tabular}{| m{0.22\textwidth} | m{0.6\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF} SESAM keyword  &  Comments  \\
+  \hline\hline
+  {\tt BELFIX}   & \\\hline
+  {\tt BLDEP}    & \\\hline
+  {\tt BNBCD }   & Only the {\sl Fixed}(1) and {\sl Free}(0) status codes are \\
+                 & considered in Fedem. Other values are ignored. \\\hline
+  {\tt BNMASS}   & \\\hline
+  {\tt GBEAMG}   & \\\hline
+  {\tt GCOORD}   & \\\hline
+  {\tt GECCEN}   & \\\hline
+  {\tt GELMNT1}  & See table below for supported element types \\\hline
+  {\tt GELREF1}  & \\\hline
+  {\tt GELTH}    & \\\hline
+  {\tt GSETMEMB} & \\\hline
+  {\tt GUNIVEC}  & \\\hline
+  {\tt MGSPRNG}  & \\\hline
+  {\tt MISOSEL}  & \\\hline
+  {\tt TDMATER}  & \\\hline
+  {\tt TDSECT}   & \\\hline
+  {\tt TDSETNAM} & \\\hline
+\end{tabular}
+
+\clearpage
+
+The following SESAM element types are supported:
+
+\medskip
+\begin{tabular}{| m{0.25\textwidth} |  m{0.6\textwidth} |}
+  \hline
+  \rowcolor[HTML]{EFEFEF} SESAM type name & Equivalent FEDEM type name \\
+  \hline\hline
+  {\tt BEPS} & {\tt BEAM2}   \\\hline
+  {\tt BEAS} & {\tt BEAM2}   \\\hline
+  {\tt SECB} & {\tt BEAM3}   \\\hline
+  {\tt BTSS} & {\tt BEAM3} subdivided to two {\tt BEAM2} \\\hline
+  {\tt GSPR} & {\tt RSPRING} \\\hline
+  {\tt CSTA} & {\tt TRI3}    \\\hline
+  {\tt FTRS} & {\tt TRI3}    \\\hline
+  {\tt LQUA} & {\tt QUAD4}   \\\hline
+  {\tt FQUS} & {\tt QUAD4}   \\\hline
+  {\tt ILST} & {\tt TRI6}    \\\hline
+  {\tt SCTS} & {\tt TRI6}    \\\hline
+  {\tt IQQE} & {\tt QUAD8}   \\\hline
+  {\tt SCQS} & {\tt QUAD8}   \\\hline
+  {\tt ITET} & {\tt TET10}   \\\hline
+  {\tt IPRI} & {\tt WEDG15}  \\\hline
+  {\tt IHEX} & {\tt HEX20}   \\\hline
+  {\tt TETR} & {\tt TET4}    \\\hline
+  {\tt TPRI} & {\tt WEDG6}   \\\hline
+  {\tt LHEX} & {\tt HEX8}    \\\hline
+  {\tt GMAS} & {\tt CMASS}   \\\hline
+\end{tabular}

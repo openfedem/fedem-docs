@@ -1,0 +1,489 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Fundamentals}
+\label{c:Fundamentals}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Notation}
+\label{s:Notation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Matrices and matrix vectors (one column matrices), are denoted in text as
+upright bold symbols, such as $\mf K$ and $\mf v$.
+Tensors are denoted in italicized bold symbols, such as ${\tf a}=a_i{\tf i}_i$.
+
+Given two coordinate systems with the three orthonormal base vectors
+$({\tf I}_1 {\tf I}_2 {\tf I}_3)$ and $({\tf i}_1 {\tf i}_2 {\tf i}_3)$,
+system ${\tf I}_i$ is called the \textit{global system}, whereas system
+${\tf i}_i$ is called the \textit{local system}.
+
+Using \textit{tensor notation}, a vector (first order tensor) $\tf a$
+can be represented as
+%
+\begin{equation}
+\eqalign{
+{\tf a} \;=\; & a_1{\tf I}_1 + a_2{\tf I}_2 + a_3{\tf I}_3 \;=\;
+\sum_{i=1}^3 a_i{\tf I}_i \;=\; a_i{\tf I}_i \cr =\; &
+{\tilde a}_1{\tf i}_1 + {\tilde a}_2{\tf i}_2 + {\tilde a}_3{\tf i}_3 \;=\;
+\sum_{i=1}^3 {\tilde a}_i{\tf i}_i \;=\; {\tilde a}_i{\tf i}_i}
+\end{equation}
+%
+with respect to the two coordinate systems.
+
+Using \textit{matrix notation}, this same vector will be represented as $\mf a$
+and $\tilde{\mf a}$ in the global and local coordinate systems respectively:
+%
+\begin{equation}
+{\mf a} \;= \left[\begin{array}{c}
+ a_1 \\ a_2 \\ a_3
+\end{array}\right]
+\quad\mbox{and}\quad
+\tilde{\mf a} \;= \left[\begin{array}{c}
+\tilde a_1 \\ \tilde a_2 \\ \tilde a_3
+\end{array}\right]
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Rigid-body motion}
+\label{s:Rigid-body motion}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The position and orientation in space of a rigid body, $\cal S$, can be
+represented by the position and orientation of a fixed coordinate system.
+This rigid body can be a link or a superelement.
+This section addresses the rigid-body motion of the superelement.
+
+The vector $\mf s$ represents the position of the fixed coordinate system
+in relation to the global coordinate system.
+The fixed coordinate system is defined by the three orthonormal base vectors
+$({\tf i}_1,{\tf i}_2,{\tf i}_3)$, which comprise the rotation matrix:
+%
+\begin{eqnarray}
+\makebox[28mm]{Position:\hfill} {\mf s} &=&
+\left[\begin{array}{c} s_x\\ s_y\\ s_z \end{array}\right]
+\label{eq:posVec} \\
+\makebox[30mm]{Orientation:} {\mf R}_S &=&
+\left[\begin{array}{ccc} {\mf i}_1 & {\mf i}_2 & {\mf i}_3 \end{array}\right] =
+\left[\begin{array}{ccc}
+i_{1x} & i_{2x} & i_{3x} \\
+i_{1y} & i_{2y} & i_{3y} \\
+i_{1z} & i_{2z} & i_{3z}
+\end{array}\right]
+\label{eq:rotMat}
+\end{eqnarray}
+
+It is frequently necessary to describe the motion within the rigid body $\cal S$
+in, for example, joint attachment points.
+Such points have a position relative to the rigid body coordinate system.
+The joint itself has an orientation relative to the rigid body's orientation.
+Defining the point $\cal N$ (a FE node, for example) within the rigid body with
+coordinates $\tilde{\mf a}$ relative to the body's fixed coordinate system,
+a local coordinate system, $\tilde{\mf R}_N$, relative to the body-fixed
+system is represented by
+%
+\begin{eqnarray}
+\makebox[28mm]{Position:\hfill} \tilde{\mf a} &=&
+\left[\begin{array}{c}
+\tilde{a}_x \\ \tilde{a}_y \\ \tilde{a}_z \end{array}\right] \\
+\makebox[30mm]{Orientation:} \tilde{\mf R}_N &=&
+\left[\begin{array}{ccc} \tilde{\mf i}_1 & \tilde{\mf i}_2 & \tilde{\mf i}_3
+\end{array}\right] = \left[\begin{array}{ccc}
+\tilde{i}_{1x} & \tilde{i}_{2x} & \tilde{i}_{3x} \\
+\tilde{i}_{1y} & \tilde{i}_{2y} & \tilde{i}_{3y} \\
+\tilde{i}_{1z} & \tilde{i}_{2z} & \tilde{i}_{3z}
+\end{array}\right]
+\end{eqnarray}
+
+The point $\cal N$ has a motion in the global system produced as a result of the
+motion of the body-fixed coordinate system.
+With $\mf a$ being the coordinates of the point relative to the global system,
+we have
+%
+\begin{equation}
+{\mf a} \;=\; {\mf R}_S\tilde{\mf a} + {\mf s}
+\end{equation}
+%
+The orientation of the point in the local coordinate system, $\tilde{\mf R}_N$,
+will then be as follows in the global system:
+%
+\begin{equation}
+{\mf R}_N \;=\; {\mf R}_S \tilde{\mf R}_N
+\end{equation}
+
+The above equations can be combined by using $4\times4$ transformation matrices
+containing the position and rotation as defined by \eqsref{eq:posVec}{eq:rotMat}
+%
+\begin{equation}
+{\mf P}_S \;=\;
+\left[\begin{array}{cc} {\mf R}_S & {\mf s}\\ {\mf 0} & 1 \end{array}\right] =
+\left[\begin{array}{cccc}
+i_{1x} & i_{2x} & i_{3x} & s_x \\
+i_{1y} & i_{2y} & i_{3y} & s_y \\
+i_{1z} & i_{2z} & i_{3z} & s_z \\
+0 & 0 & 0 & 1
+\end{array}\right]
+\label{eq:posDef}
+\end{equation}
+%
+and
+%
+\begin{equation}
+\tilde{\mf P}_N \;=\;
+\left[\begin{array}{cc}
+\tilde{\mf R}_N & \tilde{\mf a} \\
+{\mf 0} & 1 \end{array}
+\right] = \left[\begin{array}{cccc}
+\tilde{i}_{1x} & \tilde{i}_{2x} & \tilde{i}_{3x} & \tilde{a}_x \\
+\tilde{i}_{1y} & \tilde{i}_{2y} & \tilde{i}_{3y} & \tilde{a}_y \\
+\tilde{i}_{1z} & \tilde{i}_{2z} & \tilde{i}_{3z} & \tilde{a}_z \\
+0 & 0 & 0 & 1
+\end{array}\right]
+\end{equation}
+
+The position and orientation of point $\cal N$ in the global system
+can then be expressed as
+%
+\begin{equation}
+{\mf P}_N \;=\; {\mf P}_S\tilde{\mf P}_N \;=\;
+\left[\begin{array}{cc} {\mf R}_N & {\mf a} \\ {\mf 0} & 1 \end{array}\right]
+\label{eq:posUpdate}
+\end{equation}
+%
+\remark{In computer implementations, the $4\times4$ transformation matrices
+are represented as $3\times4$ matrices obtained by deleting the fourth of the
+$4\times4$ matrix as in.
+The matrix multiplication of \eqnref{eq:posUpdate} is then modified by taking
+into account the implicitly defined $[0\;0\;0\;1]$ fourth row of the matrix.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Finite rotations}
+\label{s:Finite rotations}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Spin of a matrix}
+
+The cross product of vectors is written as
+%
+\begin{equation}
+{\tf c} \;=\; {\tf a}\times{\tf b}
+\end{equation}
+%
+when using tensor notation.
+Using matrix notation this can be written
+%
+\begin{equation}
+{\mf c} \;=\; \widehat{\mf a}\,{\mf b}
+\end{equation}
+%
+where
+%
+\begin{equation}
+\widehat{\mf a} \;=
+\left[\begin{array}{ccc}
+   0 &  a_z & -a_y \\
+-a_z &    0 &  a_x \\
+ a_y & -a_x &    0
+\end{array}\right]
+\quad\text{when}\quad
+{\mf a} \;= \left[\begin{array}{c}
+a_x \\ a_y \\ a_z
+\end{array}\right]
+\label{eqF:SpinDef}
+\end{equation}
+%
+The above equations define the \textit{Spin} of a vector.
+This notation is frequently used in the matrix expressions in the following.
+
+\subsection{Rotation of a vector}
+
+Any rotation of a vector from its original direction $\mf a$ to its rotated
+direction ${\mf a}^\prime$ can be described by the general relationship
+%
+\begin{equation}
+{\mf a}^\prime \;=\; {\mf R}{\mf a}
+\end{equation}
+%
+where $\mf R$ is a {\em orthonormal} $3\times3$ matrix.
+A matrix is orthonormal when each row and column represented as a vector is
+orthogonal to all the other rows and columns of the matrix, and has a unit length.
+Since $\mf R$ is orthonormal, the inverse relationship becomes
+%
+\begin{equation}
+{\mf a} \;=\; {\mf R}^{-1}{\mf a}^\prime \;=\; {\mf R}^T{\mf a}^\prime
+\end{equation}
+%
+A rotation matrix $\mf R$ can be established in a number of ways,
+referred to as different {\em parameterizations} of the rotation.
+The rotation matrix is also often called rotation {\em tensor},
+as it has properties of a second order tensor.
+
+\subsection{Rodriguez parameterization}
+
+Rodriguez parameterization states that any combination of rotations can be
+represented by a single rotation $\theta$ about a single rotational axis
+defined by a unit vector $\tf n$.
+The vector is defined as
+%
+\begin{equation}
+{\tf\theta} \;=\; \theta{\mf n}
+\end{equation}
+%
+and the rotation matrix can be written as
+\begin{equation}
+{\mf R} \;=\; {\mf R}({\tf\theta}) \;=\;
+{\mf I} + \frac{\sin\theta}{\theta}\widehat{\tf\theta} +
+\frac{1}{2}\left(\frac{\sin\frac{\theta}{2}}{\frac{\theta}{2}}\right)^2
+\widehat{\tf\theta}^2
+\label{eq:RodriguesDef}
+\end{equation}
+
+\subsection{Variation of Rodriguez parameterization}
+
+The variation of the instantaneous rotation axis $\tf\omega$ with respect to the
+finite rotations $\tf\theta$ of the Rodriguez parameterization can be written as
+%
+\begin{equation}
+\delta{\mf \omega} \;=\;
+\frac{\partial\tf\omega}{\partial\tf\theta} \delta{\tf\theta} \;=\;
+{\mf H}({\tf\theta}) \delta{\tf\theta}
+\label{eq:DomegaDthetaDef}
+\end{equation}
+%
+where
+%
+\begin{equation}
+{\mf H}({\tf \theta}) \;=\;
+\frac{1}{\theta^2}{\tf\theta}{\tf\theta}^T + \frac{\sin\theta}{\theta}
+\left({\mf I}-\frac{1}{\theta^2}{\tf\theta}{\tf\theta}^T\right) +
+\frac{1-\cos\theta}{\theta^2}
+{\mf\widehat{\tf\theta}}
+\label{eq:DomegaDtheta}
+\end{equation}
+%
+\remark{Attention should be paid to the $0/0$ terms of \eqnref{eq:DomegaDtheta}
+when calculating ${\mf H}({\theta})$ for very small values of $\theta$.}
+
+\subsection{Euler angles parameterization}
+\label{subs:Euler angles}
+
+The Euler angle parameterization actually refers to several parameterizations
+of a finite rotation.
+The total rotation is defined by a series of rotations about subsequent follower axes.
+To establish the relationship for the follower axes we first establish
+a relationship for subsequent rotations about rigid (global) axes.
+
+\subsubsection{Sequential rotations about rigid axes}
+
+A vector ${\mf a}_0$ is first rotated an angle $\theta_x$ about the global
+$X$-axis to obtain vector ${\mf a}_1$.
+The vector ${\mf a}_1$ is then rotated an angle $\theta_y$ about the global
+$Y$-axis to obtain vector ${\mf a}_2$.
+Finally, the vector ${\mf a}_2$ is rotated an angle $\theta_z$ about the global
+$Z$-axis to obtain vector ${\mf a}_3$.
+This yields the equations:
+%
+\begin{eqnarray}
+{\mf a}_1 &=& {\mf R}_x{\mf a}_0 \\
+{\mf a}_2 &=& {\mf R}_y{\mf a}_1 \;=\;
+{\mf R}_y{\mf R}_x{\mf a}_0 \;=\; {\mf R}_{Rxy}{\mf a}_0
+\label{eqF:RigAxisRot} \\
+{\mf a}_3 &=& {\mf R}_z{\mf a}_2 \;=\;
+{\mf R}_z{\mf R}_y{\mf R}_x{\mf a}_0 \;=\; {\mf R}_{Rxyz}{\mf a}_0
+\label{eqF:RigidXYZ}
+\end{eqnarray}
+%
+where ${\mf R}_x$, ${\mf R}_y$, and ${\mf R}_z$ are established
+from \eqnref{eq:RodriguesDef} by inserting ${\tf\theta}^T = [\theta_x\;0\;\;0]$,
+${\tf\theta}^T = [0\;\;\theta_y\;0]$ and ${\tf\theta}^T = [0\;\;0\;\;\theta_x]$,
+respectively.
+
+\subsubsection{Sequential rotations about follower axes}
+
+When rotating a vector ${\mf a}_0$ with rotation matrix ${\mf R}_x$,
+a new coordinate system consisting of the global axes rotated with matrix
+${\mf R}_x$, can be obtained.
+
+\remark{The columns of ${\mf R}_x$ form the basis vectors of the new coordinate system.}
+
+\noindent
+As vector ${\mf a}_0$ rotates with the coordinate system to form vector
+${\mf a}_1$, the vector has not changed in the co-rotated coordinate system:
+%
+\begin{equation}
+\tilde{\mf a}_1 \;=\; {\mf a}_0
+\end{equation}
+%
+where superimposed $\tilde{}$ is used to designate a vector in the local
+(co-rotated) coordinate system of ${\mf R}_x$.
+
+A second rotation of the vector ${\mf a}_1$, an angle $\theta_y$ about the new
+local $y$-axis, is established in the co-rotated coordinate system
+%
+\begin{equation}
+\tilde{\mf a}_2 \;=\; {\mf R}_y\tilde{\mf a}_1 \;=\; {\mf R}_y{\mf a}_0
+\end{equation}
+%
+where matrix ${\mf R}_y$ is identical to the matrix established
+in \eqnref{eqF:RigAxisRot}.
+Transforming the vector $\tilde{\mf a}_2$ back to the global coordinate system
+can be achieved by the relationship
+%
+\begin{equation}
+{\mf a}_2 \;=\; {\mf R}_x\tilde{\mf a}_2 \;=\;
+{\mf R}_x{\mf R}_y{\mf a}_0 \;=\; {\mf R}_{Fxy}{\mf a}_0
+\end{equation}
+
+A third rotation about the new $z$-axis of the second updated coordinate system
+is established in the local coordinate system
+%
+\begin{equation}
+\tilde{\tilde{\mf a}}_3 \;=\; {\mf R}_z\tilde{\tilde{\mf a}}_2 \;=\;
+{\mf R}_z{\mf a}_0
+\quad\text{since}\quad
+\tilde{\tilde{\mf a}}_2 \;=\; \tilde{\mf a}_1 \;=\; {\mf a}_0
+\end{equation}
+%
+where superimposed $\tilde{\tilde{}}$ is used to designate a vector in the
+local (co-rotated) coordinate system of ${\mf R}_{Fxy}$.
+
+Transforming $\tilde{\tilde{\mf a}}_3$ back to the global coordinate system is
+performed in steps that reverse the intermediate local coordinate systems
+%
+\begin{eqnarray}
+\tilde{\mf a}_3 &=& {\mf R}_y\tilde{\tilde{\mf a}}_3 \;=\;
+{\mf R}_y{\mf R}_z{\mf a}_0 \\
+{\mf a}_3 &=& {\mf R}_x\tilde{\mf a}_3 \;=\;
+{\mf R}_x{\mf R}_y{\mf R}_z{\mf a}_0 \;=\; {\mf R}_{Fxyz}{\mf a}_0
+\label{eqF:FollowerXYZ}
+\end{eqnarray}
+
+Comparing \eqsref{eqF:RigidXYZ}{eqF:FollowerXYZ},
+the sequential rotations about follower axes are obtained by reversing the
+order of the matrix multiplication in relation to rigid axis rotation and
+forming the resultant rotation matrix:
+%
+\begin{eqnarray}
+\text{Rigid (fixed) axis $X$-$Y$-$Z$ rotation:} \hskip5mm {\mf R}_{Rxyz} &=&
+{\mf R}_z{\mf R}_y{\mf R}_x \\
+\text{Follower axis $X$-$Y$-$Z$ rotation:} \hskip12mm {\mf R}_{Fxyz} &=&
+{\mf R}_x{\mf R}_y{\mf R}_z
+\label{eqF:EulerXYZ}
+\end{eqnarray}
+
+\subsubsection{Euler angles}
+
+To define a number of Euler angle parameterizations,
+the axis and the sequence in which to perform the rotations are determined.
+The most common parameterizations use all axes in the sequences $X$-$Y$-$Z$,
+$Y$-$Z$-$X$, and $Z$-$X$-$Y$, and their reverse-sequenced alternatives.
+Two axis combinations such as $X$-$Y$-$X$ are also possible.
+These parameterizations are easily established by substitutions into the
+expression~\eqref{eqF:EulerXYZ}.
+
+This gives the 12 different parameterizations of Table~\ref{tab:EulerAngles}.
+The Euler angle parameterization used in Fedem is $Z$-$Y$-$X$.
+%
+\begin{table}[b]
+\caption{Euler Angle Parameterizations}
+\begin{center}
+\begin{tabular}{llll}
+\noalign{\hrule\smallskip}
+Three axis combinations: & $X$-$Y$-$Z$, & $Y$-$Z$-$X$, & $Z$-$X$-$Y$, \\
+                         & $Z$-$Y$-$X$, & $X$-$Z$-$Y$, & $Y$-$X$-$Z$  \\
+\noalign{\smallskip\hrule\smallskip}
+Two axis combinations:   & $X$-$Y$-$X$, & $Y$-$X$-$Y$, \\
+                         & $Y$-$Z$-$Y$, & $Z$-$Y$-$Z$, \\
+                         & $Z$-$X$-$Z$, & $X$-$Z$-$X$  \\
+\noalign{\smallskip\hrule}
+\end{tabular}
+\end{center}
+\label{tab:EulerAngles}
+\end{table}
+
+\subsection{Euler angles extraction}
+\label{subs:Euler angles extraction}
+
+Section~\ref{subs:Euler angles} describes how to obtain an incremental rotation
+matrix, $\mf R$, given three Euler angles $\theta_x$, $\theta_y$ and $\theta_z$.
+In some cases we would also like to perform the inverse transformation, that is,
+given an (incremental) rotation matrix, find the corresponding Euler angles.
+
+Assuming we use the Euler $Z$-$Y$-$X$ parameterization, we start by creating the
+rotation matrix that rotates a vector an angle $\theta_z=\alpha$
+about the $Z$-axis:
+%
+\begin{equation}
+{\mf R}_z \;=\;
+\left[\begin{array}{ccc}
+\cos\alpha & -\sin\alpha & 0 \\
+\sin\alpha &  \cos\alpha & 0 \\
+0 & 0 & 1
+\end{array}\right]
+\end{equation}
+%
+Next, create the rotation matrix to rotate a vector an angle $\theta_y=\beta$
+about the $Y$-axis:
+%
+\begin{equation}
+{\mf R}_y \;=\;
+\left[\begin{array}{ccc}
+\cos\beta & 0 & \sin\alpha \\
+0 & 1 & 0 \\
+-\sin\beta & 0 & \cos\beta
+\end{array}\right]
+\end{equation}
+%
+Then, create the rotation matrix rotating a vector an angle $\theta_x=\gamma$
+about the $X$-axis:
+%
+\begin{equation}
+{\mf R}_x \;=\;
+\left[\begin{array}{ccc}
+1 & 0 & 0 \\
+0 & \cos\gamma & -\sin\gamma \\
+0 & \sin\gamma & \cos\gamma
+\end{array}\right]
+\end{equation}
+%
+Multiplying these matrices together we get the single rotation matrix:
+%
+\begin{equation}
+\eqalign{{\mf R} &\;=\; {\mf R}_z {\mf R}_y {\mf R}_x \;=\cr&
+\footnotesize
+\left[\begin{array}{ccc}
+\cos\alpha\cos\beta &
+\cos\alpha\sin\beta\sin\gamma - \sin\alpha\cos\gamma &
+\cos\alpha\sin\beta\cos\gamma + \sin\alpha\sin\gamma \\
+\sin\alpha\cos\beta &
+\sin\alpha\sin\beta\sin\gamma + \cos\alpha\cos\gamma &
+\sin\alpha\sin\beta\cos\gamma - \cos\alpha\sin\gamma \\
+-\sin\beta & \cos\beta\sin\gamma & \cos\beta\cos\gamma
+\end{array}\right]}
+\end{equation}
+%
+Letting $r_{ij}$ denote the individual elements of this matrix,
+we can now derive the Euler angles as follows:
+%
+\begin{eqnarray}
+\label{eq:EulerZ}
+\theta_z \;=\; \alpha &=& \arctan\frac{r_{21}}{r_{11}} \\
+\label{eq:EulerY}
+\theta_y \;=\; \beta  &=& \arctan\frac{-r_{31}}{\sqrt{r_{11}^2 + r_{21}^2}} \\
+\label{eq:EulerX}
+\theta_x \;=\; \gamma &=& \arctan\frac{r_{32}}{r_{33}}
+\end{eqnarray}
+%
+\remark{In a computer implementation of the above equations, one should use the
+intrinsic math function {\tt atan2(y,x)} when evaluating $\arctan\frac{y}{x}$,
+such that the sign of the computed angles are correctly set according to which
+quadrant the arguments $x$ and $y$ implies.}

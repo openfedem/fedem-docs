@@ -1,0 +1,539 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Finite Element Library}
+\label{chap:ElLibrary}
+
+The finite element library in Fedem contains the element types listed in
+Table~\ref{tab:element library}.
+The BUSH, SPRING and RSPRING elements are mass less and contribute to the
+stiffness matrix only,
+whereas the CMASS element contributes to the mass matrix only.
+The RBAR, RGD and WAVGM elements have neither mass nor stiffness on their own.
+They are constraint elements, i.e., they introduce linear couplings between
+the degrees of freedom of the other elements in various manners.
+All the other elements listed in Table~\ref{tab:element library} are standard
+linearized finite elements with both stiffness and mass.
+
+A brief description of these basic elements is given in the following sections.
+In addition, the formulation of the Generic part element is given in
+Section~\ref{sec:GenericPart}.
+The latter element is used to represent a link in the Fedem Dynamics Solver,
+when a proper finite element representation is not available or has not yet
+been established (see the \FedemUG, {\em Section~4.1 ``Links''}).
+
+\begin{table}[b]
+\medskip
+\begin{center}
+\begin{tabular}{ll}
+\noalign{\hrule\smallskip}
+Element name & Element description \\
+\noalign{\smallskip\hrule\smallskip}
+FFT3   &  3-node triangular shell element \\
+FFQ4   &  4-node quadrilateral shell element \\
+TET4   &  4-node isoparametric tetrahedron solid element \\
+TET10  & 10-node isoparametric tetrahedron solid element \\
+WEDG6  &  6-node isoparametric prismatic solid element \\
+WEDG15 & 15-node isoparametric prismatic solid element \\
+HEX8   &   Linear isoparametric hexahedron solid element \\
+HEX20  &Quadratic isoparametric hexahedron solid element \\
+BEAM2  & 2-node linear beam element, also used for spot welds \\
+BUSH   & 2-node bushing element (generalized spring) \\
+SPRING & 2-node translatory spring \\
+RSPRING& 2-node rotational spring \\
+CMASS  & Single-node concentrated mass element \\
+RBAR   & 2-node rigid bar \\
+RGD    & Multi-node rigid body \\
+WAVGM  & Multi-node weighted averaged motion element \\
+\noalign{\smallskip\hrule}
+\end{tabular}
+\end{center}
+\caption{Fedem element library.}
+\label{tab:element library}
+\end{table}
+
+\section{FFT3}
+\label{s:FFT3}
+
+The 3-node triangular shell element FFT3 is composed of a
+triangular element for plate bending by Allman~\cite{AllmanTriPlate},
+and a triangular membrane element with rotational Degree of Freedom (DOF) by
+Bergan and Felippa~\cite{BerganFelippaTri}.
+The membrane part of FFT3 has 9 DOFs;
+6 corner translations, and 3 corner normal rotations.
+The element is coordinate invariant and passes the patch test for any geometry.
+
+The element performs significantly better than the constant strain triangle.
+Because of the presence of the normal rotation DOFs, FFT3 is well
+suited to modeling general shell structures.
+
+The FFT3 element is referred to in a global Cartesian coordinate system
+as shown in Figure~\ref{fig:FFT3}.
+The element nodes are numbered 1-2-3, and a local coordinate system $(x,y,z)$
+is defined in such a way that the $x-y$ plane coincides with the middle surface
+of the element.
+Origin is taken at node 1, and positive $x$-axis coincides with edge 1-2,
+while positive y-axis is taken in direction from the $x$-axis toward node 3.
+Positive $z$-axis is defined in such a way that $x,y$ and $z$ form a
+right-handed coordinate system.
+The nodal DOFs are $u,v,w,r_x,r_y$ and $r_z$.
+
+\begin{figure}[b]
+\center{
+\setlength{\unitlength}{1mm}
+\begin{picture}(100,71)
+\thinlines
+\put( 15,15){\vector(1,0){70}}
+\put( 15,15){\vector(0,1){55}}
+\put( 15,15){\vector(-1,-1){12}}
+\put(  0, 0){$x_{\text{link}}$}
+\put( 87,14){$y_{\text{link}}$}
+\put( 13,72){$z_{\text{link}}$}
+\thicklines
+\put( 34,21){\circle{2}}\put( 31,18){$1$}
+\put( 76,42){\circle{2}}\put( 80,40){$2$}
+\put( 42,52){\circle{2}}\put( 43,48){$3$}
+\qbezier(34,21)(55,31.5)(76,42)
+\qbezier(76,42)(59,47)(42,52)
+\qbezier(42,52)(38,36.5)(34,21)
+\thinlines
+%Nodal dofs
+\put(42,52)      {\vector(2,1){5}}
+\put(48,55)      {\vector(2,1){5}}
+\put(49.07,55.54){\vector(2,1){5}}
+\put(46,52){$u$}\put(51,54){$r_x$}
+\put(42,52)      {\vector(-1,4){1.2}}
+\put(40.5,58)    {\vector(-1,4){1.2}}
+\put(40.21,59.16){\vector(-1,4){1.2}}
+\put(42,55){$v$}\put(40.5,61){$r_y$}
+\put(42,52)      {\vector(-2,1){4}}
+\put(36,55)      {\vector(-2,1){4}}
+\put(34.93,55.54){\vector(-2,1){4}}
+\put(35.5,51.5){$w$}\put(29,54){$r_z$}
+%Coordinate system for element
+\put(76,42){\vector(2,1){10}}\put(87,46){$x_{\text{elem}}$}
+\put(35,21){\vector(-1,4){7}}\put(20,46){$y_{\text{elem}}$}
+\put(35,21){\vector(-2,1){13}}\put(16,30){$z_{\text{elem}}$}
+\end{picture}
+}
+\caption{FFT3, Flat triangular shell element}
+\label{fig:FFT3}
+\end{figure}
+
+\section{FFQ4}
+\label{s:FFQ4}
+
+The 4-node quadrilateral shell element FFQ4 is composed of a
+Quadrilateral plate Bending Element with Shear deformation (QBESH)
+and a Quadrilateral Membrane element with Rotational degrees of Freedom (QMRF).
+The QMRF element has 12 DOFs; 8 corner translations $(u,v)$,
+and 4 corner normal rotations $(r_z)$.
+The element is coordinate invariant and passes the patch test for any geometry.
+The element performance is significantly better than that of the
+linear isoparametric quadrilateral.
+Because of the presence of the normal rotation DOFs,
+QMRF is well suited to modeling general shell structures.
+The QBESH element is a quadrilateral plate-bending element that passes the
+individual element test.
+The element has 12 DOFs; 3 DOFs $(w,r_x,r_y)$ at each of the 4 nodes.
+Transverse shear deformation is included in the formulation.
+
+The FFQ4 element is capable of handling warped element geometries by utilizing
+projection techniques that restore force equilibrium and correct rigid body
+motion (see~\cite{RankinNourOmid} and~\cite{BH:phd}).
+
+\begin{figure}[b]
+\center{
+\setlength{\unitlength}{1mm}
+\begin{picture}(100,71)
+\thinlines
+\put( 15,15){\vector(1,0){70}}
+\put( 15,15){\vector(0,1){55}}
+\put( 15,15){\vector(-1,-1){12}}
+\put(  0, 0){$x_{\text{link}}$}
+\put( 87,14){$y_{\text{link}}$}
+\put( 13,72){$z_{\text{link}}$}
+\thicklines
+\put( 34,21){\circle{2}}\put( 31,18){$1$}
+\put( 76,42){\circle{2}}\put( 82,41){$2$}
+\put( 72,62){\circle{2}}\put( 68,57){$3$}
+\put( 42,52){\circle{2}}\put( 39,53){$4$}
+\qbezier(34,21)(55,31.5)(76,42)
+\qbezier(76,42)(74,52)(72,62)
+\qbezier(72,62)(57,57)(42,52)
+\qbezier(42,52)(38,36.5)(34,21)
+\thinlines
+%Nodal dofs
+\put(72,62)      {\vector(2,1){5}}
+\put(78,65)      {\vector(2,1){5}}
+\put(79.07,65.54){\vector(2,1){5}}
+\put(75,61){$u$}\put(81,64){$r_x$}
+\put(72,62)      {\vector(-1,4){1.2}}
+\put(70.5,68)    {\vector(-1,4){1.2}}
+\put(70.21,69.16){\vector(-1,4){1.2}}
+\put(72,65){$v$}\put(70.5,71){$r_y$}
+\put(72,62)      {\vector(-2,1){4}}
+\put(66,65)      {\vector(-2,1){4}}
+\put(64.93,65.54){\vector(-2,1){4}}
+\put(65.5,61.5){$w$}\put(59,64){$r_z$}
+%Coordinate system for element
+\put(76,42){\vector(2,1){10}}\put(87,46){$x_{\text{elem}}$}
+\put(35,21){\vector(-1,4){8}}\put(25,56){$y_{\text{elem}}$}
+\put(35,21){\vector(-2,1){13}}\put(16,30){$z_{\text{elem}}$}
+\end{picture}
+}
+\caption{FFQ4, Flat quadrilateral shell element}
+\label{fig:FFQ4}
+\end{figure}
+
+The FFQ4 element is referred to in a Cartesian link coordinate system
+as shown in Figure~\ref{fig:FFQ4}.
+The element nodes are numbered counter-clockwise $1$-$2$-$3$-$4$.
+The nodal DOFs are $u, v, w, r_x, r_y,$ and $r_z$.
+
+\section{TET4}
+\label{s:TET4}
+
+TET4 is a solid constant strain tetrahedron element with 4 nodes and 12 DOFs.
+The nodal points at the corners of the tetrahedron are numbered 1 through 4
+as shown in Figure~\ref{fig:TET4}.
+
+\begin{figure}[p]
+\center{
+\setlength{\unitlength}{1mm}
+\begin{picture}(100,75)
+\thinlines
+\put( 15,15){\vector(1,0){70}}
+\put( 15,15){\vector(0,1){55}}
+\put( 15,15){\vector(-1,-1){12}}
+\put(  0, 0){$x_{\text{link}}$}
+\put( 87,14){$y_{\text{link}}$}
+\put( 13,72){$z_{\text{link}}$}
+\thicklines
+\put( 25,25){\circle{2}}\put( 22,22){$1$}
+\put( 65,21){\circle{2}}\put( 66,17){$2$}
+\put( 60,40){\circle{2}}\put( 63,40){$3$}
+\put( 42,62){\circle{2}}\put( 41,65){$4$}
+\qbezier    (25,25)(45,23)    (65,21)
+\qbezier    (25,25)(33.5,43.5)(42,62)
+\qbezier[30](25,25)(42.5,32.5)(60,40)
+\qbezier    (65,21)(53.5,41.5)(42,62)
+\qbezier    (65,21)(62.5,30.5)(60,40)
+\qbezier    (60,40)(51,51)    (42,62)
+%Nodal dofs
+\thinlines
+\put(65,21){\vector(1,0){6}}  \put(73,20){$v$}
+\put(65,21){\vector(0,1){6}}  \put(64,29){$w$}
+\put(65,21){\vector(-1,-1){3.6}}\put(58,17){$u$}
+\end{picture}
+}
+\caption{TET4, Constant strain tetrahedron element}
+\label{fig:TET4}
+\end{figure}
+
+\section{TET10}
+\label{s:TET10}
+
+TET10 is an isoparametric tetrahedron element with 30 DOFs; 3 DOFs $(u,v,w)$
+at each of the 10 nodes (4 corner nodes and 6 mid-edge nodes).
+The edges may be straight or curved.
+Figure~\ref{fig:TET10} shows a typical element and its local node numbering.
+The local node numbering 1 through 10 must be carried out in a right-hand
+direction with nodes 1, 7 and 10 on the same edge.
+
+\begin{figure}[p]
+\center{
+\setlength{\unitlength}{1mm}
+\begin{picture}(100,75)
+\thinlines
+\put( 15,15){\vector(1,0){70}}
+\put( 15,15){\vector(0,1){55}}
+\put( 15,15){\vector(-1,-1){12}}
+\put(  0, 0){$x_{\text{link}}$}
+\put( 87,14){$y_{\text{link}}$}
+\put( 13,72){$z_{\text{link}}$}
+\thicklines
+\put( 25,25){\circle{2}}\put( 22,22){$1$}
+\put( 65,21){\circle{2}}\put( 65,17){$3$}
+\put( 60,40){\circle{2}}\put( 63,40){$5$}
+\put( 42,62){\circle{2}}\put( 41,65){$10$}
+\put( 44,19){\circle{2}}\put( 41,16){$2$}
+\put( 62,30){\circle{2}}\put( 64,31){$4$}
+\put( 43,36){\circle{2}}\put( 41,38){$6$}
+\put( 31.5,42){\circle{2}}\put( 28,41){$7$}
+\put( 51,42.5){\circle{2}}\put( 53,42){$8$}
+\put( 52,49.5){\circle{2}}\put( 54,49){$9$}
+\qbezier(25,25)(45,15)(65,21)
+\qbezier(25,25)(31,44)(42,62)
+\qbezier[30](25,25)(40,38)(60,40)
+\qbezier(65,21)(50,40)(42,62)
+\qbezier(65,21)(61,30)(60,40)
+\qbezier(60,40)(50,51)(42,62)
+\thinlines
+%Nodal dofs
+\thinlines
+\put(65,21){\vector(1,0){6}}  \put(73,20){$v$}
+\put(65,21){\vector(0,1){6}}  \put(64,28){$w$}
+\put(65,21){\vector(-1,-1){3.6}}\put(58,17){$u$}
+%\graphpaper[2](0,0)(100,80)
+\end{picture}
+}
+\caption{TET10, Isoparametric tetrahedron element}
+\label{fig:TET10}
+\end{figure}
+
+\section{WEDG6}
+\label{s:WEDG6}
+
+WEDG6 is an isoparametric triangular prism element with 18 DOFs;
+3 DOFs $(u,v,w)$ at each of the 6 corner nodes.
+%
+\begin{figure}[p]
+\center{
+\setlength{\unitlength}{1mm}
+\begin{picture}(100,75)
+\thinlines
+\put( 15,15){\vector(1,0){70}}
+\put( 15,15){\vector(0,1){55}}
+\put( 15,15){\vector(-1,-1){12}}
+\put(  0, 0){$x_{\text{link}}$}
+\put( 87,14){$y_{\text{link}}$}
+\put( 13,72){$z_{\text{link}}$}
+\thicklines
+\put( 24,24){\circle{2}}\put( 21,21){$1$}
+\put( 64,22){\circle{2}}\put( 64,18){$2$}
+\put( 56,40){\circle{2}}\put( 53,41){$3$}
+\put( 34,60){\circle{2}}\put( 30,58){$4$}
+\put( 74,52){\circle{2}}\put( 77,50){$5$}
+\put( 66,70){\circle{2}}\put( 63,71){$6$}
+\qbezier    (24,24)(44,23)(64,22)
+\qbezier[20](64,22)(60,31)(56,40)
+\qbezier[30](56,40)(40,32)(24,24)
+\qbezier    (34,60)(54,56)(74,52)
+\qbezier    (74,52)(70,61)(66,70)
+\qbezier    (66,70)(45,64)(34,60)
+\qbezier    (24,24)(29,42)(34,60)
+\qbezier    (64,22)(69,37)(74,52)
+\qbezier[30](56,40)(61,55)(66,70)
+%Nodal dofs
+\thinlines
+\put(64,22){\vector(1,0){6}}  \put(72,21){$v$}
+\put(64,22){\vector(0,1){6}}  \put(63,30){$w$}
+\put(64,22){\vector(-1,-1){3.6}}\put(57,18){$u$}
+%\graphpaper[2](0,0)(100,80)
+\end{picture}
+}
+\caption{WEDG6, Isoparametric triangular prismatic element}
+\label{fig:WEDG6}
+\end{figure}
+%
+The edges are straight, and Figure~\ref{fig:WEDG6} shows a typical
+element with local node numbering.
+The local node numbering 1 through 6 must be carried out in a right-hand
+direction, with nodes 1 and 4 on the same edge.
+The WEDG6 element has constant strains for triangular cross-sections, and
+a limited linear variation of the strains in the direction transverse to the
+triangular side.
+
+\section{WEDG15}
+\label{s:WEDG15}
+
+WEDG15 is an isoparametric triangular prism element with 45 DOFs;
+3 DOFs $(u,v,w)$ at each of the 15 nodes (6 corner and 9 mid-edge nodes).
+The edges may be straight or curved.
+Figure~\ref{fig:WEDG15} shows a typical element with local node numbering.
+The local node numbering 1 through 15 must be carried out in a right-hand
+direction with nodes 1, 7 and 10 on the same edge.
+WEDG15 has stresses with minimum linear variation; in addition,
+it has an incomplete quadratic variation of stresses in the direction transverse
+to the triangular side.
+Some stress components also have a quadratic variation in the directions
+parallel to the triangular side, for example, the transverse stress component.
+
+\begin{figure}[p]
+\center{
+\setlength{\unitlength}{1mm}
+\begin{picture}(100,75)
+\thinlines
+\put( 15,15){\vector(1,0){70}}
+\put( 15,15){\vector(0,1){55}}
+\put( 15,15){\vector(-1,-1){12}}
+\put(  0, 0){$x_{\text{link}}$}
+\put( 87,14){$y_{\text{link}}$}
+\put( 13,72){$z_{\text{link}}$}
+\thicklines
+\put( 24,24){\circle{2}}\put( 21,21){$1$}
+\put( 64,22){\circle{2}}\put( 67,20){$3$}
+\put( 56,40){\circle{2}}\put( 53,41){$5$}
+\put( 34,60){\circle{2}}\put( 28,59){$10$}
+\put( 74,52){\circle{2}}\put( 75,48){$12$}
+\put( 66,70){\circle{2}}\put( 63,72){$14$}
+\put( 44,20.5){\circle{2}}\put( 43,16){$2$}
+\put( 59,31){\circle{2}}  \put( 61,31){$4$}
+\put( 39,35){\circle{2}}  \put( 37,37){$6$}
+\put( 28,42){\circle{2}}  \put( 24,41){$7$}
+\put( 67,38){\circle{2}}  \put( 69,37){$8$}
+\put( 59,51){\circle{2}}  \put( 56,47){$9$}
+\put( 54,54.5){\circle{2}}\put( 51,50){$11$}
+\put( 68,62){\circle{2}}  \put( 70,62){$13$}
+\put( 50,67){\circle{2}}  \put( 47,69){$15$}
+\qbezier    (24,24)(44,18)(64,22)
+\qbezier[20](64,22)(57,31)(56,40)
+\qbezier[30](56,40)(31,35)(24,24)
+\qbezier    (34,60)(54,53)(74,52)
+\qbezier    (74,52)(67,61)(66,70)
+\qbezier    (66,70)(44,67)(34,60)
+\qbezier    (24,24)(27,42)(34,60)
+\qbezier    (64,22)(64,37)(74,52)
+\qbezier[30](56,40)(59,55)(66,70)
+%Nodal dofs
+\thinlines
+\put(74,52){\vector(1,0){6}}  \put(82,51){$v$}
+\put(74,52){\vector(0,1){6}}  \put(73,59){$w$}
+\put(74,52){\vector(-1,-1){3.6}}\put(67,47){$u$}
+%\graphpaper[2](0,0)(100,80)
+\end{picture}
+}
+\caption{WEDG15, Isoparametric prismatic element}
+\label{fig:WEDG15}
+\end{figure}
+
+\section{HEX8}
+\label{s:HEX8}
+
+HEX8 is a solid hexahedron element with 8 nodal points and 24 DOFs.
+The nodal points located at the corners of the hexahedron are
+numbered 1 through 8 as shown in Figure~\ref{fig:HEX8}.
+HEX8 is an isoparametric element with linear displacement shape functions.
+
+\begin{figure}[p]
+\center{
+\setlength{\unitlength}{1mm}
+\begin{picture}(100,75)
+\thinlines
+\put( 15,15){\vector(1,0){70}}
+\put( 15,15){\vector(0,1){55}}
+\put( 15,15){\vector(-1,-1){12}}
+\put(  0, 0){$x_{\text{link}}$}
+\put( 87,14){$y_{\text{link}}$}
+\put( 13,72){$z_{\text{link}}$}
+\thicklines
+\put( 24,24){\circle{2}}\put( 21,21){$1$}
+\put( 64,20){\circle{2}}\put( 65,16){$2$}
+\put( 84,38){\circle{2}}\put( 87,38){$3$}
+\put( 42,42){\circle{2}}\put( 39,42){$4$}
+
+\put( 28,54){\circle{2}}\put( 23,56){$5$}
+\put( 68,50){\circle{2}}\put( 70,46){$6$}
+\put( 88,64){\circle{2}}\put( 90,66){$7$}
+\put( 46,68){\circle{2}}\put( 41,71){$8$}
+
+\qbezier    (24,24)(44,22)(64,20)
+\qbezier    (64,20)(74,29)(84,38)
+\qbezier[30](84,38)(63,40)(42,42)
+\qbezier[20](42,42)(33,33)(24,24)
+\qbezier    (28,54)(48,52)(68,50)
+\qbezier    (68,50)(78,57)(88,64)
+\qbezier    (88,64)(67,66)(46,68)
+\qbezier    (46,68)(37,61)(28,54)
+\qbezier    (24,24)(26,39)(28,54)
+\qbezier    (64,20)(66,35)(68,50)
+\qbezier    (84,38)(86,51)(88,64)
+\qbezier[20](42,42)(44,55)(46,68)
+%Nodal dofs
+\thinlines
+\put(64,20){\vector(1,0){6}}    \put(72,19){$v$}
+\put(64,20){\vector(0,1){6}}    \put(62,28){$w$}
+\put(64,20){\vector(-1,-1){3.6}}\put(57,16){$u$}
+\end{picture}
+}
+\caption{HEX8, Isoparametric hexahedron element}
+\label{fig:HEX8}
+\end{figure}
+
+\section{HEX20}
+\label{s:HEX20}
+
+HEX20 is an isoparametric hexahedron element with 60 DOFs;
+3 DOFs $(u,v,w)$ at each of the 20 nodes (8 corner and 12 mid-edge nodes).
+The edges may be straight or curved, and Figure~\ref{fig:HEX20} shows a
+typical element with local node numbering.
+The local node numbering 1 through 20 must be carried out in a right-hand
+direction with nodes 1, 9 and 13 on the same edge.
+HEX20 yields an incomplete quadratic variation of the displacements.
+The minimum variation of stresses along a border is linear for this element.
+
+\begin{figure}[p]
+\center{
+\setlength{\unitlength}{1mm}
+\begin{picture}(100,75)
+\thinlines
+\put( 15,15){\vector(1,0){70}}
+\put( 15,15){\vector(0,1){55}}
+\put( 15,15){\vector(-1,-1){12}}
+\put(  0, 0){$x_{\text{link}}$}
+\put( 87,14){$y_{\text{link}}$}
+\put( 13,72){$z_{\text{link}}$}
+\thicklines
+\put( 24,24){\circle{2}}\put( 21,21){$1$}
+\put( 64,20){\circle{2}}\put( 65,16){$3$}
+\put( 84,38){\circle{2}}\put( 87,38){$5$}
+\put( 42,42){\circle{2}}\put( 39,42){$7$}
+
+\put( 28,54){\circle{2}}\put( 23,56){$13$}
+\put( 68,50){\circle{2}}\put( 70,46){$15$}
+\put( 88,64){\circle{2}}\put( 90,66){$17$}
+\put( 46,68){\circle{2}}\put( 41,71){$19$}
+
+\put( 43,20){\circle{2}}\put( 42,16){$2$}
+\put( 74,31){\circle{2}}\put( 76,28){$4$}
+\put( 58,42){\circle{2}}\put( 57,44){$6$}
+\put( 33,36){\circle{2}}\put( 29,36){$8$}
+\put( 25,40){\circle{2}}\put( 21,39){$9$}
+\put( 65,36){\circle{2}}\put( 67,35){$10$}
+\put( 85,52){\circle{2}}\put( 87,50){$11$}
+\put( 43,56){\circle{2}}\put( 45,56){$12$}
+\put( 48,50){\circle{2}}\put( 47,52){$14$}
+\put( 77,58){\circle{2}}\put( 79,54){$16$}
+\put( 64,68){\circle{2}}\put( 62,71){$18$}
+\put( 36,63){\circle{2}}\put( 31,64){$20$}
+
+\qbezier    (24,24)(44,18)(64,20)
+\qbezier    (64,20)(74,32)(84,38)
+\qbezier[30](84,38)(63,43)(42,42)
+\qbezier[20](42,42)(33,39)(24,24)
+\qbezier    (28,54)(48,48)(68,50)
+\qbezier    (68,50)(78,60)(88,64)
+\qbezier    (88,64)(67,69)(46,68)
+\qbezier    (46,68)(37,67)(28,54)
+\qbezier    (24,24)(23,39)(28,54)
+\qbezier    (64,20)(63,35)(68,50)
+\qbezier    (84,38)(83,51)(88,64)
+\qbezier[20](42,42)(41,55)(46,68)
+%Nodal dofs
+\thinlines
+\put(64,20){\vector(1,0){6}}    \put(72,19){$v$}
+\put(64,20){\vector(0,1){6}}    \put(60,28){$w$}
+\put(64,20){\vector(-1,-1){3.6}}\put(57,16){$u$}
+%\graphpaper[2](0,0)(100,80)
+\end{picture}
+}
+\caption{HEX20, Isoparametric hexahedron element}
+\label{fig:HEX20}
+\end{figure}
+
+\input{beam_element}
+\input{bush_element}
+\input{spring_mass_elements}
+\input{rigid_elements}
+\input{wavgm_element}
+\input{generic_part}

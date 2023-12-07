@@ -1,0 +1,118 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{BEAM2}
+\label{s:BEAM2}
+
+The BEAM2 element is based on Euler-Bernoulli's beam theory with quadratic shape
+functions and continuous first derivatives.
+The deformations account for are bending, shear, axial and St.\ Venant torsion.
+The element is straight with uniform cross section and material properties.
+The cross section does not need to be symmetrical.
+The 2 nodal points of the element, one at each end, may be offset in relation
+to the principle axis.
+
+Figure~\ref{fig:BEAM2} shows an arbitrary beam element referred to in a link
+coordinate system $(X, Y, Z)$ and a local system $(x, y, z)$.
+The local $x$-axis coincides with the beam axis through the center of gravity of
+the cross sections, and is positive in the direction from point $I$ to $J$.
+The local $y$- and $z$-axes coincide with the principal axes of the cross section.
+An auxiliary point $K$ defines together with the beam axis the local $xz$-plane.
+The local $z$-axis is positive in the direction from the element toward point $K$.
+The end points $I$ and $J$ are connected, via fictitious rigid eccentricities,
+to the nodal points $II$ and $JJ$, respectively, at which nodal parameters are defined.
+
+\begin{figure}[t]
+\begin{center}
+\setlength{\unitlength}{1mm}
+\begin{picture}(100,75)
+\thinlines
+\put(15,15){\vector( 1, 0){70}}
+\put(15,15){\vector( 0, 1){55}}
+\put(15,15){\vector(-1,-1){12}}
+\put( 0, 0){$x_{\text{link}}$}
+\put(87,14){$y_{\text{link}}$}
+\put(13,72){$z_{\text{link}}$}
+\thicklines
+\qbezier(30,30)(32,30.5) (34,31)
+\qbezier(30,30)(30,32)   (30,34)
+\qbezier(30,34)(31,34.25)(32,34.5)
+\qbezier(34,31)(33,32.75)(32,34.5)
+\put(31.5,32.375){\circle*{1.5}}\put(31,27){$I$}
+\put(34,31)  {\line(3,2){35}}
+\put(32,34.5){\line(3,2){35}}
+\put(30,34)  {\line(3,2){35}}
+\qbezier(65,57.33)(66,57.58)(67,57.83)
+\qbezier(69,54.33)(68,56.08)(67,57.83)
+\put(66.5,55.708){\circle*{1.5}}\put(66,60){$J$}
+\thinlines
+\put(66.5,55.708){\vector(3,2){15}}\put(83,65){$x_{\text{elem}}$}
+\put(31.5,32.375){\vector(-1,4){5}}\put(25,55){$y_{\text{elem}}$}
+\put(31.5,32.375){\vector(4,1){40}}\put(73,42){$z_{\text{elem}}$}
+\put(66.5,45){\circle*{1.5}}\put(68,45){$K$}
+\put(66.5,55.708){\line(0,-1){14.5}}
+%Eccentricity at node I to II
+\put(31.5,32.375){\line(-1,-1){10}}
+\put(21.5,22.375){\line( 1, 0){25}}
+\put(46.5,22.375){\line( 0, 1){ 5}}
+\put(46.5,27.375){\circle{1.5}}\put(48,26){$II$}
+\put(21,27){$e_x$}
+\put(32,19){$e_y$}
+\put(48,23){$e_z$}
+%Eccentricity at node j to JJ
+\put(66.5,55.708){\line(-1,-1){5}}
+\put(61.5,50.708){\line( 1, 0){15}}
+\put(76.5,50.708){\line( 0, 1){ 5}}
+\put(76.5,55.708){\circle{1.5}}\put(78,54){$JJ$}
+\put(78,50){\scriptsize{fictitious rigid arm}}
+%Nodal dofs
+%\thinlines
+%\put(70,40){\vector(1,0){6}}    \put(79,39){$v$}
+%\put(70,40){\vector(0,1){6}}    \put(70,49){$w$}
+%\put(70,40){\vector(-1,-1){3.6}}\put(64,37){$u$}
+\end{picture}
+\end{center}
+\caption{BEAM2, Beam element}
+\label{fig:BEAM2}
+\end{figure}
+
+The BEAM2 element may optionally be equipped with pin flags in end $I$ and/or $J$.
+They are used to remove connections between the associated grid point and
+selected DOFs of the beam defined in the local element coordinate system.
+Thus, they work like inserting a local hinge in the beam for the selected DOFs.
+The beam must have stiffness associated with the DOFs that are released in this
+manner, e.g.\ if local DOF 4 is released in one end, the beam must have a
+nonzero torsional stiffness.
+
+\subsection{Spot weld element}
+\label{subs:Spot weld element}
+
+The BEAM2 element described above is also used to represent spot welds\footnote{
+Known as CWELD elements in Nastran.} in Fedem.
+A circular massive cross section is assumed for a spot weld beam.
+An explicit local $z$-axis definition is therefore not needed for such elements.
+
+Instead of the rigid arms, a spot weld BEAM2 element is equipped with a WAVGM
+element in each end (see Section~\ref{s:WAVGM} below), in order to distribute
+the forces transferred by the beam over a group of nodes in the welded surfaces.
+The end points of the beam, which are connected to the reference node of the
+WAVGM elements, are then defined by the projection of a specified point
+onto each of the 2 welded surfaces.
+The WAVGM elements may span an arbitrary number of nodes, but typically they
+are connected to all surface nodes of the finite element that is intersected by
+the spot weld beam.
+
+Since the welded surfaces typically are quite close, the actual length
+of the spot weld beam will be relatively small (or maybe zero).
+However, it is possible to equip the spot weld beam with a separate effective
+length property to be used instead of its actual length when calculating the
+element stiffness.

@@ -1,0 +1,104 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_properties_beam-cross-section"></a>Beam Cross Section</h1>
+
+<p>The Beam cross section object is used to describe the
+cross section properties of a <a href="Beam.htm">Beam</a> element.</p>
+
+<p><img src="../../img/prp/beam-cross-section-1.png"></p>
+<p><img src="../../img/prp/beam-cross-section-2.png"></p>
+
+<p>The two figures above illustrate the <i>Structural</i> properties
+for the cross section types <i>Pipe</i> and <i>Generic</i>, respectively,
+and consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Cross section type</td>
+<td>Specifies the cross section type.
+We currently support “Pipe” and “Generic”.</td></tr>
+<tr><td>Material</td><td>Specifies the <a href="material.htm">Material</a>
+property object that this cross section is to be associated with.</td></tr>
+<tr><td>Definition (Pipe)</td>
+<td>Depending on the cross section type,
+you will have various fields for defining the cross section geometry.
+For Pipe sections, you specify the outer (Do) and inner (Di) diameters.</td></tr>
+<tr><td>Definition (Generic)</td>
+<td>For Generic cross sections, you specify axial stiffness (EA),
+bending stiffnesses (EIyy and EIzz), torsional stiffness (GIt),
+mass per unit length (&rho;A), and torsional moment of inertia (&rho;Ip).
+Note that these property parameters also include the neccessary material information.
+Thus, no <a href="material.htm">Material</a> object is needed for Generic cross sections.</td></tr>
+<tr><td>Shear reduction factors</td>
+<td>These values (ky and kz) specify the ratio between the effective transverse shear area
+and the actual cross section area, in the local y- and z-axis directions, respectively.
+Refer to text books on structural mechanics on how these parameters depend on
+different cross section shapes. If these values are set to zero, the transverse
+shear deformation is ignored in the FE model (infinite shear stiffness).</td></tr>
+<tr><td>Shear stiffness</td>
+<td>For Generic cross section, you specify the shear stiffness (GAs,y and GAs,z) directly,
+instead of the shear reduction factors. Zero (or negative) values in these fields will be
+interpreted as infinite shear stiffness (no shear deformation).</td></tr>
+<tr><td>Shear center offset</td>
+<td>These fields (sy and sz) allow you to specify the local position of the shear centre
+of the cross section w.r.t. its elastic centre (or the neutral axis).
+The shear centre defines the point through which a transverse load must be act
+in order to avoid torsional deformation in the beam element.
+For symmetric cross sections the shear centre conicides with the elastic centre
+and the values 0.0 are appropriate.</td></tr>
+<tr><td>Dependent properties</td>
+<td>These properties (cross section area, A, and moments of inertias, Iyy, Izz and Ip)
+are updated automatically based on the specified geometry parameters.
+However, if the Break dependency toggle is enabled
+any of the dependent properties may be overridden manually.</td></tr>
+</table></p>
+
+<h2><a name="Hydrodynamics"></a>Hydrodynamics tab</h2>
+
+<p><img src="../../img/prp/beam-cross-section-3.png"></p>
+
+<p>The figure above illustrates the <i>Hydrodynamics</i> properties of the
+Beam cross section, which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Enable</td><td>Enables hydrodynamic load calculation for all Beams
+that are using this cross section.</td></tr>
+<tr><td>Db</td><td>Effective buoyancy diameter.</td></tr>
+<tr><td>Dd</td><td>Effective drag diameter.</td></tr>
+<tr><td>Cd</td><td>Lateral drag coefficient.</td></tr>
+<tr><td>Ca</td><td>Lateral added mass coefficient.</td></tr>
+<tr><td>Cm</td><td>Lateral added mass coefficient.</td></tr>
+<tr><td>Cd_axial</td><td>Axial drag coefficient.</td></tr>
+<tr><td>Ca_axial</td><td>Axial added mass coefficient.</td></tr>
+<tr><td>Cm_axial</td><td>Axial added mass coefficient.</td></tr>
+<tr><td>Cd_spin</td><td>Drag coefficient associated with spin motion.</td></tr>
+<tr><td>Di</td><td>Diameter of internal fluid (or soil) body,
+used for calculation of additional mass.</td></tr>
+</table></p>
+
+<p>See the FEDEM User's Guide for more information on how
+the hydrodynamic loads are calculated based on the above parameters.</p>
+
+</body>
+</html>

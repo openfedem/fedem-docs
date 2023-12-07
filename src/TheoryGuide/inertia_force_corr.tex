@@ -1,0 +1,304 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\CGtiny{{\mbox{\tiny CG}}}
+\def\CRtiny{{\mbox{\tiny CR}}}
+
+\section{Inertia forces and high-speed rotation}
+\label{s:Inertia forces and high-speed rotation}
+
+When performing FE-based dynamics analysis with high-speed rotation, the inertia
+forces can be poorly represented if superelements with very few external DOFs
+have motion with high-speed rotation components.
+
+This problem is usually only encountered with rigid body analysis, in which the
+number of external DOFs for each superelement is too limited to calculate the
+stresses with any accuracy.
+However, such a model is often desirable, as it can provide fairly accurate
+motion and joint force characteristics while being very efficient numerically.
+The cause of the problem is that model reduction (as described earlier in
+Chapter~\ref{chap:CMS}) invariably reduces the interpolation order of
+displacements, velocities and accelerations over the superelement,
+thereby producing a poor representation of the centripetal acceleration field
+for the superelement or element mesh.
+
+There are two remedies for this problem:
+%
+\begin{enumerate}
+\item Using an adequate number of external nodes to represent the centripetal
+acceleration field.
+This generally means selecting nodes that effectively span the complete
+superelement and surround the center of gravity.
+\item Using an automatic algorithm to correct the inertia forces with respect to
+rigid body resultants.
+\end{enumerate}
+
+Remedy 1 is not always desirable, as it mandates the use of more DOFs than are
+strictly necessary to achieve satisfactory result.
+In addition, it takes some experience to determine an adequate selection of
+external nodes.
+
+In order to eliminate the guesswork from remedy 1 above, a procedure to obtain
+accurate rigid body inertia forces while still allowing a minimal number of
+external DOFs has been developed.
+The procedure uses the rigid body mass properties for each superelement to check
+consistency between the nodal inertia forces and rigid body resultant forces.
+If they are not consistent, the nodal inertia forces are corrected to ensure
+correct rigid body resultants.
+
+It is important to note that if a fairly large number of external nodes are
+chosen in order to obtain good stress results for a particular superelement,
+a good representation of the acceleration field is also ensured and the inertia
+force corrections outlined in this section are reduced (approaches zero).
+In this way the additional correction forces will not affect the stress results.
+
+\subsection{Rigid body mass properties}
+\label{subs:Rigid body mass properties}
+
+The rigid body mass properties for a structure can be calculated from the
+FE~representation of the structure---either the full mass matrix $\mf M$,
+or the reduced mass matrix ${\mf M}_r$ given by \eqnref{eqCMS:ReducedModelEq}.
+It can be shown that both $\mf M$ and ${\mf M}_r$ yield the same mass property
+matrix, ${\mf I}_a$, about a given point $a$.
+
+\subsubsection{Inertia matrix about an arbitrary point}
+
+For a given structure, an $n_{\text{\tiny DOFs}}\times 6$ matrix for the rigid
+body displacement vector can be formed, in which each column consists of a rigid
+body displacement vector of unit magnitude:
+%
+\begin{equation}
+{\mf R}_a = \left[ \begin{array}{*6c}
+{\mf v}_{x} & {\mf v}_y & {\mf v}_z &
+{\mf v}_{\omega_x} & {\mf v}_{\omega_y} & {\mf v}_{\omega_z}
+\end{array}\right]
+\end{equation}
+%
+Using this matrix in a congruence transformation of the mass matrix yields
+%
+\begin{equation}
+\eqalign{
+{\mf I}_a =\;& {\mf R}_a^T{\mf M}_r {\mf R}_a \cr =\;&
+\left[\begin{array}{*6c}
+m & 0 & 0 & 0 & mz_\CGtiny & -my_\CGtiny \\
+0 & m & 0 & -mz_\CGtiny & 0 & mx_\CGtiny \\
+0 & 0 & m & my_\CGtiny & -mx_\CGtiny & 0 \\
+0 & -mz_\CGtiny & my_\CGtiny & I_{xx_a} & I_{xy_a} & I_{xz_a} \\
+mz_\CGtiny & 0 & -mx_\CGtiny & I_{yx_a} & I_{yy_a} & I_{yz_a} \\
+-my_\CGtiny & mx_\CGtiny & 0 & I_{zx_a} & I_{zy_a} & I_{zz_a}
+\end{array}\right]
+}\label{eq:Ia}
+\end{equation}
+
+\subsubsection{Inertia matrix about center of gravity}
+
+From the off-diagonal submatrices in \eqnref{eq:Ia},
+the position of the Center of Gravity (CG) can be established.
+Performing the transformation about the CG yields
+%
+\begin{equation}
+{\mf I}_\CGtiny = {\mf R}_\CGtiny^T {\mf M}_r {\mf R}_\CGtiny =
+\left[\begin{array}{*6c}
+m & 0 & 0 & 0 & 0 & 0 \\
+0 & m & 0 & 0 & 0 & 0 \\
+0 & 0 & m & 0 & 0 & 0 \\
+0 & 0 & 0 & I_{xx} & I_{xy} & I_{xz} \\
+0 & 0 & 0 & I_{yx} & I_{yy} & I_{yz} \\
+0 & 0 & 0 & I_{zx} & I_{zy} & I_{zz}
+\end{array}\right]
+\label{eq:Icg}
+\end{equation}
+
+\begin{figure}[b]
+\center{
+\setlength{\unitlength}{1mm}
+\begin{picture}(55,70)(15,2)
+\thinlines
+% Global coordinate system
+\thicklines
+\put( 37,53){CG}
+\put( 40,50){\vector(3, 1){20}}\put(63,57){${\tf n}_1$}
+\put( 40,50){\vector(2,-1){15}}\put(59,41){${\tf n}_2$}
+\put( 40,50){\vector(0,-1){25}}\put(43,25){${\tf n}_3$}
+\thinlines
+\put( 46,52){\line(2,-1){4}}
+\put( 44,48){\line(3, 1){6}}
+\thicklines
+\put( 40,50){\vector(1,0){10}}\put(51,49){${\tf u}_\CGtiny$}
+\put( 19,3){\vector(3, 1){40}}
+\put( 19,3){\vector(3, 1){38}}\put(62,17){${\tf\omega}_\CGtiny$}
+\thinlines
+\put( 40,50){\line(0,-1){40}}\put(39,6){CR}
+\put( 40,15){\line(3, 1){4.5}}
+\put( 44.5,11.5){\line(0, 1){5}}
+% The ``potato''
+\thicklines
+\qbezier(27,40)( 5,46)(25,52)
+\qbezier(25,52)(32,54)(37,62)
+\qbezier(37,62)(46,74)(55,60)
+\qbezier(55,60)(63,50)(53,44)
+\qbezier(53,44)(40,36)(27,40)
+%\graphpaper[2](0,0)(70,70)
+\end{picture}
+}
+\caption{Rotation axis of screw-like motion}
+\label{fig:screw-like motion}
+\end{figure}
+
+\subsection{Extracting rigid body velocity}
+\label{subs:Extracting rigid body velocity}
+
+The element velocity vector is composed of both rigid body displacements,
+${\mf v}_r$, and deformational displacements, ${\mf v}_d$, where the
+deformational displacements are orthogonal to rigid body displacements, i.e.
+%
+\begin{equation}
+\dot{\mf v} \;=\; \dot{\mf v}_r + \dot{\mf v}_d \;=\;
+{\mf R}_\CGtiny \dot{\mf a} + \dot{\mf v}_d
+\quad\mbox{where}\quad
+{\mf R}_\CGtiny^T \dot{\mf v}_d = {\mf 0}
+\end{equation}
+%
+The rigid body velocities can thus be established as
+%
+\begin{equation}
+\dot{\mf a} \;=\; \left({\mf R}_\CGtiny^T {\mf R}_\CGtiny\right)^{-1}
+{\mf R}_\CGtiny^T \dot{\mf v}
+\quad\mbox{where}\quad
+\dot{\mf a} \;= \left[\begin{array}{c}
+\dot{u}_\CGtiny \\ \dot{v}_\CGtiny \\ \dot{w}_\CGtiny \\
+\omega_{x} \\ \omega_{y} \\ \omega_{z}
+\end{array}\right] = \left[\begin{array}{c}
+\dot{\mf u}_\CGtiny \\
+{\tf\omega}_\CGtiny
+\end{array}\right]
+\label{eq:rigid velocity}
+\end{equation}
+%
+which, again, can be used to establish the axis of rotation relative to CG
+(see Figure~\ref{fig:screw-like motion})
+%
+\begin{equation}
+{\tf n}_1 \;=\; \frac{\tf\omega}{\|\tf\omega\|},\quad
+{\tf n}_3 \;=\; \frac{\dot{\tf u}_\CGtiny\times{\tf n}_1}{\|\dot{\tf u}_\CGtiny
+\times{\tf n}_1\|},\quad
+{\tf n}_2 \;=\; {\tf n}_3\times{\tf n}_1
+\end{equation}
+%
+The axis of rotation can then be established as
+%
+\begin{equation}
+{\tf r}_\CRtiny \;=\; r_\CRtiny{\tf n}_3 \quad\mbox{where}\quad
+r_\CRtiny \;=\; \frac{\dot{\tf u}_\CGtiny \cdot {\tf n}_2}{\|{\tf\omega}\|}
+\end{equation}
+
+\subsection{Rigid body inertia forces}
+\label{subs:Rigid body inertia forces}
+
+From the rigid body velocities established in \eqnref{eq:rigid velocity}
+and the rigid body properties in \eqnref{eq:Icg},
+the forces about the Center of Rotation (CR) can be established as follows
+%
+\begin{eqnarray}
+\mbox{Force:~~}  {\tf f}_{RB} &=&
+m\,{\tf\omega}\times\left({\tf\omega}\times{\tf r}_\CRtiny\right) \\
+\mbox{Torque:~~~}{\tf t}_{RB} &=&
+\dot{\tf L}_\CRtiny = \dot{\tf L}_\CGtiny =
+\tf\omega\times\left({\tf I}_\CGtiny\cdot\tf\omega\right)
+\end{eqnarray}
+
+\subsection{FE Resultant inertia forces}
+\label{subs:FE Resultant inertia forces}
+
+Having established the rigid body velocity vector, the associated FE
+acceleration vector for this $\ddot{\mf v}_{\omega_\CRtiny}$ can be established.
+
+The virtual work equation about the CR is
+%
+\begin{eqnarray}
+\mbox{Force:~~~} {\mf f}_{FE} &=&
+\delta{\mf v}_f^T {\mf M} \ddot{\mf v}_{\omega_\CRtiny} \label{eq:Ffe} \\
+\mbox{Torque:~~~}{\mf t}_{FE} &=&
+\delta{\mf v}_t^T {\mf M} \ddot{\mf v}_{\omega_\CRtiny}
+\end{eqnarray}
+%
+where $\delta{\mf v}_f$ contains virtual displacement vectors for unit
+translations in $X$, $Y$ and $Z$, whereas $\delta{\mf v}_t$ contains virtual
+displacement vectors for rotations $X$, $Y$ and $Z$ about CR.
+
+\subsection{Correction to FE inertia forces}
+\label{subs:Correction to FE inertia forces}
+
+For models with few DOFs, there is often a discrepancy between the forces
+resulting from the FE mass matrix and the rigid body force resultants.
+The correction of the FE resultant forces should then be
+%
+\begin{eqnarray}
+\mbox{Force:~~~} {\mf f}_C &=& {\mf f}_{RB} - {\mf f}_{FE} \label{eq:Fc} \\
+\mbox{Torque:~~~}{\mf t}_C &=& {\mf t}_{RB} - {\mf t}_{FE} \label{eq:Tc}
+\end{eqnarray}
+
+Forces and torques must now be added at the available nodes in such a way that
+the resultants after the correction are equal to those of \eqsref{eq:Fc}{eq:Tc}.
+The solution to this is not unique, but from an empirical or heuristic
+viewpoint, the following procedure has been adopted:
+%
+\begin{enumerate}
+\item The resultant force correction is evenly distributed to each node $i$
+on the superelement
+%
+\begin{equation}
+{\mf f}_{C_i} \;=\; \frac{1}{n_{\mbox{\tiny nodes}}}{\mf f}_C
+\label{eq:Fci}
+\end{equation}
+%
+This, of course, alters the torque about CR, which requires additional
+compensation when correcting the resultant torque.
+%
+\item The new FE resultant torque, which includes the forces above, becomes
+%
+\begin{equation}
+{\mf t}_{FE_2} \;=\; \delta{\mf v}_t^T \left(
+{\mf M}\ddot{\mf v}_{\omega_\CRtiny} + {\mf f}_{\mbox{\tiny corr}}
+\right)
+\end{equation}
+%
+when combining the forces from \eqsref{eq:Ffe}{eq:Fci}.
+The resultant corrected torque is
+%
+\begin{equation}
+{\mf t}_{C_2} \;=\; {\mf t}_{RB} - {\mf t}_{FE_2}
+\end{equation}
+%
+and the accompanying nodal correction torque is
+%
+\begin{equation}
+{\mf t}_{C_i} \;=\; \frac{1}{n_{\mbox{\tiny nodes}}}{\mf t}_{C_2}
+\label{eq:Tci}
+\end{equation}
+%
+\item Combining the \eqsref{eq:Fci}{eq:Tci}
+into the superelement correction vector results in
+%
+\begin{equation}
+{\mf F}^{I_c} \;= \left[\begin{array}{c}
+{\mf f}^{C_1} \\ {\mf t}_{C_1} \\ \vdots \\ {\mf f}_{C_n} \\ {\mf t}_{C_n}
+\end{array}\right]
+\end{equation}
+%
+\end{enumerate}
+
+\remark{Models with high-speed rotation components are sometimes integrated more
+accurately using standard Newmark rather than Newmark with numerical damping.
+Using a low damping factor for the HHT-$alpha$ method improves accuracy.
+See Section~\ref{s:Newmark time integration}
+and~\ref{s:Newmark integration with numerical damping} with remarks.}

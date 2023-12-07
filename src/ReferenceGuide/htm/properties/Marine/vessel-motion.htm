@@ -1,0 +1,67 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_properties_vessel-motion"></a>
+Vessel Motion</h1>
+
+<p>The Vessel Motion object is used to represent the motion of a rigid floating
+marine vessel through a Response Amplitude Operator (RAO).
+An RAO expresses the motion of a point on the vessel as a function of
+the wave height and frequency at the same reference point.</p>
+
+<p><img src="../../../img/prp/vessel-motion-1.png"></p>
+
+<p>The figure above illustrates the Vessel Motion properties,
+which consists of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>RAO file</td><td>Specifies a file containing the RAO table(s) describing
+the vessel motion as functions of wave elevation and frequency.</td></tr>
+<tr><td>Wave function</td><td>Specifies the
+<a href="wave-function.htm">Wave Function</a> defining the wave height,
+angular frequency and phase delay, used by the six motion
+<a href="../function.htm">Function</a>s associated with the vessel motion object.
+Normally, this should be the same function as specified as the Wave function
+in the <a href="../../dialogbox/Marine/sea-environment.htm">Sea Environment</a>
+dialog, but is not necessarily so.</td></tr>
+<tr><td>Wave direction</td><td>Specifies the angle (in degrees) between the
+local X-axis of the <i>Vessel Triad</i> and the incomming wave direction.
+A zero wave direction means that the waves propagate in the direction of
+the negative local X-axis of the Vessel Triad and the value 90.0 means that
+the waves propagate in the direction of the negative Y-axis.
+A separate RAO table is associated with each of the direction angles available
+in the specified RAO file.</td></tr>
+<tr><td>Motion scale</td><td>Specifies a <a href="../function.htm">Function</a>
+to be used as a scaling on the six motion functions associated with the vessel motion.
+This can be used to ramp up the RAO motions in a smooth manner,
+to avoid undesired startup trascients. When a function is specified here,
+six new motion functions are generated, where each one is defined as the
+product of the original motion function and the scaling function.</td></tr>
+</table></p>
+
+<p>Please see the chapter on "Marine Modeling" in the FEDEM User’s Guide, for
+more information on the RAO file format and how the motion functions associated
+with the vessel motion object are defined.</p>
+
+</body>
+</html>

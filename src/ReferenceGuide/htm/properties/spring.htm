@@ -1,0 +1,70 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_properties_spring"></a>Spring</h1>
+
+<p>The Spring object is used to introduce discrete stiffness in a FEDEM model.
+There are two types of springs in FEDEM: Axial- and joint springs.
+Axial springs apply relative forces between two
+<a href="triad.htm">Triads</a> along the direction axis between the triads,
+whereas Joint springs are integrated in the Joint, and act on the joint
+triads along one of the unconstrained DOFs of the Joint.</p>
+
+<p><img src="../../img/prp/spring-1.png"></p>
+
+<p>The figure above illustrates the Spring properties,
+which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Length in model</td><td>The initial distance measured in the model
+as you have made it. For joint springs, this is the measured value of the
+joint DOF that the spring acts in. For axial springs, it is the distance
+between the two Triads the spring is connected to.</td></tr>
+<tr><td>Constant stress free length, Constant deflection</td><td>
+These buttons and fields work together allowing you to introduce prestress in
+the spring, by setting a constant stress free length different from the
+Length in model. You can chose to enter this property either as an
+absolute value, using the Constant stress free length option, or relative to
+the Length in model by selecting the Constant deflection option.</td></tr>
+<tr><td>Stress free length change</td><td> You can select a
+<a href="function.htm">Function</a> to change the stress free length of
+the spring during the simulation. The value of the function will be used as
+an addition to the constant stress free length defined above.</td></tr>
+<tr><td>Stiffness</td><td>In this field either a constant spring stiffness
+can be entered, or you can select a defined spring characteristic
+from the pull-down list.</td></tr>
+<tr><td>Scale</td><td>The spring force can be scaled by a function.
+This can for instance be used to switch the spring on and off during the
+simulation. When no function is selected the scale is set to 1.0.
+The Scale can not be a function of the spring deflection or length.</td></tr>
+</table></p>
+
+<p>Note that if prestress is introduced in a Spring, it will be
+accounted for in the very first iteration of the dynamics simulation
+and may thus lead to a dynamic shock effect. However, when the initial
+<a href="../dialogbox/solver-advanced.htm#Initial-Equilibrium">
+Static equilibrium analysis</a> is enabled, the prestress force is taken
+as a pure static load and the transient shock should be avoided.</p>
+
+</body>
+</html>

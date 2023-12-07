@@ -1,0 +1,184 @@
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Property Reference">
+		<param name="ImageNumber" value="1">
+		</OBJECT>
+	<UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="General Modeling">
+		<param name="ImageNumber" value="1">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Animation">
+			<param name="Local" value="htm\properties\animation.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Ball Joint">
+			<param name="Local" value="htm\properties\ball-joint.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Beam">
+			<param name="Local" value="htm\properties\beam.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Beam Cross Section">
+			<param name="Local" value="htm\properties\beam-cross-section.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Cam Joint">
+			<param name="Local" value="htm\properties\cam-joint.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Curve">
+			<param name="Local" value="htm\properties\curve.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Cylindric Joint">
+			<param name="Local" value="htm\properties\cylindric-joint.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Damper">
+			<param name="Local" value="htm\properties\damper.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Free Joint">
+			<param name="Local" value="htm\properties\free-joint.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Function">
+			<param name="Local" value="htm\properties\function.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Gear">
+			<param name="Local" value="htm\properties\gear.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Graph">
+			<param name="Local" value="htm\properties\graph.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Material">
+			<param name="Local" value="htm\properties\material.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Part">
+			<param name="Local" value="htm\properties\part.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Prismatic Joint">
+			<param name="Local" value="htm\properties\prismatic-joint.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Rack and Pinion">
+			<param name="Local" value="htm\properties\rack-and-pinion.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Reference Plane">
+			<param name="Local" value="htm\properties\reference-plane.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Revolute Joint">
+			<param name="Local" value="htm\properties\revolute-joint.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Rigid Joint">
+			<param name="Local" value="htm\properties\rigid-joint.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Spring">
+			<param name="Local" value="htm\properties\spring.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Subassembly">
+                        <param name="Local" value="htm\properties\sub-assembly.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Triad">
+			<param name="Local" value="htm\properties\triad.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Other objects">
+			<param name="Local" value="htm\properties\other-elements.htm">
+			</OBJECT>
+		</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Marine Modeling">
+		<param name="ImageNumber" value="1">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Beamstring">
+			<param name="Local" value="htm\properties\marine\beamstring.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Current Function">
+			<param name="Local" value="htm\properties\marine\current-function.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Jacket">
+			<param name="Local" value="htm\properties\marine\jacket.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Soil Pile">
+			<param name="Local" value="htm\properties\marine\soil-pile.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Vessel Motion">
+			<param name="Local" value="htm\properties\marine\vessel-motion.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Wave Function">
+			<param name="Local" value="htm\properties\marine\wave-function.htm">
+			</OBJECT>
+		</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Windpower Modeling">
+		<param name="ImageNumber" value="1">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Blade">
+			<param name="Local" value="htm\properties\windpower\blade.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Gearbox">
+			<param name="Local" value="htm\properties\windpower\gearbox.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Generator">
+			<param name="Local" value="htm\properties\windpower\generator.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Nacelle">
+			<param name="Local" value="htm\properties\windpower\nacelle.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Rotor">
+			<param name="Local" value="htm\properties\windpower\rotor.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Shaft">
+			<param name="Local" value="htm\properties\windpower\shaft.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Tower">
+			<param name="Local" value="htm\properties\windpower\tower.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Turbine">
+			<param name="Local" value="htm\properties\windpower\turbine.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Wind turbine controller">
+			<param name="Local" value="htm\properties\windpower\controller.htm">
+			</OBJECT>
+		</UL>
+	</UL>

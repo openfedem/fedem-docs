@@ -1,0 +1,128 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1></a>Wind turbine controller</h1>
+
+<p>When the WTCtrl.dll plug-in is enabled in the
+<a href="../../plugins/plugin-architecture.htm">Plug-Ins</a> dialog box,
+the following set of User-defined function types are available in the
+<a href="../function.htm">Function</a> property panel.</p>
+
+<h3><a name="low-pass-filter"></a>Low-pass filter</h3>
+
+<p><img src="../../../img/prp/prp-function-21.png"></p>
+
+<p>The figure above illustrates the properties of a <i>Low-pass filter</i>
+function, which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Argument x</td><td>Selection of first function
+<a href="../function.htm#argument">argument</a>.<br>
+This should be the rotation velocity of the turbine generator.</td></tr>
+<tr><td>Argument y</td><td>Selection of second function
+<a href="../function.htm#argument">argument</a>.<br>
+This should be set to <i>Time</i>.</td></tr>
+<tr><td>Corner frequency, f_c</td><td>
+Specifies the corner frequency of the low-pass filter.</td></tr>
+</table></p>
+
+<h3><a name="torque-controller"></a>Torque controller</h3>
+
+<p><img src="../../../img/prp/prp-function-22.png"></p>
+
+<p>The figure above illustrates the properties of a <i>Torque controller</i>
+function, which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Argument x</td><td>Selection of first function
+<a href="../function.htm#argument">argument</a>.<br>
+This should be the enforced rotation angle change on the wind turbine blades,
+i.e., a function of type <a href="#pitch-controller">Pitch controller</a>.
+</td></tr>
+<tr><td>Argument y</td><td>Selection of second function
+<a href="../function.htm#argument">argument</a>.<br>
+This should be set to the filtered generator velocity, i.e.,
+a function of type <a href="#low-pass-filter">Low-pass filter</a>
+taking the actual generator velocity as argument.</td></tr>
+<tr><td>Argument z</td><td>Selection of third function
+<a href="../function.htm#argument">argument</a>.<br>
+This should be set to <i>Time</i>.</td></tr>
+<tr><td>Minimum pitch, region 3</td><td>
+Specifies the region 3 minimum pitch.</td></tr>
+<tr><td>Rated speed</td><td>
+Specifies the rated speed.</td></tr>
+<tr><td>Rated power</td><td>
+Specifies the rated power.</td></tr>
+<tr><td>Transition speed region 1 and 1.5</td><td>
+Specifies the transition speed (region 1 and 1.5).</td></tr>
+<tr><td>Transition speed region 1.5 and 2</td><td>
+Specifies the transition speed (region 1.5 and 2).</td></tr>
+<tr><td>Torque constant region 2</td><td>
+Specifies the torque constant (region 2).</td></tr>
+<tr><td>Rated slip percentage</td><td>
+Specifies the rated slip percentage.</td></tr>
+<tr><td>Max. torque, region 3</td><td>
+Specifies maximum torque (region 3).</td></tr>
+<tr><td>Max. torque rate</td><td>
+Specifies the maximum torque rate.</td></tr>
+</table></p>
+
+<h3><a name="pitch-controller"></a>Pitch controller</h3>
+
+<p><img src="../../../img/prp/prp-function-23.png"></p>
+
+<p>The figure above illustrates the properties of a <i>Pitch controller</i>
+function, which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Argument x</td><td>Selection of first function
+<a href="../function.htm#argument">argument</a>.<br>
+This should be the rotation angle of (one of) the wind turbine blades.</td></tr>
+<tr><td>Argument y</td><td>Selection of second function
+<a href="../function.htm#argument">argument</a>.<br>
+This should be set to the filtered generator velocity, i.e.,
+a function of type <a href="#low-pass-filter">Low-pass filter</a>
+taking the actual generator velocity as argument.</td></tr>
+<tr><td>Argument z</td><td>Selection of third function
+<a href="../function.htm#argument">argument</a>.<br>
+This should be set to <i>Time</i>.</td></tr>
+<tr><td>Reference speed</td><td>
+Specifies the reference speed</td></tr>
+<tr><td>Integral gain</td><td>
+Specifies the integral gain.</td></tr>
+<tr><td>Pitch for doubled power</td><td>
+Specifies the pitch for doubled power.</td></tr>
+<tr><td>Proportional gain</td><td>
+Specifies the proportional gain.</td></tr>
+<tr><td>Minimum pitch</td><td>
+Specifies the minimum pitch setting.</td></tr>
+<tr><td>Maximum pitch</td><td>
+Specifies the maximum pitch setting.</td></tr>
+<tr><td>Maximum pitch rate</td><td>
+Specifies the minimum pitch rate.</td></tr>
+</table></p>
+
+</body>
+</html>

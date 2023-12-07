@@ -1,0 +1,694 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Modeling of Joints}
+\label{c:Modeling of Joints}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Master and Slave based Joint Modeling}
+
+A joint is a way of specifying a constrained relative motion between two bodies
+or links in a mechanism.
+In the finite element modeling of mechanism joints, superelement nodes are used
+to specify the joint constraints.
+A joint between two moving links, denoted 1 and 2, will in general be defined by
+one node on link 1, called the slave triad, and one or more nodes on link 2,
+called the master triad(s).
+The constraints are then modeled by making all DOFs of the slave triad
+dependent on all DOFs of the master triad(s), and DOFs of the joint itself.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Single-master Joints}
+
+The position of the slave triad relative to the master triad is given by
+%
+\begin{equation}
+{\mf P}_{SG} \:=\; {\mf P}_{MG}{\mf P}_{JT}{\mf P}_N\cdots{\mf P}_1{\mf P}_{SJ}
+\label{eq:JointDef}
+\end{equation}
+%
+where the interpretation of each term is as follows:
+%
+\begin{namelist}{${\mf P}_{MG}$}
+
+\item[${\mf P}_{SG}$]
+Position of Slave triad measured in the Global coordinate system.
+The position is ultimately a function of the DOFs of the master triad
+and the joint DOFs.
+
+\item[${\mf P}_{MG}$]
+Position of Master triad measured in the Global coordinate system.
+This matrix is a function of the master triad DOFs and is thus
+subject to variation.
+
+\item[${\mf P}_{JT}$]
+Position of the Joint measured in the master Triad coordinate system.
+This matrix handles a possible offset of the joint relative to the master triad,
+as well as joint orientation possibly different from that of the master triad.
+The matrix is constant (carries no DOFs) and is thus not subject to variation.
+
+\item[${\mf P}_i$]
+Joint variable matrices, numbered from 1 to $N$.
+Each matrix can have from 1 to 6 DOFs, or joint variables
+(three translations and three rotations).
+When all joint variables are zero, each of the matrices ${\mf P}_i$
+becomes unity, and \eqnref{eq:JointDef} simplifies to
+${\mf P}_{SG} = {\mf P}_{MG}{\mf P}_{JT}{\mf P}_{SJ}$.
+
+\item[${\mf P}_{SJ}$]
+Position of the Slave triad measured in the Joint coordinate system,
+when all joint variables are zero.
+This matrix handles a possible offset of the joint relative to the slave triad,
+as well as joint orientation possibly different from that of the slave triad.
+This matrix is also constant, and is thus not subject to variation.
+
+\end{namelist}
+%
+Note that the position of the joint itself, in the global system, is given by
+%
+\begin{equation}
+{\mf P}_{JG} \:=\; {\mf P}_{MG}{\mf P}_{JT}
+\label{eq:JointPosGlobSingleMaster}
+\end{equation}
+
+The $N$ joint variable matrices ${\mf P}_i$ can be thought of as describing the
+relative motion between $N+1$ bodies.
+With one single joint variable matrix the two bodies will be the master- and
+slave link, respectively (slave link as body 1, and master link as body 2).
+With two or more joint variable matrices the intermediate bodies are of course
+purely fictitious, although a very useful mental concept.
+The joint variables associated with joint variable matrix ${\mf P}_i$ are
+expressed in the coordinate system of body $i+1$.
+According to~\eqref{eq:JointDef}, this gives the following coordinate system,
+$\delta\tilde{\mf u}_1 = {\mf 0}$, for these joint variables:
+%
+\begin{equation}
+{\mf R}_{C_i} =\; {\mf R}_{MG}{\mf R}_{JT}{\mf R}_N\cdots{\mf R}_{i+1}
+\quad\text{and}\quad
+{\mf R}_{C_N} =\; {\mf R}_{MG}{\mf R}_{JT}
+\label{eq:JVarCoordSys}
+\end{equation}
+
+Variation of \eqnref{eq:JointDef} provides an expression for the slave DOFs
+as a linear combination of the free master DOFs, i.e.
+%
+\begin{equation}
+\label{eq:JointVar}
+\eqalign{\delta{\mf P}_{SG} \;
+= \;& \delta{\mf P}_{MG}{\mf P}_{JT}{\mf P}_N\cdots{\mf P}_1{\mf P}_{SJ} \cr
++ \;& {\mf P}_{MG}{\mf P}_{JT}\delta{\mf P}_N\cdots{\mf P}_1{\mf P}_{SJ} \cr
+\vdots \;& \cr
++ \;& {\mf P}_{MG}{\mf P}_{JT}{\mf P}_N\cdots\delta{\mf P}_1{\mf P}_{SJ} }
+\end{equation}
+%
+since $\delta{\mf P}_{JT}={\mf 0}$ and $\delta{\mf P}_{SJ}={\mf 0}$
+according to the definitions above.
+
+The first term of \eqnref{eq:JointVar} provides a linear coupling to the master
+triad DOFs, and can be expressed as
+%
+\begin{equation}
+\left[\begin{array}{c}
+\delta{\mf u}_s \\
+\delta{\tf \omega}_s
+\end{array}\right]_M
+\;=\;
+\left[\begin{array}{cc}
+{\mf I} & {\mf \widehat e}_{SM} \\
+{\mf 0} & {\mf I}
+\end{array}\right]
+\left[\begin{array}{c}
+\delta{\mf u}_m \\
+\delta{\tf \omega}_m
+\end{array}\right]
+\label{eq:SingleMasterVariation}
+\end{equation}
+%
+where ${\mf e}_{SM}$ is the position of the slave triad relative to the master
+triad, measured in global system.
+For simplicity, it is here assumed that both the master and slave triad have
+DOFs in global directions.
+
+The variation with respect to the joint variables of a given joint variable
+matrix ${\mf P}_i$, can be expressed as
+%
+\begin{equation}
+\label{eq:JVarVariation}
+\eqalign{
+\left[\begin{array}{c}
+\delta{\mf u}_s \\
+\delta{\tf \omega}_s
+\end{array}\right]_i
+=\; &
+\left[\begin{array}{cc}
+{\mf I} & {\mf \widehat e}_{Si} \\
+{\mf 0} & {\mf I}
+\end{array}\right]
+\left[\begin{array}{cc}
+{\mf R}_{C_i} & {\mf 0} \\
+{\mf 0}       & {\mf R}_{C_i}
+\end{array}\right]
+\left[\begin{array}{cc}
+{\mf 0} & {\mf 0} \\
+{\mf 0} & {\mf H}_i
+\end{array}\right]
+\left[\begin{array}{c}
+\delta\tilde{\mf u}_i \\
+\delta\tilde{\tf \theta}_i
+\end{array}\right] \cr
+=\; &
+\left[\begin{array}{cc}
+{\mf R}_{C_i} & {\mf \widehat e}_{Si}{\mf R}_{C_i}{\mf H}_i \\
+{\mf 0}       & {\mf R}_{C_i}{\mf H}_i
+\end{array}\right]
+\left[\begin{array}{c}
+\delta\tilde{\mf u}_i \\
+\delta\tilde{\tf \theta}_i
+\end{array}\right] }
+\end{equation}
+%
+where ${\mf e}_{Si}$ is the position of the slave triad relative to body $i+1$,
+measured in global system.
+The matrix ${\mf R}_{C_i}$ defines the coordinate system of joint variable
+matrix $i$ according to \eqnref{eq:JVarCoordSys}.
+The rotation gradient matrix
+${\mf H} = \frac{\partial\tf\omega}{\partial\tf\theta}$
+is given by \eqnref{eq:DomegaDtheta}.
+Note that in case of only one rotational DOF for joint variable matrix
+${\mf P}_i$, this simplifies (in effect) to ${\mf H}_i = {\mf I}$.
+
+
+\subsection{Revolute Joint}
+
+A revolute joint is modeled from two supernodes located on different links in a
+mechanism, see Figure~\ref{fig:RevJoint}.
+%
+\begin{figure}[b]
+\center{
+\setlength{\unitlength}{1mm}
+\begin{picture}(86,62)(9,4)
+\thicklines
+% First arm
+\qbezier(9,12)(25,35)(37,45)
+\qbezier(37,45)(45,50)(51,46)
+\qbezier(51,46)(57,42)(52,35)
+\qbezier(52,35)(49,30)(36,25)
+\qbezier(36,25)(26,19)(17,9)
+\qbezier(52,30)(49,25)(36,20)
+\qbezier(36,20)(26,14)(17,4)
+\qbezier(54.5,41)(54.5,38.5)(54.5,36)
+\qbezier(54.5,36)(53.5,32)(52,30)
+%
+\qbezier(9,12)(13,10.5)(17,9)
+\qbezier(17,9)(17,6.5)(17,4)
+\qbezier(17,4)(13.5,5.5)(9,7)
+\qbezier(9,7)(9,9.5)(9,12)
+%Pin
+\qbezier(38.5,40)(38.5,43)(43.5,43)
+\qbezier(43.5,43)(48.5,43)(48.5,40)
+\qbezier(48.5,40)(48.5,37)(43.5,37)
+\qbezier(43.5,37)(38.5,37)(38.5,40)
+\qbezier(48.5,38.5)(48.5,35.5)(43.5,35.5)
+\qbezier(43.5,35.5)(38.5,35.5)(38.5,38.5)
+\put(38.6,38.5){\line(0,1){1.5}}
+\put(48.6,38.5){\line(0,1){1.5}}
+% Second arm
+\qbezier(54.2,41)(75,36)(86,23)
+\qbezier(44.5,24)(65,23)(80,16)
+\qbezier(35.7,19.5)(65,18)(80,11)
+%
+\qbezier(80,11)(80,13.5)(80,16)
+\qbezier(80,16)(83,19.5)(86,23)
+\qbezier(86,23)(86,20.5)(86,18)
+\qbezier(86,18)(83,14.5)(80,11)
+%Z, X0 and Xn vectors
+\put(43.5,40){\vector(0,1){13}}
+\put(39,50){$Z$}
+\put(43.5,55){\vector(0,1){5}}
+\put(43.5,55){\vector(0,1){6.5}}
+\put(46,56.5){$\tilde\theta_z$}
+\put(43.5,40){\vector(-1,-1){10}}
+\put(30,26.5){$X_i$}
+\put(43.5,40){\vector(2,-1){13}}
+\put(57,32){$X_j$}
+%\graphpaper[2](0,0)(90,50)
+\end{picture}
+}
+\caption{Coordinate axis and variable of revolute joint.}
+\label{fig:RevJoint}
+\end{figure}
+%
+The joint position matrix ${\mf P}_{JT}$ orients the joint coordinate system
+to have local $z$-axis along the axis of relative rotation.
+The joint has one joint variable matrix with a single DOF, $\tilde\theta_z$:
+%
+\begin{equation}
+{\mf P}_{SG} \:=\; {\mf P}_{MG}{\mf P}_{JT}
+{\mf P}_1(\tilde\theta_z)
+{\mf P}_{SJ}
+\label{eq:RevJointDefault}
+\end{equation}
+%
+Optionally, the joint may also have free motion in the $z$-direction,
+in which case it has the additional DOF $\tilde w$:
+%
+\begin{equation}
+{\mf P}_{SG} \:=\; {\mf P}_{MG}{\mf P}_{JT}
+{\mf P}_1(\tilde w,\tilde\theta_z)
+{\mf P}_{SJ}
+\label{eq:RevJointFreeZ}
+\end{equation}
+
+The joint produces six constraint equations, one for each slave triad DOF.
+Variation of the default revolute joint, \eqnref{eq:RevJointDefault},
+will be that of \eqsref{eq:SingleMasterVariation}{eq:JVarVariation}
+with the simplifications ${\mf H}_1 = \mf I$, $\delta\tilde{\mf u}_1 = {\mf 0}$,
+and $\delta\tilde{\tf\theta}_1 = [0\;0\;\delta\tilde\theta_z]^T$.
+With the additional freedom in $z$ as in \eqnref{eq:RevJointFreeZ},
+the only change is $\delta\tilde{\mf u}_1 = [0\;0\;\delta\tilde{w}]^T$.
+
+
+\subsection{Universal Joint}
+
+A universal joint consists of three bodies:
+Input Shaft, Center Cross, and Output Shaft.
+It is thus modeled with two joint variable matrices to describe the relative
+motion between the three bodies (the center cross body is only implicitly
+defined through the joint formulation):
+%
+\begin{equation}
+{\mf P}_{SG} \:=\; {\mf P}_{MG}{\mf P}_{JT}
+{\mf P}_2(\tilde\theta_z)
+{\mf P}_1(\tilde\theta_y)
+{\mf P}_{SJ}
+\label{eq:UniversalJointDef}
+\end{equation}
+%
+The matrix ${\mf P}_2(\tilde\theta_z)$ here describes the relative motion
+(rotation) between the master body and the center cross.
+The rotation axis is the $z$-axis of the joint coordinate system.
+The matrix ${\mf P}_1(\tilde\theta_y)$ describes the rotation between the
+center cross an the slave body.
+The rotation axis is here the $y$-axis of the cross coordinate system.
+The $y$-axis of the cross coordinate system is initially coincident with
+the $y$-axis of the joint coordinate system.
+The joint coordinate system will normally be that of the master triad.
+
+
+\subsection{Constant Velocity Joint}
+
+A constant velocity joint is modeled using the fact that two universal joints
+connected via an intermediate shaft will give a constant rotational velocity,
+provided that each joint absorbs half of the total angle between the input and
+output shaft.
+This gives a joint formulation with 4 joint variable matrices,
+and two constraint equations that ensure the equal shaft-axis angle between the
+two fictitious universal joints:
+%
+\begin{equation}
+{\mf P}_{SG} \:=\; {\mf P}_{MG}{\mf P}_{JT}
+{\mf P}_4(\tilde{\theta}_{z_4})
+{\mf P}_3(\tilde{\theta}_{y_3})
+{\mf P}_2(\tilde{\theta}_{y_2})
+{\mf P}_1(\tilde{\theta}_{z_1})
+{\mf P}_{SJ}
+\label{eq:CVJointDef}
+\end{equation}
+%
+with the additional linear constraint equations
+%
+\begin{equation}
+\tilde{\theta}_{z_4} = \tilde{\theta}_{z_1} \qquad\mbox{and}\qquad
+\tilde{\theta}_{y_3} = \tilde{\theta}_{y_2}
+\label{eq:CVJointHP}
+\end{equation}
+
+
+\subsection{Ball Joint}
+
+A ball joint is modeled from two supernodes located on different
+links in a mechanism, see Figure~\ref{fig:BallJoint}.
+The default ball joint formulation has Euler angles $Z-Y-X$ as joint DOFs:
+%
+\begin{equation}
+{\mf P}_{SG} \:=\; {\mf P}_{MG}{\mf P}_{JT}
+{\mf P}_3(\tilde\theta_z)
+{\mf P}_2(\tilde\theta_y)
+{\mf P}_1(\tilde\theta_x)
+{\mf P}_{SJ}
+\label{eq:BallJoint1}
+\end{equation}
+%
+In addition, the ball joint is available with components of the rotation
+axis as joint DOFs:
+%
+\begin{equation}
+{\mf P}_{SG} \:=\; {\mf P}_{MG}{\mf P}_{JT}
+{\mf P}_1(\tilde\theta_z,\tilde\theta_y,\tilde\theta_x)
+{\mf P}_{SJ}
+\label{eq:BallJoint2}
+\end{equation}
+
+\begin{figure}[b]
+\center\includegraphics[width=2.8in]{Figures/ballJoint.png}
+\caption{Coordinate system i and j of a ball joint}
+\label{fig:BallJoint}
+\end{figure}
+
+The formulation with the rotation axis parameterization may be used if the
+default formulation runs into singularities with respect to the Euler angles.
+If singularity arises for the Euler angles, one may also try rotating the joint
+(different initial orientation).
+
+
+\subsection{Rigid Joint}
+
+A rigid joint (see Figure~\ref{fig:RigidJoint}) contains no joint variable
+matrices since there is no relative motion between the master and slave bodies.
+The joint allows a rigid coupling between two nodes that need not be coincident,
+nor is there a limitation on common directions in space:
+%
+\begin{equation}
+{\mf P}_{SG} \:=\; {\mf P}_{MG}{\mf P}_{JT}{\mf P}_{SJ}
+\label{eq:RigidJointDef}
+\end{equation}
+
+\begin{figure}[t]
+\center\includegraphics[width=3.9in]{Figures/rigidJoint.png}
+\caption{Coordinate axis of rigid joint.}
+\label{fig:RigidJoint}
+\end{figure}
+
+The rigid joint is often used for accessing internal forces through the
+joint at system level during simulation.
+
+
+\subsection{Free Joint}
+\label{subs:Free Joint}
+
+The free joint (see Figure~\ref{fig:FreeJoint}) is modeled from two supernodes
+located on ground or different links in a mechanism.
+There is full freedom of motion between the links,
+provided by six joint variables.
+The three translational joint variables are in the coordinate system of the
+joint itself, and the three rotational joint variables are Euler angles $Z-Y-X$.
+This gives the joint formulation as
+%
+\begin{equation}
+{\mf P}_{SG} \:=\; {\mf P}_{MG}{\mf P}_{JT}
+{\mf P}_3(\tilde u,\tilde v,\tilde w,\tilde\theta_z)
+{\mf P}_2(\tilde\theta_y)
+{\mf P}_1(\tilde\theta_x)
+{\mf P}_{SJ}
+\label{eq:FreeJoint}
+\end{equation}
+%
+The free joint is also available with components of the rotation
+axis as joint DOFs:
+%
+\begin{equation}
+{\mf P}_{SG} \:=\; {\mf P}_{MG}{\mf P}_{JT}
+{\mf P}_1(\tilde u,\tilde v,\tilde w,\tilde\theta_z,\tilde\theta_y,\tilde\theta_x)
+{\mf P}_{SJ}
+\label{eq:FreeJoint2}
+\end{equation}
+
+\begin{figure}[t]
+\center\includegraphics[width=3.55in]{Figures/freeJoint.png}
+\caption{Coordinate system i and j for a free joint.}
+\label{fig:FreeJoint}
+\end{figure}
+
+The reason for having this joint is to facilitate introduction of constraints,
+prescribed motions and spring/damper properties on the DOFs represented by the
+joint variables rather than the global triad DOFs.
+Note that an entirely spring-based free joint formulation, without the joint
+variable transformations given by \eqsref{eq:FreeJoint}{eq:FreeJoint2},
+also is available for this joint type, see Section~\ref{subs:Global spring}.
+
+
+\subsection{Axial Joint}
+
+An axial joint is modeled from two supernodes located on two different links.
+The joint position matrix ${\mf P}_{JT}$ orients the joint coordinate system
+to have its local $x$-axis pointing from the master triad to the slave triad.
+The joint has one joint variable matrix with a single DOF, $\tilde u$,
+the displacement along the local $x$-axis:
+%
+\begin{equation}
+{\mf P}_{SG} \:=\; {\mf P}_{MG}{\mf P}_{JT}
+{\mf P}_1(\tilde u)
+{\mf P}_{SJ}
+\end{equation}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Multi-master Joints}
+
+The multi-master joints have the same formulation with respect to the relative
+motion between the joint itself and the slave triad, as single-master joints.
+These joints have an additional variable, called the slider variable $s$,
+which expresses the position of the joint (or follower) along a curve defined
+by $N$ master triads, i.e, ${\mf P}_{JG}(s)$.
+For each master triad, the joint position relative to the triad itself is
+defined through ${\mf P}_{JT_i}$, such that the path the follower is to travel
+along does not need to go through the triads themselves.
+This can be expressed as
+%
+\begin{equation}
+{\mf P}_{JG} \:=\; {\mf P}(s,{\mf P}_{JG_1},\cdots,{\mf P}_{JG_N})
+\quad\text{where}\quad{\mf P}_{JG_i} = {\mf P}_{MG_i}{\mf P}_{JT_i}
+\label{eq:FollowerFunction}
+\end{equation}
+%
+which resembles the similar expression for the single master joint in
+\eqnref{eq:JointPosGlobSingleMaster}.
+
+The variation of \eqnref{eq:FollowerFunction} with respect to the $N$
+master triads is
+%
+\begin{equation}
+\left[\begin{array}{c}
+\delta{\mf u}_s \\
+\delta{\tf \omega}_s
+\end{array}\right]_M
+\;=\; \sum_{i=1}^N f(s)_i
+\left[\begin{array}{cc}
+{\mf I} & {\mf \widehat e}_{SM_i} \\
+{\mf 0} & {\mf I}
+\end{array}\right]
+\left[\begin{array}{c}
+\delta{\mf u}_{m_i} \\
+\delta{\tf \omega}_{m_i}
+\end{array}\right]
+\end{equation}
+%
+which closely resembles the similar expression for the single master joints,
+\eqnref{eq:SingleMasterVariation}.
+If the follower is positioned between node $k$ and $l$,
+the interpolation functions $f(s)_i$ will be
+%
+\begin{equation}
+\label{eq:MultimasterWeight}
+\eqalign{
+f(s)_k \;=\;& (-s-s_l)/(s_l -s_k) \cr
+f(s)_l \;=\;& ( s-s_k)/(s_l -s_k) \cr
+f(s)_i \;=\;& 0 \quad\mbox{for}\;\; i\ne k \;\;\mbox{and}\;\; i\ne l
+}
+\end{equation}
+
+
+\subsection{Prismatic Joint}
+
+The prismatic joint is modeled from three or more supernodes where one node,
+the slave triad, is located on the first link while two or more nodes,
+the master triads, are located on the second link.
+The master triads define a straight line along which the sliding occur,
+see Figure~\ref{fig:PrismJoint}.
+The slave link can rotate about the $x$- and $y$-axes of the joint,
+which gives the following parameterization:
+%
+\begin{equation}
+{\mf P}_{SG} \:=\; {\mf P}_{JG}(s,\cdots)
+{\mf P}_2(\tilde\theta_y)
+{\mf P}_1(\tilde\theta_x)
+{\mf P}_{SJ}
+\label{eq:PrismDef}
+\end{equation}
+%
+The $z$-axis of the joint is always pointing in the positive curve direction.
+
+\begin{figure}[b]
+\includegraphics[width=\textwidth]{Figures/prismaticJoint.png}
+\caption{Prismatic joint with slave and master nodes.}
+\label{fig:PrismJoint}
+\end{figure}
+
+To model telescopic motion, two parallel prismatic joints of this type is used
+between the same two links of the mechanism.
+
+
+\subsection{Cylindric Joint}
+
+The cylindric joint closely resembles the prismatic joint, but the slave link
+is also free to rotate about the master line itself.
+The joint coordinate system has, as for the prismatic joint, the local $z$-axis
+along the master curve in positive direction, which gives the parameterization:
+%
+\begin{equation}
+{\mf P}_{SG} \:=\; {\mf P}_{JG}(s,\cdots)
+{\mf P}_3(\tilde\theta_z)
+{\mf P}_2(\tilde\theta_y)
+{\mf P}_1(\tilde\theta_x)
+{\mf P}_{SJ}
+\label{eq:CylindricDef}
+\end{equation}
+%
+The rotation can also be parameterized using rotation axis components:
+%
+\begin{equation}
+{\mf P}_{SG} \:=\; {\mf P}_{JG}(s,\cdots)
+{\mf P}_1(\tilde\theta_z,\tilde\theta_y,\tilde\theta_x)
+{\mf P}_{SJ}
+\label{eq:CylindricDef2}
+\end{equation}
+
+
+\subsection{Cam Joint}
+\label{subs:Cam Joint}
+
+The cam surface is defined by a curve through an ordered set of master triads.
+If the first and last master are identical, the cam has a closed surface.
+The curve tangent defines the local $z$-axis of the joint coordinate system.
+Its local $x$-axis corresponds with the surface normal direction, and is defined
+from the local $x$-axis direction of the master triads along the curve.
+
+Currently, the curve defining the cam surface can consist of straight lines
+and circle arcs only, each made up of three nodes, see Figure~\ref{fig:Cam}.
+A straight line is simply an arc with zero curvature ($1/R\approx0$).
+
+\begin{figure}[t]
+\center\includegraphics[width=2.2in]{Figures/CamCurve.png}
+\caption{Cam curve composed of a circle arc, a straight line, a circle arc
+and another circle arc.
+The first and last arcs consist of two curve segments (5 nodes).
+The straight line and the second arc consist of one curve segment each.}
+\label{fig:Cam}
+\end{figure}
+
+\remark{It is worth noticing that a sudden change in radii of the curve gives a
+discontinuity in the second derivative, resulting in sudden forces in the cam.}
+
+The default master-slave based cam parameterization has full rotational freedom
+of the slave link relative to the follower, as well as translational DOFs in
+the local $x$- and $y$-direction of the follower, which gives
+%
+\begin{equation}
+{\mf P}_{SG} \:=\; {\mf P}_{JG}(s,\cdots)
+{\mf P}_3(\tilde u,\tilde v,\tilde\theta_z)
+{\mf P}_2(\tilde\theta_y)
+{\mf P}_1(\tilde\theta_x)
+{\mf P}_{SJ}
+\label{eq:CamDef}
+\end{equation}
+%
+The translational DOFs can be suppressed entirely, and individually,
+which give the following three alternative formulations for the cam joint:
+%
+\begin{eqnarray}
+{\mf P}_{SG} &=& {\mf P}_{JG}(s,\cdots)
+{\mf P}_3(\tilde u,\tilde\theta_z)
+{\mf P}_2(\tilde\theta_y)
+{\mf P}_1(\tilde\theta_x)
+{\mf P}_{SJ} \label{eq:CamFixY} \\
+%
+{\mf P}_{SG} &=& {\mf P}_{JG}(s,\cdots)
+{\mf P}_3(\tilde v,\tilde\theta_z)
+{\mf P}_2(\tilde\theta_y)
+{\mf P}_1(\tilde\theta_x)
+{\mf P}_{SJ} \label{eq:CamFixX} \\
+%
+{\mf P}_{SG} &=& {\mf P}_{JG}(s,\cdots)
+{\mf P}_3(\tilde\theta_z)
+{\mf P}_2(\tilde\theta_y)
+{\mf P}_1(\tilde\theta_x)
+{\mf P}_{SJ} \label{eq:CamFixBoth}
+\end{eqnarray}
+%
+The rotation can also be parameterized using rotation axis components as for the
+ball-, free- and cylindric joints, i.e., instead of \eqnref{eq:CamDef} we have:
+%
+\begin{equation}
+{\mf P}_{SG} \:=\; {\mf P}_{JG}(s,\cdots)
+{\mf P}_1(\tilde u,\tilde v,\tilde\theta_z,\tilde\theta_y,\tilde\theta_x)
+{\mf P}_{SJ}
+\label{eq:CamDef2}
+\end{equation}
+%
+and similarly for~\meqsref{eq:CamFixY}{eq:CamFixBoth}.
+
+\input{contact_element}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Master and Slave based Transmissions}
+
+Master and slave based transmissions are expressed using linear dependencies
+between selected joint variables of the various joint types described above.
+
+
+\subsection{Gear Joint}
+
+The gear joint is based on two revolute joints, one for the input shaft and one
+for the output shaft.
+The master triads for these two joints must be placed on the same link---the
+gear housing.
+Setting the gear ratio to $N$, the linear dependency of the rotational joint
+DOFs becomes
+%
+\begin{equation}
+\theta_{z_O} \;=\; N\,\theta_{z_I}
+\label{eq:GearConstraint}
+\end{equation}
+%
+where subscript $O$ designates the output shaft, and $I$ the input shaft.
+
+
+\subsection{Rack and Pinion}
+
+The rack--and--pinion is based on a revolute joint and a prismatic joint.
+The master triads of the revolute joint and prismatic joint should be placed
+on the same link---the joint housing.
+The linear dependency of the rack--and--pinion becomes
+%
+\begin{equation}
+s_O \;=\; N\,\theta_{z_I}
+\label{eq:RackAndPinionConstraint}
+\end{equation}
+%
+when using subscript $O$ for the slider variable of the prismatic joint,
+and subscript $I$ for the rotational DOF of the input shaft.
+
+
+\subsection{Screw Joint}
+
+The screw joint is based on a cylindric joint.
+The slider DOF is now connected to the rotational DOF about the joint $z$-axis,
+which gives the linear dependency
+%
+\begin{equation}
+s_O \;=\; N\,\theta_{z_I}
+\label{eq:ScrewJointConstraint}
+\end{equation}
+
+\input{friction}

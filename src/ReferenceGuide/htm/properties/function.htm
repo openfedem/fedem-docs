@@ -1,0 +1,620 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1></a>Function</h1>
+
+<p>The Function object is used to represent explicit functions of time
+or any other response variable in the model.
+Functions can be used to control the magnitude of loads, the length of springs,
+prescribed motion in joints, etc. The function defines one input variable
+(except for functions of type Math Expression which may have up to four input
+variables, and user-defined functions which may have an arbitrary number of
+input variables) and a function shape that is used to transform the
+input value(s) into the output value of the function.
+The output will thus change during the simulation depending on the variations
+in its input value(s).</p>
+
+<p>The input value can be a system variable measured by a sensor, the output of
+a control system, the output of another Function, or simply the simulation time.
+The function shape can be defined in several different ways by specifying the
+Function Type, but the different mechanism objects that may require
+function-like relationships use a common way of defining the function shapes.
+</p>
+
+<p>The different function types available in Fedem are summarized below.</p>
+
+<br><a name="one-to-one"></a><h2>1:1</h2>
+
+<p><img src="../../img/prp/function-1.png"></p>
+
+<p>This represents the identity function.
+Its output value always equals the argument value.
+The properties of the <b>1:1</b> function consist mainly of the Argument selection
+fields, and are as follows:</p>
+
+<p><a name="argument"></a><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Argument</td><td>
+You can select any of the objects in your model that already is used as
+an argument by this or other functions (i.e., those having a sensor attached)
+from the pull-down list.
+By pressing the arrow button, you can instead select any object in your model.
+A sensor will then be created on the selected object which then also will appear
+in the pull-down list.
+In addition to physical objects like Triads, Joints, etc.,
+you may also select Control output elements and other Functions as arguments.
+</td></tr>
+<tr><td>DOF</td><td>
+If the object selected as argument have several degrees of freedom (DOFs),
+you may here select which DOF to provide the argument value.
+</td></tr>
+<tr><td>Var</td><td>
+Specifies which response quantity (deflection, velocity, acceleration, etc.)
+in the selected object to use as argument value.
+</td></tr>
+<tr><td>Use as output sensor</td><td>
+If this toggle is enabled, this function will be marked as an <i>Output Indicator</i>
+when the model is exported to a Digital Twin Streaming app, using the
+<a href="../dialogbox/dt-export.htm">Model Export</a> dialog box.
+When enabled, you can also define some <a href="#threshold">Threshold</a>
+settings for the function (see below).
+</td></tr>
+</table></p>
+
+<p>The property fields for function argument definition are similar for all the
+other function types listed below, only with two exceptions
+(<a href="#constant">Constant</a> and <a href="#external-function">External function</a>).
+The description above therefore applies to all of the other function types.
+The same holds for the <i>Use as output sensor</i> toggle,
+although the use of this toggle is mostly limited to 1:1 functions only.</p>
+
+
+<br><h2>General functions</h2>
+
+<p>This group of function types provide different ways of defining
+function shapes with an arbitrary variation.</p>
+
+<h3><a name="poly-line"></a>Poly line</h3>
+
+<p><img src="../../img/prp/prp-function-2.png"></p>
+
+<p>The figure above illustrates the properties of a <i>Poly line</i>
+function, which is a linear interpolation between user-specified points.
+The properties consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Argument</td><td>Selection of function argument,
+see <a href="#argument">above</a>.</td></tr>
+<tr><td>X</td><td>Specifies the x-coordinate of the point.</td></tr>
+<tr><td>Y</td><td>Specifies the y-coordinate of the point.</td></tr>
+<tr><td>+/-</td><td>Adds or removes points in the Parameters list.</td></tr>
+<tr><td>Extrapolate</td><td>Selects the extrapolation type to use.</td></tr>
+</table></p>
+
+<h3><a name="poly-line-from-file"></a>Poly line from file</h3>
+
+<p><img src="../../img/prp/prp-function-4.png"></p>
+
+<p>The figure above illustrates the properties of a <i>Poly line from file</i>
+function, which is similar to the <a href="#polyline">Poly line</a> function,
+except that the point coordinates now are read from a file.
+The properties consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Argument</td><td>Selection of function argument,
+see <a href="#argument">above</a>.</td></tr>
+<tr><td>File/Reference</td><td>
+Specifies the file or a reference to the file containing the poly line data.
+See the FEDEM User's Guide for available file formats.</td></tr>
+<tr><td>Channel</td><td>
+If the specified file contains multiple (more than two) columns of data,
+which column to be used is selected here.</td></tr>
+<tr><td>Scale</td><td>
+Specifies a scaling factor for the y-coordinate values.</td></tr>
+<tr><td>Shift function to<br>zero out start value</td><td>
+Shifts the Y-coordinate values to make the first value zero.</td></tr>
+<tr><td>Additional shift</td><td>
+Shift the y-coordinate values by the specified amount.
+If the <i>Shift function to zero out start value</i> toggle also is applied,
+the applied shift is reduced by the first y-value.</td></tr>
+</table></p>
+
+<h3><a name="spline"></a>Spline</h3>
+
+<p><img src="../../img/prp/prp-function-5.png"></p>
+
+<p>The figure above illustrates the properties of a <i>Spline</i>
+function, which is a third-order (cubic) interpolation between (at least 4)
+user-specified points. The properties consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Argument</td><td>Selection of function argument,
+see <a href="#argument">above</a>.</td></tr>
+<tr><td>X</td><td>Specifies the x-coordinate of the point.</td></tr>
+<tr><td>Y</td><td>Specifies the y-coordinate of the point.</td></tr>
+<tr><td>+/-</td><td>Adds or removes points in the Parameters list.</td></tr>
+<tr><td>Extrapolate</td><td>Selects the extrapolation type to use.</td></tr>
+</table></p>
+
+<h3><a name="math-expression"></a>Math expression</h3>
+
+<p><img src="../../img/prp/math-expression-1.png"></p>
+
+<p>The figure above illustrates the properties of a <i>Math expression</i>
+function, which allows a mathematical expression defining the function shape
+to be entered as free text.
+The properties consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Argument x</td><td>Selection of first function argument,
+see <a href="#argument">above</a>.</td></tr>
+<tr><td>Argument y</td><td>Selection of second function argument,
+similar as for <i>Argument x</i>, etc.</td></tr>
+<tr><td>Number of function arguments</td><td>
+Specifies the number of arguments for the function (one to four).
+There will be one <i>Argument</i> selection frame for each.</td></tr>
+<tr><td>Parameters</td><td>
+The mathematical expression is typed in this field.
+It can span multiple lines and can contain any combination of the operators
+and intrisic functions listed below.</td></tr>
+<tr><td>Apply</td><td> You have to press this button
+when the expression has been edited to apply the changes.</td></tr>
+</table></p>
+
+<p>The available operators and intrisic functions which can be used in a
+math expression function are as follows. The symbols <i>a</i> and <i>b</i>
+may here be numerical constants, one of the independent variables (<i>x</i>,
+<i>y</i>, <i>z</i>, <i>t</i>), or another expression enclosed in parentheses.
+</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Operator/<br>Function:</b></td>
+<td><b>Description:</b></td></tr>
+<tr><td>abs <i>a</i></td><td>Absolute value, |<i>a</i>|.</td></tr>
+<tr><td><i>a</i> + <i>b</i></td><td>Addition.</td></tr>
+<tr><td><i>a</i> - <i>b</i></td><td>Subtraction.</td></tr>
+<tr><td><i>a</i> * <i>b</i></td><td>Multiplication.</td></tr>
+<tr><td><i>a</i> / <i>b</i></td><td>Division.</td></tr>
+<tr><td><i>a</i> % <i>b</i></td><td>Modulus operator,
+i.e., the remainder of the division a</i> / <i>b</i>.</td></tr>
+<tr><td><i>a</i> ^ <i>b</i></td><td>Power operator,
+<i>a</i><sup><i>b</i></sup>.</td></tr>
+<tr><td>sqrt <i>a</i></td><td>Square root, &radic;<i>a</i></td></tr>
+<tr><td><i>b</i> # <i>a</i></td><td>The <i>b</i>'th root,
+i.e., equivalant to <i>a</i> ^ (1/<i>b</i>).</td></tr>
+<tr><td>sin <i>a</i></td><td>Sine.</td></tr>
+<tr><td>cos <i>a</i></td><td>Cosine.</td></tr>
+<tr><td>tan <i>a</i></td><td>Tangent.</td></tr>
+<tr><td>asin <i>a</i></td><td>Arcus sine.</td></tr>
+<tr><td>acos <i>a</i></td><td>Arcus cosine.</td></tr>
+<tr><td>atan <i>a</i></td><td>Arcus tangent.</td></tr>
+<tr><td>pi</td><td>The constant value of &pi;</td></tr>
+<tr><td>ln <i>a</i></td><td>The natural logarithm, base e</td></tr>
+<tr><td>log <i>a</i></td><td>Logarithm with base 10</td></tr>
+<tr><td>exp <i>a</i></td><td>Exponential function,
+e<sup><i>a</i></sup></td></tr>
+<tr><td><i>a</i>E<i>b<i></td><td><i>a</i>&sdot;10<sup><i>b</b></sup></td></tr>
+<tr><td>max(<i>a</i>,<i>b</i>)</td><td>
+The largest value of <i>a</i> and <i>b</i>.</td></tr>
+<tr><td>min(<i>a</i>,<i>b</i>)</td><td>
+The smalles value of <i>a</i> and <i>b</i>.</td></tr>
+<tr><td>! <i>a</i></td><td>Logical not operator.</td></tr>
+<tr><td><i>a</i> &lt; <i>b</i></td><td>Logical less-than operator.</td></tr>
+<tr><td><i>a</i> &gt; <i>b</i></td><td>Logical greater-than operator.</td></tr>
+<tr><td><i>a</i> &lt;= <i>b</i></td><td>Logical less-than or equal to.</td></tr>
+<tr><td><i>a</i> &gt;= <i>b</i></td><td>Logical greater-than or equal to.</td></tr>
+<tr><td><i>a</i> == <i>b</i></td><td>Logical equal-to operator.</td></tr>
+<tr><td><i>a</i> || <i>b</i></td><td>Logical or operator.</td></tr>
+<tr><td><i>a</i> && <i>b</i></td><td>Logical and operator.</td></tr>
+</table></p>
+
+
+<br><h2>Simple functions</h2>
+
+<p>This group of function types provide different ways of defining
+some simple function shapes with a minimum set of parameters.</p>
+
+<h3><a name="constant"></a>Constant</h3>
+
+<p><img src="../../img/prp/prp-function-6.png"></p>
+
+<p>The figure above illustrates the properties of a <i>Constant</i>
+function, which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Constant value</td><td>
+Specifies the constant function value.</td></tr>
+</table></p>
+
+<h3><a name="linear"></a>Linear</h3>
+
+<p><img src="../../img/prp/prp-function-7.png"></p>
+
+<p>The figure above illustrates the properties of a <i>Linear</i>
+function, which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Argument</td><td>Selection of function argument,
+see <a href="#argument">above</a>.</td></tr>
+<tr><td>Slope</td><td>Specifies the slope of the function.</td></tr>
+</table></p>
+
+<h3><a name="step"></a>Step</h3>
+
+<p><img src="../../img/prp/prp-function-8.png"></p>
+
+<p>The figure above illustrates the properties of a <i>Step</i>
+function, which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Argument</td><td>Selection of function argument,
+see <a href="#argument">above</a>.</td></tr>
+<tr><td>Start displacement</td><td>
+Specifies the start displacement.</td></tr>
+<tr><td>Amplitude</td><td>
+Specifies the amplitude of the function.</td></tr>
+<tr><td>Start of step</td><td>
+Specifies the start point of the step.</td></tr>
+</table></p>
+
+<h3><a name="ramp"></a>Ramp</h3>
+
+<p><img src="../../img/prp/prp-function-9.png"></p>
+
+<p>The figure above illustrates the properties of a <i>Ramp</i>
+function, which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Argument</td><td>Selection of function argument,
+see <a href="#argument">above</a>.</td></tr>
+<tr><td>Start displacement</td><td>
+Specifies the start displacement.</td></tr>
+<tr><td>Slope</td><td>
+Specifies the slope of the function.</td></tr>
+<tr><td>Start of ramp</td><td>
+Specifies the start point of the ramp.</td></tr>
+</table></p>
+
+<h3><a name="limited-ramp"></a>Limited ramp</h3>
+
+<p><img src="../../img/prp/prp-function-10.png"></p>
+
+<p>The figure above illustrates the properties of a <i>Limited ramp</i>
+function, which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Argument</td><td>Selection of function argument,
+see <a href="#argument">above</a>.</td></tr>
+<tr><td>Start displacement</td><td>
+Specifies the start displacement.</td></tr>
+<tr><td>Slope</td><td>
+Specifies the slope of the function.</td></tr>
+<tr><td>Start of ramp</td><td>
+Specifies the start point of the ramp.</td></tr>
+<tr><td>End of ramp</td><td>
+Specifies the end point of the ramp.</td></tr>
+</table></p>
+
+<h3><a name="pulse"></a>Pulse</h3>
+
+<p><img src="../../img/prp/prp-function-11.png"></p>
+
+<p>The figure above illustrates the properties of a <i>Pulse</i>
+function, which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Argument</td><td>Selection of function argument,
+see <a href="#argument">above</a>.</td></tr>
+<tr><td>Start displacement</td><td>
+Specifies the start displacement.</td></tr>
+<tr><td>Amplitude</td><td>
+Specifies the amplitude of the pulse.</td></tr>
+<tr><td>Width</td><td>
+Specifies the width of the pulse.</td></tr>
+<tr><td>Position</td><td>
+Specifies the position of the pulse.</td></tr>
+</table></p>
+
+
+<br><h2>Periodic functions</h2>
+
+<p>This group of function types provide different ways of defining varying
+functions shapes which repeat themselves with a certain frequency.</p>
+
+<h3><a name="sine"></a>Sine</h3>
+
+<p><img src="../../img/prp/prp-function-12.png"></p>
+
+<p>The figure above illustrates the properties of a <i>Sine</i>
+function, which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Argument</td><td>Selection of function argument,
+see <a href="#argument">above</a>.</td></tr>
+<tr><td>Frequency</td><td>
+Specifies the frequency of the function.</td></tr>
+<tr><td>Delay</td><td>
+Specifies the delay as a fraction of the period.</td></tr>
+<tr><td>Amplitude</td><td>
+Specifies the amplitude of the function.</td></tr>
+<tr><td>Mean value</td><td>
+Specifies the mean value of the function.</td></tr>
+<tr><td>End</td><td>
+Specifies the end of the function.
+For any argument values larger than this value,
+the function value will be equal to the value at this point.</td></tr>
+</table></p>
+
+<h3><a name="combined-sine"></a>Combined sine</h3>
+
+<p><img src="../../img/prp/prp-function-13.png"></p>
+
+<p>The figure above illustrates the properties of a <i>Combined sine</i>
+function, which is a combination of two independent sine waves.
+The properties consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Argument</td><td>Selection of function argument,
+see <a href="#argument">above</a>.</td></tr>
+<tr><td>Frequency wave 1</td><td>
+Specifies the frequency of the first function.</td></tr>
+<tr><td>Amplitude wave 1</td><td>
+Specifies the amplitude of the first function.</td></tr>
+<tr><td>Delay wave 1</td><td>
+Specifies the first function delay as a fraction of the period.</td></tr>
+<tr><td>Frequency wave 2</td><td>
+Specifies the frequency of the second function.</td></tr>
+<tr><td>Amplitude wave 2</td><td>
+Specifies the amplitude of the second function.</td></tr>
+<tr><td>Delay wave 2</td><td>
+Specifies the second function delay as a fraction of the period.</td></tr>
+<tr><td>Mean value</td><td>
+Specifies the mean value of the function.</td></tr>
+<tr><td>End</td><td>
+Specifies the end of the function.
+For any argument values larger than this value,
+the function value will be equal to the value at this point.</td></tr>
+</table></p>
+
+<h3><a name="delayed-combined-sine"></a>Delayed combined sine</h3>
+
+<p><img src="../../img/prp/prp-function-14.png"></p>
+
+<p>The figure above illustrates the properties of a <i>Delayed combined sine</i>
+function, which is a combination of two independent sine waves after a delay.
+The properties consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Argument</td><td>Selection of function argument,
+see <a href="#argument">above</a>.</td></tr>
+<tr><td>Frequency wave 1</td><td>
+Specifies the frequency of the first function.</td></tr>
+<tr><td>Amplitude 1</td><td>
+Specifies the amplitude of the first function.</td></tr>
+<tr><td>Delay wave 1</td><td>
+Specifies the first function delay as a fraction of the period.</td></tr>
+<tr><td>Frequency wave 2</td><td>
+Specifies the frequency of the second function.</td></tr>
+<tr><td>Amplitude wave 2</td><td>
+Specifies the amplitude of the second function.</td></tr>
+<tr><td>Delay wave 2</td><td>
+Specifies the second function delay as a fraction of the period.</td></tr>
+<tr><td>Mean value</td><td>
+Specifies the mean value of the function.</td></tr>
+<tr><td>Start</td><td>
+Specifies the start of the function.
+For any argument values smaller than this value,
+the function value will be equal to the value at this point.</td></tr>
+</table></p>
+
+<h3><a name="periodic-square-pulse"></a>Periodic square pulse</h3>
+
+<p><img src="../../img/prp/prp-function-17.png"></p>
+
+<p>The figure above illustrates the properties of a <i>Periodic square pulse</i>
+function, which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Argument</td><td>Selection of function argument,
+see <a href="#argument">above</a>.</td></tr>
+<tr><td>Period</td><td>
+Specifies the period of the function.</td></tr>
+<tr><td>Mean value</td><td>
+Specifies the mean value of the function.</td></tr>
+<tr><td>Amplitude</td><td>
+Specifies the amplitude of the function.</td></tr>
+<tr><td>Phase angle</td><td>
+Specifies the phase angle of the function.</td></tr>
+</table></p>
+
+
+<br><h2>Special functions</h2>
+
+<p>This group of function types provide some special purpose
+and less frequently used function shapes.</p>
+
+<h3><a name="linear-derivative"></a>Linear derivative</h3>
+
+<p><img src="../../img/prp/prp-function-18.png"></p>
+
+<p>The figure above illustrates the properties of a <i>Linear derivative</i>
+function (with piecewise constant curvature),
+which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Argument</td><td>Selection of function argument,
+see <a href="#argument">above</a>.</td></tr>
+<tr><td>X</td><td>
+Specifies the x-values of curvature change.</td></tr>
+<tr><td>+/-</td><td>
+Adds or removes X-values in the parameters list.</td></tr>
+<tr><td>Extrapolate</td><td>
+Selects the extrapolation type to use.</td></tr>
+</table></p>
+
+<h3><a name="smooth-trajectory"></a>Smooth trajectory</h3>
+
+<p><img src="../../img/prp/prp-function-19.png"></p>
+
+<p>The figure above illustrates the properties of a <i>Smooth trajectory</i>
+function, which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Argument</td><td>Selection of function argument,
+see <a href="#argument">above</a>.</td></tr>
+<tr><td>Start</td><td>
+Specifies the start of the trajectory.</td></tr>
+<tr><td>Length</td><td>
+Specifies the length of the trajectory.</td></tr>
+<tr><td>Max(f')</td><td>
+Specifies the Max(f') value.</td></tr>
+<tr><td>Max(f’’)</td><td>
+Specifies the Max(f'') value.</td></tr>
+</table></p>
+
+<h3><a name="external-function"></a>External function</h3>
+
+<p><img src="../../img/prp/function-15.png"></p>
+
+<p>The figure above illustrates the properties of an <i>External function</i>.
+These functions can be used when the FEDEM dynamics solver is run
+via another process, which passes the actual function value via the
+application programmers interface (solver API) during the time stepping.
+This function type therefore has no argument or shape definition fields.
+The properties consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Channel</td><td>
+Automatically defined channel identifier.</td></tr>
+<tr><td>Scale</td><td>
+Specifies a scaling factor for the function values.</td></tr>
+<tr><td>Additional shift</td><td>
+Shifts the function values by the specified amount, after applying the scaling.
+</td></tr>
+</table></p>
+
+<h3><a name="refer-to-other-function"></a>Refer to other function</h3>
+
+<p><img src="../../img/prp/prp-function-20.png" width="686" height="184"></p>
+
+<p>This function type allows you to reuse a function shape defined in another
+Function object in its definition.
+In addition to the normal <a href="#argument">Argument</a>-selection fields,
+its properties consist only of a reference to another Function from which
+the function shape will be reused. When another Function is selected here,
+its function shape definition will appear in a non-editable form.
+If you change/edit the shape of that function, the changes will automatically
+apply to all <i>Refer to other function</i> functions using its shape as well.
+</p>
+
+
+<br><h2><a name="user-defined-function"></a>User-defined functions</h2>
+
+<p>This group of function types exists only if you have enabled a
+<a href="../plugins/plugin-architecture.htm">Plug-in</a>
+containing user-defined functions.</p>
+
+<p>The FEDEM installation contains one plug-in (WTCtrl.dll)
+with a set of user-defined functions representing a
+<a href="WindPower/controller.htm">wind turbine controller</a>.
+In addition, there is generic plug-in (FunctionsInterface.dll),
+which is a <a href="../plugins/userdef-functions.htm">.NET interface</a>
+for user-defined functions.</p>
+
+
+<br><h2><a name="preview">Function preview</h2>
+
+<p>All the function types listed above (except for <i>External function</i>)
+have a preview section in the far right of their property panel, made available
+by clicking the <i>Preview</i> tab next to the <i>Parameter Help</i>.
+This section can be used to generate and display a <a href="graph.htm">Graph</a>
+plotting the function shape.</p>
+
+<p><img src="../../img/prp/prp-function-3.png"></p>
+
+<p>The <i>Preview</i> section, illustrated for a <i>Poly line</i> function
+in the figure above, consists of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Domain</td><td>
+Specify the start and stop values of the X-axis domain of the curve plotting
+the function shape.</td></tr>
+<tr><td>Increment</td><td>
+Specifies the X-axis increment between each curve point.
+If the <i>Auto</i> toggle is enabled, the increment is instead calculated
+automatically depending on the actual function shape type.</td></tr>
+<tr><td>Show</td><td>
+Displays the Graph plotting the function.
+</table></p>
+
+
+<br><h2><a name="threshold">Threshold settings</h2>
+
+<p>When the <i>Use as output sensor</i> toggle is enabled for a
+<a href="#one-to-one">1:1</a> function, you will have the option
+to assign some additional <i>Threshold</i> settings for this function.
+The settings here do not affect the simulation model directly.
+They are only stored in the model file and are used by
+<i>EPD Connected Products</i> in a cloud simulation of this model.</p>
+
+<p><img src="../../img/prp/function-16.png"></p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Description</td><td>
+Arbitrary text identifying this threshold.
+It will be listed in the <i>Output Indicators</i> table of the
+<a href="../dialogbox/dt-export.htm">Model Export</a> dialog box.
+</td></tr>
+<tr><td>Threshold value</td><td>
+Threshold value</td></tr>
+<tr><td>Min interval [&mu;s]</td><td>
+Min interval</td></tr>
+<tr><td>Skip interval [&mu;s]</td><td>
+Skip interval</td></tr>
+<tr><td>Severity</td><td>
+Choose between <i>Low</i>, <i>Medium</i> and <i>High</i></td></tr>
+</table></p>
+
+<p>See the <i>EPD Connected Products</i> documentation
+for further details on the Threshold settings.</p>
+
+</body>
+</html>

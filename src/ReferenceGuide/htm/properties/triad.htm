@@ -1,0 +1,203 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_properties_triad"></a>Triad</h1>
+
+<p>The Triad object is used to define connection points between mechanism elements,
+such as parts, beams, joints, axial springs and dampers, in a FEDEM model.
+Triads are also used as attack point for external concentrated loads and point masses.
+A Triad defines a set of three orthogonal coordinate axes at the connection point,
+which serve as the reference frame for the 6 degrees of freedoms (DOFs) at this point
+(three translations <i>Tx</i>, <i>Ty</i>, <i>Tz</i>, and three roations <i>Rx</i>, <i>Ry</i>, <i>Rz</i>).</p>
+
+<h2><a name="General"></a>General tab</h2>
+
+<p><img src="../../img/prp/triad-1.png"></p>
+
+<p>The figure above illustrates the <i>General</i> properties of the Triad,
+which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>FE Node</td><td>ID number of the FE node to which the selected Triad is attached.
+The value N/A here indicates a Triad that is not connected to an FE Part.</td></tr>
+<tr><td>Set All Free</td><td>Enables you to set the Constraint type of all triad DOFs to Free.
+This button is not present for slave triads.</td></tr>
+<tr><td>Set All Fixed</td><td>Enables you to set the Constraint type of all triad DOFs to Fixed.
+This button is not present for slave triads.</td></tr>
+<tr><td>Additional Masses</td><td>Enables you to apply additional mass and inertia at this point.</td></tr>
+<tr><td>System directions</td><td>This pull-down list enables you to select reference coordinate system
+for the DOFs associated with this Triad.<br>
+- Global : The global inertial coordinate axis directions are used.<br>
+- Local, initial : The local axis directions of this Triad in its modelling configuration are used.<br>
+- Local, withrotated : The local axis directions of this Triad that follow the deformation of the model during simulation are used.</td></tr>
+<tr><td>Surface connector</td><td>If the Triad has a surface connector associated with it,
+this pull-down list enables you to switch the type of this connector between Flexible and Rigid.
+<tr><td>Summary table</td><td>An overview of the triad DOF properties is provided here.
+This table is for viewing only and can not be edited.<br>
+- Constraint - Shows the enforced Constraint type for this DOF.<br>
+- Load/Motion - Shows the applied load or prescribed motion in this DOF.<br>
+- Initial velocity - Shows the initial velocity for this DOF.</td></tr>
+</table></p>
+
+<h2><a name="Origin"></a>Origin tab</h2>
+
+<p><img src="../../img/prp/triad-2.png"></p>
+
+<p>The figure above illustrates the <i>Origin</i> properties of the Triad,
+which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Position</td><td>This frame displays data for the translational part of the Triad location.</td></tr>
+<tr><td>Orientation</td><td>This frame displays data for the rotational part of the Triad location.</td></tr>
+<tr><td>Reference CS</td><td>Each part of the Triad location can be displayed and edited in any coordinate
+system defined in the model. These pull-down lists allow the reference coordinate systems to be selected.
+They can also be selected by picking in the Modeler or selected from the Objects Browser
+To do so, you must first click the arrow button next to the pull-down list.
+Any Triad, Beam or Part can be selected.</td></tr>
+<tr><td>Coordinate type</td><td>This pull-down lists control how to display and edit
+the Position and Orientation of the Triad.
+</table></p>
+
+<p>In the <i>Position</i> frame, the <i>Coordinate type</i> options are either Cartesian or Cylindrical coordinates,
+and with Cylindrical coordinates either X, Y or Z can be chosen as the cylinder axis.</p>
+
+<p>In the <i>Orientation</i> frame, the <i>Coordinate type</i> options are as follows:<ul>
+<li><i>EulerZYX, as X, Y, Z</i> - Angles (in degrees about) the X-, Y- and Z-axes.
+This means a rotation about the Z-axis of the reference CS performed first,
+next about the Y-axis, and finally the X-axis.
+<li><i>Point on Z-axis, and in the XZ plane</i> - Together with the triad
+position itself, this uniquely defines the coordinate system.
+<li><i>Point on X-axis, and in the XY plane</i> - Together with the triad
+position itself, this uniquely defines the coordinate system.
+<li><i>X vector, and XY vector</i> - The specified X-vector is used directly,
+and the Z-vector is defined from the cross product between the two vectors.
+</ul></p>
+
+<h2><a name="DOF"></a>Triad DOF tabs</h2>
+
+<p>These tabs display detailed properties related to each of the six DOFs
+(<i>Tx-Rz</i>) associated with the Triad.
+The available options here depend on the selected <i>Constraint type</i>.</p>
+
+<p><img src="../../img/prp/triad-3.png"></p>
+
+<p>The figure above illustrates the <i>Tx-Rz</i> properties of the Triad
+when the Constraint type is <i>Free</i>, and consist of:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Load magnitude</td><td>You can apply a Load in this triad DOF. This will be
+a torque or a force depending on whether this is a translational or a rotational DOF.
+The load is applied in the defined System direction of the Triad.</td></tr>
+<tr><td>Apply in frequency domain</td><td>If a <a href="function.htm">Function</a>
+is specified in the <i>Load magnitude</i> field, this toggle will enable the
+load to be applied in the frequency domain instead of the time domain,
+if the <i>Frequency response analysis</i> toggle is enabled in the
+<a href="../dialogbox/solver-basic.htm">Solver setup</a> dialog.</td></tr>
+<tr><td>Initial velocity</td><td>You may specify a velocity that should be applied
+as initial condition in this DOF, i.e., the actual velocity at the start time of the
+dynamics simulation.</td></tr>
+<tr><td>Additional BC</td><td>When this toggle is enabled, the movement in this
+triad DOF is fixed during the initial equilibrium analysis and optionally also
+in the eigenmode analysis.
+(See the <a href="../dialogbox/solver-advanced.htm#Eigenmode">Eigenmode tab</a>,
+and the FEDEM Theory Guide, Section 7.8 "Quasistatic equilibrium".)</td></tr>
+</table></p>
+
+<p><img src="../../img/prp/triad-4.png"></p>
+
+<p>When the Constraint type is <i>Fixed</i>,
+no further property items are available as illustrated in the figure above.</p>
+
+<p><img src="../../img/prp/triad-5.png"></p>
+
+<p>The figure above illustrates the <i>Tx-Rz</i> properties of the Triad
+when the Constraint type is <i>Prescribed</i>, and consist of:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Motion magnitude</td><td>You can prescribe a constant deflection,
+velocity or acceleration by typing the desired value into this field,
+or a time-dependent evolution of the motion during the simulation by
+selecting a function.</td></tr>
+<tr><td>Prescribed quantity</td><td>You may choose whether you want to
+prescribe the Deflection, the Velocity or the Acceleration for the triad DOF.</td></tr>
+<tr><td>Apply in frequency domain</td><td>If a <a href="function.htm">Function</a>
+is specified in the <i>Motion magnitude</i> field, this toggle will enable the
+prescribed motion to be applied in the frequency domain instead of the time domain,
+if the <i>Frequency response analysis</i> toggle is enabled in the
+<a href="../dialogbox/solver-basic.htm">Solver setup</a> dialog.</td></tr>
+<tr><td>Initial velocity</td><td>You may specify a velocity that should
+be applied as initial condition in this triad DOF, i.e., the actual velocity
+at the start time of the dynamics simulation.</td></tr>
+</table></p>
+
+<p>Caution: When using a prescribed non-constant motion in triad DOF,
+it is the analysts responsibility to also specify an initial velocity that
+complies with the specified motion. Failure to do so may result it unwanted
+ficticious transcients in the beginning of the simulation.</p>
+
+<p>You may plot the reaction force associated with a fixed or prescribed triad
+DOF by selecting the "Force" or "Moment" item under the Triad node in question
+form the RDB selector (see "Selecting RDB results" in FEDEM User's Guide,
+"Curve properties").</p>
+
+
+<h2><a name="Results"></a>Results tab</h2>
+
+<p><img src="../../img/prp/triad-6.png"></p>
+
+<p>The figure above illustrates the <i>Results</i> properties of the triad.
+It contains toggles for activating output of certain solution variables
+related to the triad, such that the quantities are available for curve plotting,
+etc.</p>
+
+<p>In the <i>Global</i> frame, the following toggles are available:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Velocity</td><td>Output velocities in global coordinates
+for the triad when this toggle is enabled, no output when disabled.</td></tr>
+<tr><td>Acceleration</td><td>Output accelerations in global coordinates
+for the triad when this toggle is enabled, no output when disabled.</td></tr>
+<tr><td>Force</td><td>Output forces in global coordinates
+for the triad when this toggle is enabled, no output when disabled.</td></tr>
+<tr><td>Deformation</td><td>Output deformational displacements
+for the triad when this toggle is enabled, no output when disabled.</td></tr>
+</table></p>
+
+<p>In the <i>Local</i> frame, the following toggles are available:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Velocity</td><td>Output velocities in the local coordinate system
+of the triad when this toggle is enabled, no output when disabled.</td></tr>
+<tr><td>Acceleration</td><td>Output accelerations in the local coordinate system
+of the triad when this toggle is enabled, no output when disabled.</td></tr>
+<tr><td>Force</td><td>Output forces in the local coordinate system
+of the triad when this toggle is enabled, no output when disabled.</td></tr>
+</table></p>
+
+</body>
+</html>

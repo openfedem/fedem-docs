@@ -1,0 +1,51 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_addons_directionalfatiguefactor"></a>
+Directional Fatigue Factor (DFF)</h1>
+
+<p>In the case when an analysis is done with unidirectional waves, but the true wave spectrum 
+is distributed over many directions, the calculated life will be less than true life, because 
+damage will be distributed over the pipe cross section.</p>
+
+<p>A simplified approach to take this into account is to multiply the resulting fatigue with a 
+directional factor (DFF) >1. This app calculates a DFF based on given directional distribution 
+of waves. The calculation presumes the distribution of Hs to be the same for each direction.</p>
+
+<p>Usage: You must have a set of probability values, representing the different directions. 
+It does not matter how many. Type or paste the probability values in to the first column. 
+The directional fatigue will be calculated according to the following rule:</p>
+
+<p><img src="../../img/addons/dff1.png"></p>
+
+<p>where N is allowed number of stress cycles. Results are given for different values of m. 
+The most conservative usage is to select the lowest m-value.</p>
+
+<table><tr>
+<td align="center"><img src="../../img/addons/dff2.png"><br><br>
+	Fig. 1. Distribution of waves, 12 sectors.</td>
+<td align="center"><img src="../../img/addons/dff3.png"><br><br>
+	Fig. 2. Calculated DFFs.</td>
+</tr></table>
+
+</body>
+</html>

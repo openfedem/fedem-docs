@@ -1,0 +1,25 @@
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<tr><td>Friction</td><td>Specifies the friction in the Cam joint.</td></tr>
+<tr><td>Thickness / Width</td><td>Defines a rectangular domain in the xy-plane
+of the local joint coordinate system, and is used to determine whether it is
+necessary to test if the follower is in contact or not. The springs and dampers
+associated with the joint DOFs are activated when the follower is located within
+the distance <i>Thickness</i>/2 from the cam curve in the local x-direction, and
+within the distance <i>Width</i>/2 in the local y-direction.</td></tr>
+<tr><td>Use radial stiffness</td><td>Enables that the springs associated with
+the x- and y joint DOFs are referred to local polar coordinates in the xy-plane.
+The x-coordinate is then the radial distance from the Cam curve to the follower,
+and the y-coordinate is the angle between the local Cartesian x-axis and the
+axis extending from the contact point through the follower. The contact domain
+will consequently be a circular cylinder instead of a rectangular one,
+and the <i>Thickness</i> and <i>Width</i> parameters above will now define the
+radial and the angular (in degrees) extension of the contact domain.
+This can be used to simulate contact in pipes, etc.</td></tr>
+</table></p>

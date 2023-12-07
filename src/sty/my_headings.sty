@@ -1,0 +1,99 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% NOTE: The macro \FedemTG must be defined before including this style file.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{ifthen}
+%Enable color
+\usepackage{color}
+
+% Set up special headings etc
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{} %Clear all
+
+\fancyfoot[LO]{\setlength{\unitlength}{1in}%
+\begin{picture}(0,0)%
+\put(-1.25,0){\FedemTG}
+\end{picture}%
+}
+
+\fancyfoot[RE]{\FedemTG}
+\fancyfoot[CO,CE]{}
+
+\fancyfoot[RO]{%
+\ifthenelse{\value{chapter} > 0}%
+{\leftmark\quad\thechapter-\thepage}%
+{\leftmark\quad\thepage}%
+}
+
+\fancyfoot[LE]{\setlength{\unitlength}{1in}%
+\begin{picture}(0,0)%
+\put(-1.25,0){%
+\ifthenelse{\value{chapter} > 0}%
+{\thechapter-\thepage\quad\leftmark}%
+{\thepage\quad\leftmark}}%
+\end{picture}%
+}
+
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+
+\fancypagestyle{plain}{%
+  \fancyhf{} %
+  \fancyfoot[LO]{\setlength{\unitlength}{1in}%
+    \begin{picture}(0,0)%
+    \put(-1.25,0){\FedemTG}
+    \end{picture}%
+  }
+  \fancyfoot[RE]{\FedemTG}
+  \fancyfoot[CO,CE]{}
+  \fancyfoot[RO]{\leftmark\quad\thechapter-\thepage}
+  \fancyfoot[LE]{\thechapter-\thepage\quad\leftmark}
+}
+
+\fancypagestyle{empty}{%
+  \fancyhf{} %
+  \fancyfoot[LE,RO]{}
+%  \fancyfoot[LE]{\setlength{\unitlength}{1in}
+%    \begin{picture}(0,0)
+%    \put(-1.25,0){\FedemTG}
+%    \end{picture}
+%  }
+%  \fancyfoot[RO]{\FedemTG}
+}
+
+\newcounter{thumbpos}      % Counter for positioning the thumb marks
+\newcounter{thumbstart}    % Counter for positioning the thumb marks
+\setcounter{thumbstart}{5} % Position of first thumb mark
+
+% Print Thumb indexes
+\fancyhead[RO]{%
+\ifthenelse{\value{chapter} > 0}{%
+\setcounter{thumbpos}{\value{thumbstart}} % Can reset thumbstart for Appendix
+\addtocounter{thumbpos}{\arabic{chapter}}
+\setlength{\unitlength}{0.375in}%
+\begin{picture}(0,0)%
+\put(0.33,-\value{thumbpos}){\colorbox{black}{\textcolor{white}%
+{\parbox[t][0.35in][c]{0.35in}{\hfil\huge\bf\thechapter\hfil}}%
+}}%
+\end{picture}}{}%
+}
+
+%Set the heading and footer line thicknesses
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.0pt}
+
+\renewcommand{\headrule}{\vbox to 0pt{\hbox to \textwidth{%
+\setlength{\unitlength}{1in}%
+\begin{picture}(0,0)%
+\put(-1.25,0.0){{\rule[-4.8pt]{1in}{5.0pt}}}% Subtract half of \headrulewidth from lowering
+\put(-1.25,0.0){{\rule{1.25in}{\headrulewidth}}}%
+\end{picture}%
+\rule{\textwidth}{\headrulewidth}}}}

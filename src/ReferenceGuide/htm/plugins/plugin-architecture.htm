@@ -1,0 +1,88 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_mainui_plugin-architecture"></a>
+Plug-In Architecture</h1>
+
+<p>FEDEM supports an architecture for enabling user-defined function and element types as plug-ins.</p>
+
+<p>FEDEM plug-ins are provided as DLL-files in the "plugins" subfolder in the installation folder
+of the FEDEM software. Once a plug-in DLL has been placed in this folder, it will show up
+in the "Plug-Ins" dialog box which is opened by selecting "Plug-Ins..." from the "Tools" menu.
+You can here choose which plug-ins to enable. FEDEM currently provides plug-in interfaces of two kinds;
+user-defined functions and user-defined finite elements. Please note that FEDEM supports enabling
+only one plug-in of each kind at a time.</p>
+
+<p>You can implement your own plug-in DLLs, if you wish to create your own custom functions or elements.
+You will find the files "userfunc.C" and "userelm.C" inside the "Templates" subfolder of the installation.
+These files are provided as templates for your own implementation.
+Refer to the FEDEM User's Guide, Section 2.12, for details on the the C-functions that needs to be implemented
+in the plug-in DLLs. There is also a Fortran 90 template file ("userfunc.f90") in the "Templates" folder,
+if you prefer Fortran as your implementation language for the user-defined functions.
+There is currently no Fortran interface available for user-defined elements.</p>
+
+<p>Once you have completed programming your implementation, you may build the DLL from a command-prompt
+in which you have access to the MicroSoft Visual C++ compiler through the following commands:</p><p>
+$ echo %DATE% > build_date.h<br>
+$ cl -nologo -c -Dwin32 -TP -EHsc -GR -MD userfunc.C<br>
+$ link -nologo -dll -out:UserFunc.dll userfunc.obj<br></p>
+<p>The name of the DLL output-file is of course arbitrary.
+If you prefer to generate a DLL-project in Visual Studio instead, you may do so by performing the following steps:
+<ol>
+<li>Start Microsoft Visual Studio 2012/2013.
+<li>Choose "File > New Project..." on the menu.
+<li>In the dialog box, choose "Visual C++ > Win32 > Win32 Project".
+<li>Set an appropriate Name and Location for the project.
+<li>Uncheck "Create directory for solution".
+<li>Click "OK".
+<li>Click "Next" in the wizard welcome screen.
+<li>Select the "DLL" application type.
+<li>Check "Empty project".
+<li>Click "Finish", and a new empty DLL-project is created!
+<li>Copy the file "userfunc.C" from the "Templates" folder to the DLL project folder.
+<li>Rename the file to "userfunc.cpp".
+<li>Add the file to the DLL project ("Project > Add Existing Item...").
+<li>Create a new file named "build_date.h" in the DLL project file.
+<li>Open the file in Notepad.exe.
+<li>Write the today date in the file using the following format (including quotes): "2012-12-31"
+<li>Save the file and close Notepad.exe.
+<li>In Visual Studio, open the project properties ("Project > Properties...").
+<li>Change "Configuration" to "All Configurations".
+<li>Change "Character Set" to "Use Multi-Byte Character Set".
+<li>Under "C/C++ > Preprocessor", edit "Preprocessor Definitions", and add the line (without quotes): "win32"
+<li>Click "OK" to close the properties.
+<li>Build the DLL ("Build > Build Solution").
+</ol>
+</p>
+
+<p>Notes:
+<ul>
+<li>The compiled DLL must be copied to the "plugins" folder of FEDEM in order for it to show up in FEDEM.
+<li>We recommend using <A HREF="http://www.dilascia.com/TraceWin.htm">TraceWin</A>, version 3,
+for enabling tracing output in the DLL code. (It will be hard to write and debug code without some form of tracing.)
+<li>If you only see a blank page in the FEDEM Plug-Ins dialog box, that might be because you may have
+forgot to set the "win32" (lower case) preprocessor definition (i.e., the DLL does not export anything).
+</ul>
+</p>
+
+</body>
+</html>

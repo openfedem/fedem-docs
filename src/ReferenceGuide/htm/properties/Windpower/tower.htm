@@ -1,0 +1,62 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_properties_tower"></a>
+Tower</h1>
+
+<p>The Tower object is a sub-assembly used to represent the turbine tower in a wind turbine model.</p>
+
+<p><img src="../../../img/prp/tower-1.png"></p>
+
+<p>The figure above illustrates the Tower properties,
+which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Mass</td><td>Displays the total mass of the tower.</td></tr>
+<tr><td>Center of Gravity</td><td>Displays the location of the tower's
+center of gravity, in either Global coordinates or in Local coordinates
+with respect to the origin of the tower assembly.</td></tr>
+<tr><td>Visualize 3D</td><td>Enables or disables 3D visualization
+of all the <a href="../beam.htm">Beam</a> elements the tower consists of.
+</table></p>
+
+<p>The default Tower representation in FEDEM consists of a single Generic
+<a href="../part.htm">Part</a>, and a
+<a href="../triad.htm">Triad</a> in each end of the tower.
+A tower model may have to be a bit more complex than that,
+which is why we offer additional approaches for modeling the tower.
+Please see the chapter on "Wind Power Modelling" in the FEDEM User's Guide
+for details on these approaches.</p>
+
+<p>Note: A valid wind turbine model is not required to contain a separate Tower object.
+The tower may optionally be an integrated part of the underlying support structure.
+It may then be modelled manually, by importing a FE Part or through other means.</p>
+
+<p>Note: The Visualize 3D toggle has a tri-state value.
+In addition to the usual ON and OFF states,
+it can also have a neither-ON-nor-OFF state, in which the corresponding
+ON/OFF settings on each underlying beam element are applied instead.
+This is usually the default setting for such tri-state toggles.</p>
+
+</body>
+</html>

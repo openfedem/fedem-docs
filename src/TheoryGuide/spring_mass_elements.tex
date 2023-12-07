@@ -1,0 +1,88 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{SPRING and RSPRING}
+\label{s:SPRING and RSPRING}
+
+SPRING is a 2-node linear spring element which adds a 6$\times$6 symmetric
+stiffness matrix to the translatory DOFs of the 2 nodes.
+The element stiffness matrix is referred to in the global (or link) coordinate system.
+The element may be of zero length, i.e.\ the 2 nodes can have identical coordinates.
+RSPRING is similar to SPRING, but for the rotational DOFs.
+The SPRING element may be connected to both 3-DOF and 6-DOF nodes\footnote{
+3-DOF nodes are internal nodes that are used by solid finite elements only
+and thus lack rotational DOFs.
+6-DOF nodes have 3 translatory- and 3 rotational DOFs,
+and are connected to at least one shell, beam or RBAR element,
+or is a master node in a RGD element},
+whereas the RSPRING element may be connected to 6-DOF nodes only.
+The SPRING and RSPRING elements do not contribute to the mass matrix.
+
+\section{CMASS}
+\label{s:CMASS}
+
+CMASS is a 1-node concentrated mass element which adds a 6$\times$6 symmetric
+mass matrix to a 3- or 6-DOF node.
+The element mass matrix is referred to in the global (or link) coordinate system.
+Note that any non-zero inertia terms are ignored for CMASS elements
+that are connected to 3-DOF nodes.
+The CMASS element does not contribute to the stiffness matrix.
+
+The CMASS element may also be specified without any mass properties,
+but only the element topology.
+During modeling in Fedem, such elements are automatically created at the extra
+node that is added when creating property-less BUSH elements at slave nodes,
+see Section~\ref{s:BUSH}.
+The CMASS element is needed at such added nodes to avoid that the assembled mass
+matrix becomes singular, with subsequent failure in the eigenvalue analysis.
+For such property-less CMASS elements, a diagonal element matrix is assumed with
+the following values for the translational and rotational DOFs, respectively:
+%
+\begin{eqnarray}
+\label{eq:max translational mass}
+m_t &=& C_m \max\left\{{\rm diag}({\bf M}_{\rm tra})\right\} \\
+\label{eq:max rotational mass}
+m_r &=& C_m \max\left\{{\rm diag}({\bf M}_{\rm rot})\right\}
+\end{eqnarray}
+%
+Here, ${\bf M}_{\rm tra}$ and ${\bf M}_{\rm rot}$ are the translational and
+rotational parts, respectively, of the fully assembled mass matrix,
+and $C_m$ is a user-defined scaling factor that is specified through the
+command-line argument {\tt -autoMassScale} when running the Fedem Link Reducer
+(default value is $10^{-9}$).
+
+In some cases, it may happen that the value $m_r$ defined by
+\eqnref{eq:max rotational mass}, is identically zero.
+For instance, if the finite element model consists of solid elements only,
+in addition to at least one WAVGM element with automatically added BUSH and
+CMASS elements at its slave node, there are no mass contributions to the
+rotational DOFs in the model.
+In such cases, a value for $m_r$ is instead derived from the global inertia
+tensor, ${\bf I}$, that may be computed from the finite element model, i.e.
+%
+\begin{equation}
+{\bf I} := \left[\begin{array}{ccc}
+I_{xx} & I_{xy} & I_{xz} \\
+I_{xy} & I_{yy} & I_{yz} \\
+I_{xz} & I_{yz} & I_{zz} \\
+\end{array}\right] = \int\limits_\Omega \rho \left[\begin{array}{ccc}
+y^2 + z^2    & xy        & xz \\
+             & x^2 + z^2 & yz \\
+\mbox{symm.} &           & x^2 + y^2
+\end{array}\right] dV
+\end{equation}
+%
+where $\rho$ is the mass density, and
+%
+\begin{equation}
+m_r \;=\; \frac{C_m}{3} \left( I_{xx} + I_{yy} + I_{zz} \right)
+\end{equation}

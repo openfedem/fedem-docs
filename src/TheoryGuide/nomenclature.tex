@@ -1,0 +1,177 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+\chapter*{Nomenclature}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Small macro for nomenclature items %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\newcommand{\nomitem}[2]
+{
+\item[{\makebox[30mm][l]{#1 \hfill:}}] #2
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+\subsubsection*{Position and Orientation}
+\begin{namelist}{{\makebox[30mm][l]{$G = [G_{1} G_{2} G_{3}]$\hfill:}}}
+\nomitem{${\mf s} = [s_{x} s_{y} s_{z}]^T$}{Position vector}
+\nomitem{${\mf a} = [a_{1} a_{2} a_{3}]^T$}{Position vector}
+\nomitem{${\mf p} = [p_{1} p_{2} p_{3}]^T$}{Position vector}
+\nomitem{${\mf p} = [p_{x} p_{y} p_{z}]^T$}{Position of supernodes}
+\nomitem{${\tf \theta} = [\theta_{x} \theta_{y} \theta_{z}]$}{Rotation vector. 
+Rotation angles about $x$, $y$ and $z$-axis. Deformation vector caused by rotations}
+\nomitem{$\tf \omega = [\omega_{x} \omega_{y} \omega_{z}]^T$}{Rotational velocity vector. Instantaneous rotation axis.}
+\nomitem{$\omega$}{Rotational velocity vector}
+%bh\nomitem{$\omega_{c}$}{Some kind of frequency with respect to Control system}
+%bh\nomitem{$\omega_{0}$}{Some kind of frequency with respect to Control system}
+\end{namelist}
+%
+\subsubsection*{Displacement}
+\begin{namelist}{{\makebox[30mm][l]{$G = [G_{1} G_{2} G_{3}]$\hfill:}}}
+\nomitem{${\mf v} = [v_{x} v_{y} v_{z}]^T$}{Displacement vector}
+\nomitem{${\mf v}_{r}$}{Rigid body displacement}
+\nomitem{${\mf v}_{d}$}{Deformational displacement}
+\end{namelist}
+%
+\subsubsection*{Velocity}
+\begin{namelist}{{\makebox[30mm][l]{$G = [G_{1} G_{2} G_{3}]$\hfill:}}}
+\nomitem{${\mf\dot v}$}{Velocity vector}
+\nomitem{${\mf\dot r}$}{Velocity vector}
+\nomitem{${\mf\dot u} = [\dot u \dot v \dot w]$}{Rigid body translational velocity vector}
+\nomitem{${\mf\dot v}_{r}$}{Rigid body velocity vector}
+\nomitem{${\mf\dot v}_{d}$}{Deformational velocity vector}
+\nomitem{${\mf v}_{t}$}{Translational velocity vector}
+\nomitem{${\mf v}_{r}$}{Rotational velocity vector}
+\nomitem{$v_{D}$}{Damper velocity}
+\nomitem{${\mf v} = [\dot x \dot y \dot z]^T$}{Velocity}
+\end{namelist}
+%
+%\subsection*{Eigen problem}
+%\begin{namelist}{{\makebox[30mm][l]{$G = [G_{1} G_{2} G_{3}]$\hfill:}}}
+%\nomitem{$v_{\lambda}$}{Eigenvector}
+%\nomitem{$u_{\lambda}$}{Eigenvector}
+%\nomitem{$u$}{Input vector – Control system}
+%\end{namelist}
+%
+\subsubsection*{Acceleration}
+\begin{namelist}{{\makebox[30mm][l]{$G = [G_{1} G_{2} G_{3}]$\hfill:}}}
+\nomitem{$\mf\ddot v$}{Acceleration vector}
+\nomitem{$\mf\ddot r$}{Acceleration vector}
+\nomitem{${\mf U}_{x} {\mf U}_{y} {\mf U}_{z}$}
+{Force vectors from unit gravitational acceleration in $x$-, $y$-, and $z$-direction}
+\end{namelist}
+%
+\subsubsection*{Latin Symbols}
+\begin{namelist}{{\makebox[30mm][l]{$G = [G_{1} G_{2} G_{3}]$\hfill:}}}
+\nomitem{$A$}{Incidence matrix. Matrix in eigenvalue problem equation. Runge-Kutta matrix –
+Butcher tableau}
+\nomitem{$a_{g}$}{Gravitational acceleration}
+\nomitem{$a_{t}$}{Translational acceleration vector}
+\nomitem{$a_{r}$}{Rotational acceleration vector}
+\nomitem{$a_{ij}$}{Runge-Kutta coefficient – control system}
+\nomitem{$B$}{Strain-displacement matrix. Strain interpolation matrix. Matrix in eigenvalue
+problem equation}
+\nomitem{$b$}{Runge-Kutta matrix – Butcher tableau}
+\nomitem{$b_{j}$}{Runge-Kutta coefficient – control system}
+\nomitem{$C$}{Damping matrix}
+\nomitem{$c$}{Reduced damping matrix? Runge-Kutta matrix – Butcher tableau}
+\nomitem{$C$}{Constitutive matrix}
+\nomitem{$c_{j}$}{Runge-Kutta coefficient – control system}
+\nomitem{$E$}{? Matrix in eigenvalue problem equation}
+\nomitem{$e_{i}$}{Eccentricity vectors}
+\nomitem{$e_{ij}$}{Unit direction vector}
+\nomitem{$F^{I}$}{Inertia forces}
+\nomitem{$F^{D}$}{Damping forces}
+\nomitem{$F^{S}$}{Elastic forces}
+\nomitem{$f$}{Force vector}
+\nomitem{$G_{x} G_{y} G_{z}$}{Gravitational force vectors}
+\nomitem{$g_{x} g_{y} g_{z}$}{Reduced gravitational force vectors}
+\nomitem{$g$}{Superelement gravitational forces}
+\nomitem{$G = [G_{1} G_{2} G_ {3}]$}{The G matrix}
+\nomitem{$H(\theta)$}{Rodriguez parametrisation}
+\nomitem{$H$}{Transformation matrix (model reduction)}
+\nomitem{$h$}{Time increment}
+\nomitem{$I$}{Mass property matrix (what is this?). Inertia matrix}
+\nomitem{$I_{G}$}{?}
+\nomitem{$I$}{Identity matrix}
+\nomitem{$i_{1}, i_{2}, i_{3}$}{Orthonormal base vectors in local coordinate system}
+\nomitem{$I_{1}, I_{2}, I_{3}$}{Orthonormal base vectors in global coordinate system}
+\nomitem{$K$}{Stiffness matrix}
+\nomitem{$k$}{Reduced stiffness matrix?}
+\nomitem{$k_{G}$}{Rotational geometric stiffness matrix}
+\nomitem{$k_{M}$}{Material stiffness matrix}
+\nomitem{$k_{e}$}{Linear stiffness matrix}
+\nomitem{$L$}{Angular momentum? Spin?}
+\nomitem{$M$}{Mass matrix}
+\nomitem{$M_{r}$}{Reduced mass matrix}
+\nomitem{$m$}{No name in manual (reduced mass matrix??). transformed mass matrix. reduced superelement
+mass matrix. element mass matrix}
+\nomitem{$m_{1} m_{2} m_{3}$}{Some kind of position matrices ??}
+\nomitem{$m_{1} \, etc \, m_{N}$}{Torque?} 
+\nomitem{$m$}{Lumped mass}
+\nomitem{$N$}{Newton matrix}
+\nomitem{$n$}{Reduced superelement Newton matrix}
+\nomitem{$n_{1} \, etc \, n_{N}$}{Force?}
+\nomitem{$n_{a}$}{???}
+\nomitem{$P$}{Position and orientation matrix}
+\nomitem{$p = [p_{x}, p_{y}, p_{z}]$}{Position (of supernodes)}
+\nomitem{$Q$}{External load vector / external force vector / input load} 
+\nomitem{$q$}{No name in manual (reduced external load vector ??) Generalized DOFs. 
+              Reduced set of displacements. What is the difference between q and y??}
+\nomitem{$R$}{Orientation matrix. Rotation matrix}
+\nomitem{$R_{a}$}{Rigid body displacement vector}
+\nomitem{$S$}{Stiffness force. What is this compared to F S ?}
+\nomitem{$s$}{Laplace variable ? – control system}
+\nomitem{$t$}{Torque vector}
+\nomitem{$T$}{Transformation matrix from local to global coordinate system}
+\nomitem{$T_{n}$}{Transformation matrix from local to global coordinate system}
+\nomitem{$T_{{\varepsilon}_{r}}$}{??}
+\nomitem{$T$}{Period}
+\nomitem{$t_{k}$}{time at k}
+\nomitem{$U_{e}$}{Strain energy}
+\nomitem{$U_{k}$}{Kinetic energy}
+\nomitem{$U_{p}$}{Potential energy}
+\nomitem{$U_{i}$}{Input energy}
+\nomitem{$U_{d}$}{Energy loss}
+\nomitem{$U_{sum}$}{Energy check-sum}
+\nomitem{$x$}{State variables – control system}
+\nomitem{$y$}{Generalized DOFs (vibration modes)}
+\nomitem{$z$}{Algebraic variables – control system}
+\end{namelist}
+%
+\subsubsection*{Greek Symbols}
+\begin{namelist}{{\makebox[30mm][l]{$G = [G_{1} G_{2} G_{3}]$\hfill:}}}
+\nomitem{$\gamma$}{Newmark integration parameter}
+\nomitem{$\beta$}{Newmark integration parameter. Reighleigh damping coefficient}
+\nomitem{$\alpha$}{Newmark numerical damping factor. Reighleigh damping coefficient}
+\nomitem{$\alpha_{1}$}{Mass proportional damping coefficient (structural damping)}
+\nomitem{$\alpha_{2}$}{Stiffness proportional damping coefficient (structural damping)}
+\nomitem{$\mu$}{Shift value (Eigenvalue problem}
+\nomitem{$\lambda$}{Structural damping ratio}
+\nomitem{${\tf \lambda}_{u}$}{Eigenvalue – undamped system}
+\nomitem{${\tf \lambda}_{d}$}{Eigenvalue – damped system}
+\nomitem{$\varepsilon$}{Tolerance}
+\nomitem{$\tf \varepsilon$}{Strain vector}
+\nomitem{$\tf \sigma$}{Stress vector}
+\nomitem{$\tf \phi$}{Eigenvector}
+\nomitem{$\tf \Phi$}{Eigenvector matrix}
+\end{namelist}
+%
+\subsubsection*{Subscripts}
+\begin{namelist}{{\makebox[30mm][l]{$G = [G_{1} G_{2} G_{3}]$\hfill:}}}
+\nomitem{$CG$}{Centre of Gravity}
+\nomitem{$RB$}{Rigid Body}
+\nomitem{$CR$}{Centre of Rotation}
+\end{namelist}
+%
+\subsubsection*{Superscripts}
+\begin{namelist}{{\makebox[30mm][l]{$G = [G_{1} G_{2} G_{3}]$\hfill:}}}
+\nomitem{${\tilde{\;}}$}{The parameter is given in a local coordinate system}
+\nomitem{${\hat{\;}}$}{Spin of a matrix}
+\nomitem{${\overline{\;}}$}{Transformed parameter}
+\nomitem{${\dot{\;}}$}{Time derivative}
+\end{namelist}

@@ -1,0 +1,183 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_introduction_default"></a>
+Welcome to FEDEM 8.0</h1>
+
+<p><table border="1" bgcolor="#ffffe0"><tr><td>
+Please note that this is the <i>Reference Help</i> for the FEDEM software.
+Only compact user information is provided here. If you wish to learn how to
+use the software, we recommend reading the User's Guide and the Theory Guide.
+They are separate PDF-documents and are available from the <i>Help</i> menu.
+</td></tr></table></p>
+
+<p>FEDEM, an acronym for Finite Element Dynamics in Elastic Mechanisms,
+provides a technology platform and an engineering framework for virtual testing
+of complex mechanical assemblies. It contains a complete set of features to
+create, solve and post-process a model in a 3D graphical environment.
+Dynamics results in the form of graphs and animations are available during and
+after the model simulation. Combined with the fast and numerically stable FEDEM
+solvers, the graphical user interface facilitates an engineering process with
+shortened turnaround times and quick access to simulation results for a clearer
+understanding of the physical behavior of the model. FEDEM also provides
+intuitive and high-performing post-processing capabilities, including full
+stress analysis, eigenmode solutions, strain gage solutions and fatigue analysis
+for selected time steps.</p>
+
+<p><img src="../../img/intro-gui.png" width="747" height="672"></p>
+
+
+<h2>Nonlinear structural dynamics</h2>
+<p>In multibody applications, such as car bodies and suspension systems,
+axle systems, satellite appendages, industrial manipulators, medical equipment,
+high-speed mechatronic systems and so on, some of the mechanism components can
+be flexible and can experience large elastic deflections and coupling effects.
+To ensure sufficient accuracy, the numerical simulation must account for the
+mutual dependencies between dynamic properties at the system level and
+structural flexibility at the component level. These requirements can be
+efficiently satisfied through a nonlinear structural dynamics approach.</p>
+
+<p>In FEDEM, a nonlinear structural dynamics approach is utilized in order to
+simultaneously solve structural deformations and 3D motion dynamics in the time
+domain. The mechanical assembly to be simulated consists of structural Parts,
+each represented by a linear elastic finite element (FE) model or a simplified
+stiffness description (Generic Part), and are coupled together with linear or
+nonlinear joints. The model may also contain axial spring- and damper elements,
+as well as individual beam elements. After a model reduction of each FE part
+based on a dynamic superelement formulation, the system equations are assembled
+and solved with respect to FE degrees of freedom (DOFs), allowing for large
+translations and rotation according to a co-rotated theory.</p>
+
+
+<h2>Control systems in mechanical analysis</h2>
+<p>A mechanical system is often in a control loop including sensors measuring
+states in the mechanism, compensators representing control algorithms,
+and servo, hydraulic, or electrical actuators generating the energy to drive
+the mechanism. These control modules and the mechanism must be integrated
+simultaneously in order to ensure sufficient accuracy of the results.</p>
+
+<p>To model your control systems, FEDEM provides the Control Editor modeling
+environment, which combines the FEDEM look-and-feel with graphical modeling
+tools similar to those of MATLAB®/Simulink®. These modeling tools are crucial
+when creating models of mechanical systems such as robots, milling machines,
+and space mechanisms.</p>
+
+<p>As an alternative to the internal control system, FEDEM also provides a
+user-defined functions interface through which the actuator and/or force inputs
+are defined in a dynamic link library (DLL) that users may program themselves.
+</p>
+
+
+<h2>What is a FEDEM model?</h2>
+<p>A <i>FEDEM model</i> is a virtual test model designed by you to simulate your
+mechanical systems. The virtual test model is an assembly of individual parts.
+The mechanical properties of the parts can be represented by either an FE model
+a simplified stiffness/mass description (generic Parts) or one beam element.
+You connect parts, joints, springs, and other elements to create an accurate
+virtual test model of a movable mechanical system or <i>mechanism</i>.</p>
+
+<p>To minimize the time needed to calculate and simulate mechanisms,
+model reduction process of FEDEM reduces each FE model to a superelement with
+external nodes. These external nodes are defined at FE nodes that serve as
+connections between the various model entities in the assembly.</p>
+
+<p>Once constructed, a FEDEM model retains the FE characteristics of its
+component parts, and can therefore be treated as a <i>geometrically nonlinear
+FE model</i>. The mechanism is then allowed to experience large translations,
+rotations, and nonlinear, behavior-dependent loads in the simulation of its
+dynamic motion.</p>
+
+<p>Functions, measured time-history input data and control systems can be used
+to model virtual test events by controlling loads, motion, spring lengths,
+etc.</p>
+
+<p>The FEDEM solvers can then calculate the motion kinematics, dynamics,
+structural flexibility, stresses and strains in a single consistent model.</p>
+
+
+<h2>Using FE models</h2>
+<p>FEDEM can import FE models created in external systems by interfacing with
+the MSC.Nastran® Bulk Data File (<i>.bdf</i> and <i>.nas</i>) format.
+Many FE modeling systems (including I-DEAS®, Pro/ENGINEER®, Altair® HyperMesh®,
+NEiWorks/NEiFusion and MSC/Patran®) can export FE models on the Bulk Data File
+format, enabling you to use your favorite FE modeling program with FEDEM.</p>
+
+<p>FEDEM can also import FE models which are saved on the SESAM input interface
+file (.FEM) format.</p>
+
+<p>Each FE model must include its nodal coordinates and attributes,
+element topology, element properties, material data, and so on. The results
+obtained in the simulation depend to a large extent on the FE models used.
+To create a satisfactory model of a real structure, the analyst therefore must
+combine insight into the nature of the problem, experience with the <i>Finite
+Element Method</i> (FEM), and knowledge of the general rules of FE modeling.</p>
+
+
+<h2>FEDEM solver modules</h2>
+<p>FEDEM uses separate program modules to perform the different type of
+calculations on the model. Thus, there are modules for the model reduction,
+dynamic mechanism simulation, stress and mode shape recovery, strain rosette
+analysis and strain coat analysis. The execution of each solver module is
+managed from the graphical user interface of FEDEM. However, they may also be
+run separately as batch processes from a console window.</p>
+
+<p>The FEDEM solver modules are described briefly in the following.</p>
+
+<h3>Reducer</h3>
+<p>The FEDEM Reducer module performs a superelement reduction of the FE model
+representing the mass and stiffness of a part. A superelement reduction reduces
+the required DOF to a minimum. The retained DOFs, also called external DOFs,
+are the results of a dynamic superelement reduction technique called Component
+Mode Synthesis reduction, also known as CMS reduction.</p>
+
+<h3>Dynamics Solver</h3>
+<p>The FEDEM Dynamics Solver module performs a nonlinear dynamics simulation.
+This means a simulation of the motion and deformations of the superelements and
+joints, as they respond to load and displacement time histories and
+Control System output. At any time step during the simulation, the model can be
+linearized whereby an eigenvalue analysis can be performed to study the free
+vibration properties of the mechanism at the deformed state.</p>
+
+<h3>Stress Recovery</h3>
+<p>The FEDEM Stress Recovery module recovers displacements of the internal DOFs
+of an FE part from the displacements of the external DOFs simulated by the
+Dynamics Solver. Element strains and stresses are then calculated.</p>
+
+<h3>Mode Shape Recovery</h3>
+<p>The FEDEM Mode Shape Recovery module recovers the mode shapes of each FE part
+from the Eigenvalue results of the Dynamic Solver.</p>
+
+<h3>Strain Rosette Analysis</h3>
+<p>The FEDEM Strain Rosette Analysis module recovers the stresses and strains on
+<i>virtual strain gages</i> on FE parts, based on the Dynamic Solver results.
+The output is time history data of stresses and strains similar to output from
+real strain gages on phyical structures.</p>
+
+<h3>Strain Coat Analysis</h3>
+<p>The FEDEM Strain Coat Analysis module recovers the stresses and strains on
+<i>strain coat elements</i> on FE parts, and calculates a summary of the
+recovered results over its entire time history. The output from this analysis
+is maximums of certain stress/strain quantities over time,
+as well as Fatigue results (estimated damage/life).</p>
+
+</body>
+</html>

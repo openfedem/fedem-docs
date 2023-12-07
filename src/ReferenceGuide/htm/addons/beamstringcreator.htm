@@ -1,0 +1,65 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_addons_beamstringcreator"></a>
+Beam String Creator</h1>
+
+<p>This tool is used to create beam strings as straight lines or in the shape of a catenary-curve. 
+The catenary shape can include the effects of buoyancy, and tension caused by the shape can be included in the generated beam string.
+</p>
+
+<p>Please note that you must define cross sections in FEDEM before using this tool.</p>
+<p>
+A beam string contains one or more segments, with various dimensions and level of discretization/number of beam elements. <br>
+Each segment corresponds to one row in the applications table. <br>
+To add a segment you must select a cross section from the drop-down menu in the bottom row, specify the total length for your segment, and the length of the beams the segment should be made of.
+</p>
+
+<h2>Straight beam string</h2>
+<p>The default mode for the Beam String Creator creates a straight beam string starting from the position specified in the <b>End 1</b> input box, 
+shooting straight out in the direction specified by the vector in the <b>Direction</b> input box.<br>
+</p>
+
+<h2>Catenary Curve</h2>
+<p>
+When the <b>"Catenary Curve"</b> check-box is checked, the Beam String Creator will attempt to generate the beam string in a catenary shape, that is in the shape of a hanging chain.<br>
+The <b>Direction</b> input box will now be gray, and a second end-point must instead be specified in the <b>End 2</b> input box. 
+The beam string will "hang" between these two points as long as the distance between them is shorter than the cumulative length of the beam strings segments.<br>
+If the application succeeds in finding a catenary shape, a plot of the beam string will be shown in the window below the segment-table.
+</p>
+
+<h3>Buoyancy</h3>
+<p>If the <b>"Buoyancy"</b> check-box is checked, buoyancy effects will be included in the catenary calculation. <br>
+The buoyancy calculation is based on the buoyancy diameter Db for each segments cross section, and a water density of 1025kg/m^3.
+</p>
+
+<h3>Tension</h3>
+<p>When laid out in a catenary shape, the beam string will by default have no tension in this shape. The separate beams are simply rigidly connected to each other.<br>
+With <b>"Tension"</b> toggled on, joints will be placed between each pair of beams, and rotational springs with tension corresponding to the angle between consecutive beams will be added.
+Calculated tension is based on the E-modulus for each cross sections material, and the second moment of area for the cross section. Cross sections are assumed to be circular.<br> 
+
+Note that the tension effect is not included in the calculation of the catenary shape, and will thus only be a reasonable approximation for beam strings with low stiffness. 
+This means that the beam string is not in equilibrium in its initial state.
+</p>
+
+</body>
+</html>

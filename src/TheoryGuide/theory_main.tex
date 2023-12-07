@@ -1,0 +1,115 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[10pt]{book}
+
+\def\FedemVer{Fedem~8.0}
+\def\FedemTG{\FedemVer~Theory Guide}
+\def\FedemUG{\FedemVer~User Guide} % Used in cross-references, etc.
+
+\setlength{\paperwidth}{7.5in}
+\setlength{\paperheight}{9.0in}
+\setlength{\oddsidemargin}{1.25in}  % 1.0+1.0 = 2.25in
+\setlength{\evensidemargin}{0.75in} % 1.0+0.0 = 1.75in
+\setlength{\topmargin}{-0.5in}      % 1.0-0.5 = 0.5in
+\setlength{\headheight}{0.5in}
+\setlength{\headsep}{0.275in}
+\setlength{\textwidth}{4.75in}
+\setlength{\marginparwidth}{1.0in}
+\setlength{\marginparsep}{0.25in}
+\setlength{\footskip}{0.5in}
+
+\setlength{\textheight}{\paperheight}
+\addtolength{\textheight}{-1.0in}
+\addtolength{\textheight}{-\topmargin}
+\addtolength{\textheight}{-\headheight}
+\addtolength{\textheight}{-\headsep}
+\addtolength{\textheight}{-\footskip}
+\addtolength{\textheight}{-0.35in} % Desired space at bottom of page
+
+\setlength{\itemsep}{0pt}
+\setlength{\topsep}{0pt}
+\setlength{\parsep}{\parskip}
+
+\usepackage{graphpap}
+\usepackage{amsmath}
+\usepackage{amstext}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{etoolbox}
+\usepackage[backref]{hyperref}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue}
+\hypersetup{pdftitle=\FedemTG,pdfauthor=Knut Morten Okstad - SAP SE}
+\hypersetup{pdfsubject=Theory description for the FEDEM Simulation Software}
+\hypersetup{pdfkeywords=FEM Model reduction Multi-body dynamics}
+\usepackage{../sty/eqalign}
+\usepackage{../sty/chappg} % Set up page numbering with chapter and page number
+\usepackage{../sty/my_sections}
+\usepackage{../sty/my_headings}
+\usepackage{../sty/my_chapter}
+\input{../sty/my_commands}
+\input{../sty/my_lists}
+
+\newtoggle{publicedition}
+\toggletrue{publicedition} % Generates the public edition
+%\togglefalse{publicedition} % Generates the inhouse edition
+
+\renewcommand{\bottomfraction}{1.0}
+%\renewcommand{\rmdefault}{myr}
+%\DeclareTextSymbol{\aCurl}{OT1}{64}
+
+%\includeonly{title_and_contents}
+%\includeonly{fundamentals}
+%\includeonly{supel_corot}
+%\includeonly{flex_connection,joints}
+%\includeonly{joints}
+%\includeonly{dyn_sim,biblio}
+%\includeonly{dyn_sim,newmark_flowchart,biblio}
+%\includeonly{element_library}
+%\includeonly{simulation_results}
+%\includeonly{newmark_flowchart}
+%\includeonly{hydrodynamics,biblio}
+
+\title{\begin{minipage}{4in}\center\Huge\bf\FedemTG\end{minipage}}
+\author{SAP SE}
+\date{December 2023
+\iftoggle{publicedition}{}{% The following is for the in-house edition only
+\\[1cm]{\color{red} *** Internal version -- not for distribution ***}
+} % End in-house edition only
+}
+
+\begin{document}
+\include{title_and_contents}
+\setlength{\parskip}{0.35em}
+%\pagestyle{empty}
+%\include{nomenclature}
+%\pagestyle{fancy}
+\raggedright
+\include{introduction}
+\include{fundamentals}
+\include{model_reduction}
+\include{supel_corot}
+\include{flex_connection}
+\include{joints}
+\include{dyn_sim}
+\include{control}
+\include{simulation_results}
+% Make Appendix thumb indices continue below the regular chapters
+\setcounter{thumbstart}{\value{thumbpos}}
+\appendix
+\include{element_library}
+\iftoggle{publicedition}{}{% The following is for the in-house edition only
+\include{newmark_flowchart}
+\include{hydrodynamics}
+} % End in-house edition only
+\include{biblio}
+\end{document}

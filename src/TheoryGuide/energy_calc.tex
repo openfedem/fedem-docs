@@ -1,0 +1,292 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Energy calculations}
+
+Energy calculations are described by the following terms:
+
+\begin{namelist}{$U_{sum}$}
+
+\item[$U_\varepsilon$]
+Strain energy,  computed for all links (superelements), springs, 
+and the system (the system is the sum of all mechanisms)
+
+\item[$U_{k}$]
+Kinetic energy,  computed for all links, 
+discrete masses, rotational inertias, and the system
+
+\item[$U_{p}$]
+Potential energy,  computed for all links, 
+discrete masses, and the system
+
+\item[$U_{i}$]
+Input energy,  computed for all external forces, 
+springs (contribution from non-constant, stress-free length), and the system
+
+\item[$U_{d}$]
+Energy loss,  computed for all links (structural 
+damping), axial dampers, joint dampers, joint friction, and the system
+
+\item[$U_{e}$]
+External energy, computed for all external ``elements'', such as tires, that are using
+$3^\text{rd}$ party software modules. The energy can be one of (or a mix of) strain,
+damping, and other energy terms.
+
+\item[$U_{sum}$]
+Energy check-sum, computed for the system
+\end{namelist}
+
+\noindent
+All these terms are can be plotted as functions of time or other 
+variables.
+
+\subsection{Strain energy}
+
+The total strain energy for the system is computed as a sum of all the 
+element strain energies and spring strain energies.
+
+\subsubsection{Link strain energy}
+
+The strain energy for one link with linearly elastic 
+material is given by
+
+
+\begin{equation}
+U_{\varepsilon } = \frac{{1}}{{2}}{\mf v}_{d}^{T} {\mf K}{\mf v}_{d}
+\label{eqEC:81}
+\end{equation}
+
+\noindent
+where ${\mf v}_{d}$ is the deformational displacement of the 
+element, and ${\mf K}$ is the element stiffness matrix. The strain 
+energy is thus computed on a total form at each converged time-step; in other words, no 
+storage of previous strain energy is necessary.
+
+\subsubsection{Spring strain energy}
+
+Even the nonlinear springs have hyper-elastic behavior, and the strain 
+energy is computed totally at each converged time-step.
+%
+\begin{eqnarray}
+\mbox{Linear springs :\ \ } && U_{\varepsilon} = \frac{{1}}{{2}}k_{s} u^{2} \\
+\mbox{Nonlinear springs:\ \ } && U_{\varepsilon } = \int_{0}^{u} f_{s} \left( 
+{\hat u} \right) d{\hat u}  \nonumber
+\label{eqEC:82}
+\end{eqnarray}
+%
+\noindent
+As the expression for the hyper-elastic, nonlinear spring energy also 
+includes the linear spring element, it is used for all spring elements, linear and nonlinear,
+and for axial and joint springs. Incremental calculations of the spring strain energy are not
+necessary as long as only hyper-elastic nonlinear springs are included in the model.
+
+\subsection{Kinetic energy}
+
+System kinetic energy consists of the contributions from all the links, all 
+the lumped masses, and all the discrete rotational inertias.
+
+\subsubsection{Link kinetic energy}
+
+The link kinetic energy is calculated from the superelement 
+mass matrix, ${\mf M}$ and the superelement velocity vector, 
+$\dot{\mf v}$, as:
+%
+\begin{equation}
+U_{k} = \frac{{1}}{{2}} \dot{\mf v}^{T}{\mf M}
+\dot{\mf v} .
+\label{eqEC:84}
+\end{equation}
+%
+\noindent
+In other words, it is also computed on a total form for each time-step.
+
+\subsubsection{Kinetic energy from discrete masses and inertias}
+
+Discrete masses and rotational inertias contribute to the kinetic energy as:
+%
+\begin{equation}
+U_{k} = \frac{{1}}{{2}}m \dot{\mf u}^{T} 
+\dot{\mf u} + \frac{{1}}{{2}}{\tf{\omega}}^{T}{\mf I}_{\omega} \tf\omega ,
+\label{eqEC:85}
+\end{equation}
+%
+\noindent
+where ${m}$ is the lumped mass and ${\mf I}_\omega $ is the 
+rotational inertia matrix for the lumped mass.
+
+\subsection{Potential energy}
+
+As is the case with the kinetic energy, the system's potential energy is the sum off all 
+the contributions from the links and the discrete masses. However, the 
+discrete rotational inertias do not contribute to the potential energy.
+
+\subsubsection{Link potential energy}
+
+Computation of the potential energy should reflect the changes in potential 
+energy rather than the potential energy in relation to the coordinate system 
+used for modeling. Choosing a coordinate system which gives large potential energies may hide
+other energy contributions. 
+By subtracting the potential energy of the masses in their 
+initial position ${C_0}$ from the potential energy at the present position ${C_n}$, the initial
+
+potential energy of all masses, superelement masses, and lumped masses is zero.
+%
+\begin{equation}
+U_{p} = m{\mf g}^{T}\left( {\mf x}_{C_n} - {\mf x}_{C_0}  \right)
+\label{eqEC:86}
+\end{equation}
+%
+\noindent
+Calculations of the potential energy of the links use the displacements of 
+the link centroid. This calculation neglects the relative displacement of 
+the centroid due to internal deformations of the superelements; however 
+this is justified by assuming small deformations. The 
+calculation of the potential energy is performed entirely without 
+storing energies from previous steps.
+
+\subsection{Input energy}
+
+Input energy to the system consists of contributions from external forces 
+and springs that have non-constant, stress-free length.
+
+\subsubsection{Input energy from external forces}
+
+Since the external forces are non-conservative (i.e., can have a time variation 
+and co-rotational behavior), the input energy from the external forces must 
+be computed in an incremental manner from one time-step to the next:
+%
+\begin{equation}
+ U_{i} = \int_{0}^{t} {{\mf F}^T\!\left( { {\hat t} }\right) \dot{\mf u} \,d{\hat t} 
+\approx \sum_{k = 1}^{n} {\overline {{\mf F}}_{k}^{T}\Delta {\mf u}_{k} } } 
+ \mbox{\ \ \ \ where\ \ \ \ }
+\overline{{\mf F}}_{k}  = \frac{{1}}{{2}}\left( {\mf F}_{k - 1} + {\mf F}_{k}  \right)
+\label{eqEC:87}
+\end{equation}
+%
+Subscript $k$ is the time-step index. The summation expression 
+above represents a trapezoidal integration scheme.
+
+\subsubsection{Input energy from springs}
+
+The stress-free lengths of the springs (both axial springs and joint springs) 
+are subject to possible change. When the spring is 
+stressed, this represents an input energy contribution. This input energy 
+must be computed incrementally for all the springs:
+%
+\begin{equation}
+ U_{i} = 
+\int_{0}^{t} f_{s}({\hat t}) l_{0} \:d{\hat t} \approx \sum_{k = 1}^{n} 
+\overline{f}_{s_{k}}  \Delta l_{0}  
+ \mbox{\ \ \ \ where\ \ \ \ }
+\overline {f}_{s_{k}} = 
+\frac{{1}}{{2}}(f_{s_{k-1}} + f_{s_{k}})
+\label{eqEC:88}
+\end{equation}
+
+\subsection{Energy loss}
+
+Total energy loss consists of the contributions from structural damping 
+in the links and discrete dampers (both axial dampers and joint dampers), and 
+energy loss from joint friction.
+
+\subsubsection{Energy loss from link structural damping}
+
+The structural damping of the links is composed of mass and stiffness 
+proportional damping  (${\mf C} = \alpha_{1}{\mf M}+\alpha_{2}{\mf K}$),
+which is used in the following damping energy expression for a link
+%
+\begin{equation}
+U_{d} = \int_{0}^{t} { \dot{\mf v}^{T}{\mf C}
+\dot{\mf v} d {\hat t}} 
+\approx \sum_{k = 1}^{n} h\alpha _{1}  \bar{\dot{{\mf v}}}_k^T{\mf M}\bar{\dot{{\mf v}}}_k 
++ \sum_{k = 1}^{n} h\alpha _{2}  {\dot{\mf v}{}_d}_{k}^T {\mf K}  {\dot{\mf v}{}_d}_k
+\label{eqEC:89}
+\end{equation}
+%
+\noindent
+where 
+$ \bar{\dot{{\mf v}}}_{k}^{T} = \frac{{1}}{{2}}\left(\dot{\mf v}_{k-1} 
+                                           + \dot{\mf v}_{k}  \right)$,
+and 
+$ {\dot{\mf v}{}_d}_k = \frac{{1}}{{h}}\left( {{\mf v}_d}_{k} 
+                                            - {{\mf v}_d}_{k-1} \right)$,
+and 
+${h}$ represent the time-step size.
+%
+Note that the deformational velocities, $ {\dot {\mf v}_d} $, are used
+when computing the stiffness proportional damping 
+energy. This is important to avoid false damping energies from 
+rigid-body velocities when using large time-steps.
+
+\subsubsection{Energy loss from discrete dampers}
+
+Energy loss from discrete dampers (axial dampers and joint dampers) is 
+computed as
+%
+\begin{equation}
+U_{d} = \int_{0}^{t} f_{d}  {\dot u} \:dt \approx 
+\sum_{k = 1}^{n} {\overline{f}{}_d}_k  \Delta u  
+\label{eqEC:810}
+\end{equation}
+%
+\noindent
+where 
+${\overline{f}{}_d}_k = \frac{1}{2}\left( {f_d}_{k-1} + 
+{f_d}_k \right)$
+
+\subsubsection{Energy loss from friction}
+
+Friction energy loss is computationally analogous to the damping loss
+%
+\begin{equation}
+U_{d} = \int_{0}^{t} f_{f}\:dt \approx \sum_{k=1}^{n} {\overline{f}{}_f}_k  \Delta u_{k}   
+\end{equation}
+%
+\noindent
+where 
+${\overline{f}{}_f}_k = \frac{1}{2}\left( {f_f}_{k-1} + 
+{f_f}_k \right)$ 
+
+\subsection{External energy}
+
+External energy from 3rd party components such as tires is calculated
+is calculated through the incremental work performed at the component interface
+from one time-step to the next:
+%
+\begin{equation}
+ U_{e} = \int_{0}^{t} {{\mf F}^T\!\left( { {\hat t} }\right) \dot{\mf u} \:d{\hat t} 
+\approx \sum_{k = 1}^{n} {\overline {{\mf F}}_{k}^{T}\Delta {\mf u}_{k} } } 
+ \mbox{\ \ \ \ where\ \ \ \ }
+\overline{{\mf F}}_{k}  = \frac{{1}}{{2}}\left( {\mf F}_{k - 1} + {\mf F}_{k}  \right)
+\label{eqEC:83}
+\end{equation}
+%
+Subscript $k$ is the time-step index. The summation expression 
+above represents a trapezoidal integration scheme. The forces $\mf F$ from the
+component can have contribution from both stiffness and damping forces, 
+and the energy contribution is thus a mixed energy. 
+
+
+\subsection{Energy check-sum}
+
+An energy check-sum is computed for the system to verify that the 
+system energy is preserved:
+%
+\begin{equation}
+U_{\text{sum}} = {U_p}_{\text{system}}  + {U_k}_{\text{system}}  
+               + {U_\varepsilon}_{\text{system}}  
+               + {U_d}_{\text{system}} - {U_i}_{\text{system}} - {U_e}_{\text{system}}
+\label{eqEC:811}
+\end{equation}
+%
+\noindent
+The check-sum should remain constant during time integration.

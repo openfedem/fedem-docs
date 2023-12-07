@@ -1,0 +1,311 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Local element coordinate system}
+\label{sec:RefDef}
+
+The element matrices are all expressed in a local element coordinate system.
+For superelements this is the coordinate system in which the finite element
+mesh was modeled at substructure level, and for generic parts this is simply
+the local element coordinate system of the underlying rigid spider.
+In the system analysis, this local coordinate system becomes the {\it Element
+Co-rotated Coordinate System} (ECCS) because it moves with the element.
+
+Regarding the nonlinear behavior of an element, the co-rotational formulation is
+independent of whether the element is a reduced superelement, resulting from the
+Component Mode Synthesis reduction described in Section~\ref{sec:CMS reduction},
+a generic part element as described in Section~\ref{sec:GenericPart}, or a more
+traditional element as the other ones described in Appendix~\ref{chap:ElLibrary}.
+In the following description of the co-rotational formulation,
+element and superelement are thus interchangeable terms.
+
+To calculate the transformations of the elements at each new position,
+the directions for the corresponding ECCS must first be calculated based on the
+positions of the element nodes.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Method 1: Best fit of max sized triangle}
+\label{sec:RefDefMeth1}
+
+In this method, the ECCS is connected to three nodal points for each element.
+The goal is to select among all nodal points within an element,
+those three that form the largest triangle.
+This is achieved by the following algorithm:
+%
+\begin{enumerate}
+\item The first reference point, $R_1$,
+is selected as the node furthest away from the centroid of all element nodes.
+This first reference point is always at the node itself, i.e., zero offset.
+%
+\item The second reference point, $R_2$,
+is selected as the node furthest away from the point $R_1$.
+If the element only has one node the same node is used again,
+but with the second reference point defined by an offset of unit length
+along the global $x$-axis from the nodal position.
+%
+\item The third reference point, $R_3$,
+is selected as the node furthest from a line through the points $R_1$ and $R_2$.
+If the element has only one or two nodes, or the third node is on (or close to)
+this straight line\footnote{The criterion for whether the third node is on the
+straight line between $R_1$ and $R_2$ can be configured.
+Originally, this tolerance was absolute and equal to 0.001 regardless of the
+model dimensions. Later, it was changed to half the distance between the first
+two points, i.e., $0.5|\vec{R}_{12}|$ but it is now configurable by setting
+the relative tolerance parameter $\epsilon$ in the absolute tolerance
+$\epsilon|\vec{R}_{12}|$. The default value on $\epsilon$ is now 0.05.},
+the reference point is defined using an offset from the
+third node so that the three points form a proper triangle\footnote{
+The offset on the third node (when needed) was originally selected
+simply as a vector of unit length away from the straight line.
+This is clearly not a good strategy if the distance between the first two nodes
+is much greater (or much less) than 1,
+since the resulting triangle then will be far from even-sided.
+These shortcomings of the unit offset spurred an improved method where the
+offset is scaled with respect to the distance between the first two points.
+This results in a more even sided triangle, and a more robust coordinate system.
+The original method is available for backward compatibility of older models.}.
+The direction of the third-node offset vector is obtained by rotating the vector
+$\vec{R}_{12}$ from $R_1$ to $R_2$ 90 degrees about either the global $x$-, $y$-
+or $z$-axis, depending on along which global axis direction the $\vec{R}_{12}$
+vector has its smallest component.
+%
+\item A temporary coordinate system is now formed based on the positions
+of the three reference points.
+The origin is defined at $R_1$,
+the $x$-axis is defined in the direction from $R_1$ to $R_2$,
+the $z$-axis is next calculated from the cross product of the $x$-axis and the
+axis extending from $R_1$ to $R_3$, and finally the $y$-axis is calculated from
+the cross product of the $z$- and $x$-axes.
+During the analysis, this coordinate system is recalculated for each new
+position of the three reference points.
+%
+\item The position of the triangle system is always fixed in relation to the
+ECCS during the analysis.
+\end{enumerate}
+
+\clearpage
+Using the $4\times4$ position matrix notation defined in \eqnref{eq:posDef}, the
+{\underline p}osition matrix, ${\mf P}_{TE}$, relates the {\underline t}riangle
+coordinate system to the {\underline e}lement coordinate system:
+%
+\begin{equation}
+{\mf P}_{TE} \;=\; \left[\barr{cc}
+{\mf R}_{TE} & {\mf p}_1 \\
+{\mf 0} & 1 \earr\right]
+\end{equation}
+%
+where ${\mf R}_{TE}$ is the {\underline r}otation or orientation of the
+{\underline t}riangle system measured in the {\underline e}lement system,
+and ${\mf p}_1$ is the {\underline p}osition of the triangle system relative
+to the element system (${\mf p}_1$ is the position of $R_1$ measured in the
+element coordinate system).
+
+It follows that the positions of the reference points measured in global
+coordinates establish ${\mf P}_{TG}$, the position of the {\underline t}riangle
+coordinate system in relation to the {\underline g}lobal system.
+The following relationship then relates the triangle,
+element and global coordinate systems:
+%
+\begin{equation}
+{\mf P}_{TG} \;=\; {\mf P}_{EG}{\mf P}_{TE}
+\end{equation}
+%
+where ${\mf P}_{EG}$ is the {\underline e}lement coordinate system relative to
+the {\underline g}lobal system, and is stated
+%
+\begin{equation}
+{\mf P}_{EG} \;=\; {\mf P}_{TG}{\mf P}_{TE}^{-1}
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Method 2: Mass based weighted average}
+\label{sec:RefDefMeth2}
+
+This method ultimately gives an expression requiring a weighted average of the
+nodal discrepancies between the actual deformed element and the undeformed
+shadow element to be zero.
+This expression can be established from an equilibrium point of view.
+
+One assumes that the (rigid) shadow element is attached to the deformed element
+with springs, rotational and translational, at each node.
+The spring stiffnesses at each node is selected to be, for instance,
+proportional to the mass for translation and proportional to the inertia for
+the rotation of each node.
+When the nodes move, the shadow element will reposition itself according to
+equilibrium based on the redistribution of nodal displacements.
+The rigid body motion of the shadow element is then represented by the motion of
+a fictitious node at the Center of Gravity (CG) of the shadow element.
+
+The equilibrium equations for the shadow element can be established about CG.
+This yields six equations for the movement of the shadow element as a function
+of the nodal displacements.
+The equations end up being non-linear and have to be solved iteratively.
+
+With $k_t$ as the mass-proportional translational stiffness in all three
+directions at each node, and $k_r$ as inertia-proportional rotational
+stiffness in all three directions, the stiffness of a spring element
+with two co-located nodes $i$ and $j$ is given by
+%
+\begin{equation}
+\left[\begin{array}{c}
+{\mf f}_i \\ {\mf m}_i \\ {\mf f}_j \\ {\mf m}_j \\
+\end{array}
+\right]
+=\left[\begin{array}{cccc}
+ k_t {\mf I}  & {\mf 0}  & -k_t {\mf I}  & {\mf 0} \\
+ {\mf 0} &  k_r {\mf I}  & {\mf 0} &  -k_r {\mf I} \\
+ -k_t {\mf I}  & {\mf 0}  & k_t {\mf I}  & {\mf 0} \\
+ {\mf 0} &  -k_r {\mf I}  & {\mf 0} &  k_r {\mf I} \\
+\end{array}\right]
+\left[\begin{array}{c}
+{\mf v}_i \\ {\tf \theta}_i \\ {\mf v}_j \\ {\tf \theta}_j \end{array}\right]
+\label{eqCS2_nodeStiff}
+\end{equation}
+
+With node $j$ being a dependent node rigidly attached to the node at \textit{CG},
+one can establish the virtual displacement equation
+%
+\begin{equation}
+{\mf v}_j \;=\; {\mf E}_i {\mf v}_\textit{CG}
+\end{equation}
+or
+\begin{equation}
+\left[\begin{array}{c}
+{\mf v}_j \\ {\tf \theta}_j \end{array}\right] =
+\left[\begin{array}{cc}
+{\mf 1} & -\widehat{\mf e}_i \\
+{\mf 0} & {\mf 1}
+\end{array}\right]
+\left[\begin{array}{c}
+{\mf v}_\textit{CG} \\ {\tf \theta}_\textit{CG} \end{array}\right]
+\quad\text{where}\quad
+{\mf e}_i = \left[\begin{array}{c}
+x_i - x_\textit{CG} \\
+y_i - y_\textit{CG} \\
+z_i - z_\textit{CG}
+\end{array}\right]
+\label{eq:rigDispEcc}
+\end{equation}
+
+Using the kinematic relationship above in a virtual work expression,
+one can establish the stiffness matrix for the spring between node $i$
+and the \textit{CG} node as
+%
+\begin{equation}
+\left[\begin{array}{c}
+{\mf f}_i \\ {\mf m}_i \\ {\mf f}_\textit{CG} \\ {\mf m}_\text{CG} \\
+\end{array}\right]
+=
+\left[\begin{array}{cccc}
+ {\mf k}_t                   &  {\mf 0}    & -{\mf k}_t &  {\mf k}_t \widehat{{\mf e}} \\
+ {\mf 0}                     &  {\mf k}_r  &  {\mf 0}   & -{\mf k}_r \\
+-{\mf k}_t                   &  {\mf 0}    &  {\mf k}_t & -{\mf k}_t \widehat{{\mf e}} \\
+ \widehat{\mf e}^T {\mf k}_t & -{\mf k}_r  & -\widehat{\mf e}^T {\mf k}_t &
+ ({\mf k}_r + \widehat{\mf e}^T{\mf k}_T \widehat{\mf e}) \\
+\end{array}\right]
+\left[\begin{array}{c}
+{\mf v}_i \\ {\tf \theta}_i \\ {\mf v}_\textit{CG} \\ {\tf \theta}_\text{CG} \\
+\end{array}\right]
+\end{equation}
+%
+where ${\mf k}_t = k_t{\mf I}$ and ${\mf k}_r = k_r{\mf I}$.
+
+The full stiffness matrix for the shadow element is then formed by the assembly
+of all nodal contributions.
+Rewriting the equation above with a slightly different notation:
+%
+\begin{equation}
+\left[\begin{array}{c}
+{\mf f}^i_1 \\ {\mf f}^i_2 \\
+\end{array}\right]
+=
+\left[\begin{array}{cc}
+ {\mf k}^i_{11} &  {\mf k}^i_{12} \\
+ {\mf k}^i_{21} &  {\mf k}^i_{22} \\
+\end{array}\right]
+\left[\begin{array}{c}
+{\mf v}^i_1 \\ {\mf v}^i_2\\
+\end{array}\right]
+\end{equation}
+%
+the assembly for all nodes from $1$ to $n$ (where $n+1$ is the \textit{CG} node)
+gives the shadow element stiffness matrix:
+%
+\begin{equation}
+\left[\begin{array}{c}
+{\mf f}^1_1 \\ \vdots \\ {\mf f}^i_1 \\ \vdots \\ {\mf f}_\textit{CG} \\
+\end{array}\right]
+=
+\left[\begin{array}{ccccc}
+ {\mf k}^1_{11} & \hdots & {\mf 0}        & \hdots   &  {\mf k}^1_{12} \\
+ \vdots         & \ddots &                &          &  \vdots         \\
+ {\mf 0}        &        & {\mf k}^i_{11} &          &  {\mf k}^i_{12}  \\
+ \vdots         &        &                & \ddots   &  \vdots         \\
+ {\mf k}^1_{21} & \hdots & {\mf k}^i_{21} & \hdots   &
+\left(\sum\limits_{i=1}^n {\mf k}^i_{22}\right) \\
+\end{array}\right]
+\left[\begin{array}{c}
+{\mf v}^1_1 \\ \vdots \\ {\mf v}^i_1 \\ \vdots \\ {\mf v}_\textit{CG} \\
+\end{array}\right]
+\end{equation}
+
+The equilibrium equation at the \textit{CG} node is seen as the last 6 rows
+of the assembled shadow element stiffness matrix, which can be rewritten as
+%
+\begin{equation}
+{\mf f}_\textit{CG} \;=\; \sum_{i=1}^n{\mf k}^i_{21} {\mf v}_i
+\quad\text{or}\quad
+\left[\begin{array}{c}
+{\mf f}_\textit{CG} \\ {\mf m}_\text{CG} \\
+\end{array}\right]
+\;=\; \sum_{i=1}^n
+\left[\begin{array}{cc}
+-{\mf k}^i_t               &  {\mf 0}     \\
+ \hat{\mf e}^T {\mf k}^i_t & -{\mf k}^i_r \\
+\end{array}\right]
+\left[\begin{array}{c}
+{\mf v}_i \\ {\tf \theta}_i \\
+\end{array}\right]
+\end{equation}
+
+If the above equation does not yield zero forces and moments
+${\mf f}_\textit{CG}$ at the \textit{CG} node when the deformational
+\iftoggle{publicedition}{% The following is for the public version
+displacement vector is used,
+}{% The following is for the in-house edition only
+displacement vector ${\mf v}_d$ of \eqnref{eqSC:supelDefDisp} is used,
+}
+the shadow element is given a corrective translation and rotation that will
+again alter the deformation vector for all the nodes in according to
+\eqnref{eq:rigDispEcc}, such that the unbalanced forces and moments vanish.
+
+Equilibrium of the \textit{CG} node gives
+%
+\begin{equation}
+{\mf f}_\textit{CG} \;=\;
+\sum_{i=1}^n{\mf k}^i_{21}{\mf v}_i =
+\sum_{i=1}^n{\mf k}^i_{21}{\mf E}_i\,\Delta{\mf v}_\textit{CG}
+\end{equation}
+%
+Solving this with respect to increment in Shadow element position
+$\Delta{\mf v}_\textit{CG}$ gives
+%
+\begin{equation}
+\Delta{\mf v}_\textit{CG} \;=\;
+\left(\sum_{i=1}^n{\mf k}^i_{21}{\mf E}_i\right)^{-1}
+\sum_{i=1}^n{\mf k}^i_{21}{\mf v}_{d_i}
+\label{eq:refSysMeth2}
+\end{equation}
+
+The equation above is solved repeatedly until the deformational displacement
+vector ${\mf v}_d$ produces no update to the shadow element position given by
+$\Delta{\mf v}_\textit{CG}$.

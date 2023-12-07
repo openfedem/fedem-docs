@@ -1,0 +1,44 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_addons_jacketcreator"></a>
+Jacket Creator</h1>
+
+<p>The Jacket Creator is a demo-application used to illustrate how a relatively complex beam structure can be scripted using the FEDEM COM-interface.<br>
+</p>
+
+<h3>How to use it</h3>
+<p>
+<ol>
+<li>Define the four corner points for both the bottom and top level of the jacket.<br>
+You can do this by either entering coordinates for each point, or by setting the <b>"Bottom width"</b> and <b>"Top width"</b> parameters to create square planes.
+<li>Enter the cross section properties(outer and inner diameter) for the legs, x-braces and horizontal braces.
+<li>Set the desired <b>"Level heights"</b>. Each height corresponds to the distance between consecutive horizontal braces, starting from the bottom.
+<li>(Optional) Set the <b>"Bottom level z-value"</b> to generate the model with an offset in the z-direction.<br>
+Note: You can also move and rotate the jacket to the wanted position in FEDEM through the property fields of the generated subassembly.
+<li>(Optional) Toggle on the <b>"Visualize 3D"</b> property to generate the model with 3D visualization in FEDEM. 
+<li>Push the <b>"Generate"</b> button to create the jacket model in FEDEM.
+</ol>
+</p>
+
+</body>
+</html>

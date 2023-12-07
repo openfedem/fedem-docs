@@ -1,0 +1,4 @@
+/Fedem.chm
+/fm_.hhc
+# Ignore the generated joint htm-files
+/htm/properties/[a-z]*-joint.htm

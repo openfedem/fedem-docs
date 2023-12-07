@@ -1,0 +1,372 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_properties_part"></a>Part</h1>
+
+<p>The Part object is used to represent structural parts in the FEDEM model.
+Parts are the basic components of a mechanism model. Each part is either a FE
+Part or a Generic Part.</p>
+
+<p>The mass-, stiffness- and dynamic properties of an FE Part are derived
+from its finite element (FE) model, which is composed of a set of nodal points,
+elements, material- and physical property data. The FE model must be constructed
+in an external FE modeler and then imported into FEDEM.</p>
+
+<p>A Generic Part is a simplified flexible body. It can be used when you
+have no FE model available, when trying to optimize hardpoint positions,
+or when the flexibility of the part is considered to be insignificant.
+It can also have a separate geometry file attached,
+to give a realistic visualization of it.
+A Generic Part is purely defined by its connection points, mass properties
+at its centre of gravity, and the stiffness at connection points.
+The stiffness can either be defined manually, or automatically set to some very
+high value, mimicking a semi-rigid body. See the FEDEM Theory Guide,
+Appendix A.16 "Generic Part element", for details on how a Generic Part is
+represented in the Dynamics Solver.</p>
+
+<p>In addition to the Part object, a structural part in FEDEM may also be
+represented by a single, two-noded beam element. This is somewhat equivalent to
+a Generic Part with two connection points, except that the mass- and stiffness
+matrices now are derived consistently from a linear beam finite element,
+instead of using the semi-rigid representation. Such elements are denoted
+<a href="beam.htm">Beams</a> in the Model Manager panel.</p>
+
+<p>The Part properties are separated into several tabs to organize the different
+settings in a logic manner. The number of tabs and their content depend on
+whether the Part is defined as a Generic Part or an FE Part,
+or if it used for visualization only.</p>
+
+
+<h2><a name="Part"></a>Part tab</h2>
+
+<p><img src="../../img/prp/part-1.png"></p>
+<p><img src="../../img/prp/part-2.png"></p>
+
+<p>The two figures above illustrate the <i>Part</i> properties,
+for an FE Part and a Generic Part, respectively.
+The properties consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>FE Part /<br> Generic Part</td><td>These are the part type selector
+which toggle between the FE and the Generic representations. You can switch
+part type at any time during modeling (until you have simulation results).
+Note that FEDEM will try to use the supplied FE- and Visualization data in a
+sensible way when switching the part type. If imported as an FE Part and
+switched to Generic Part, the FE model is retained in memory and used for
+visualization, unless a specific <i>Visualization</i> file is specified.
+FEDEM will not drop the FE data from memory until you actively enter or change
+the visualization file name.</td></tr>
+<tr><td>Visualization only</td><td>If the Part is toggled as visualization only,
+it will be ignored by the solvers and practically serve as an extension of the
+<a href="reference-plane.htm">Reference plane</a>. All
+<a href="triad.htm">Triads</a> attached to the Part will then appear as fixed
+to ground.</td></tr>
+<tr><td>Repository entry</td><td>Indicates repository type (<i>[internal]</i>
+or <i>[external]</i>), and the name of the FE data file in the part database of
+the current model. If the current model has not yet been saved to file, this
+entry will state the file name FEDEM will use when you do save it.</td></tr>
+<tr><td>Imported file</td><td>Indicates the name and location of the originally
+imported FE model file. The unit conversion that was applied during the import,
+if any, is also displayed next to the file name.</td></tr>
+<tr><td>Change (in the Finite Element Model frame)</td><td>
+This button allows you to replace the FE model of the Part with a new one.
+The button triggers a file dialog in which the new FE model can be chosen.
+Note that all mechanism entities attached to the Part, that do not not have
+corresponding nodal points in the new FE model, will be detached when you
+replace the FE model.</td></tr>
+<tr><td>Reduced [n]</td><td>Indicates whether your FE model has been reduced
+or not. If reduced FE data exist and is recognized to match the Part, this label
+will read <i>Reduced [n]</i>, where the <i>n</i> is a number referring to the
+folder in the part database containing the reduced FE matrices. Otherwise, the
+label will read <i>Needs reduction</i>.
+<tr><td>Visualization</td><td>Specifies path to a geometry file (e.g., VRML)
+to be used for visualization of Generic Parts.
+Use the <i>Change</i> button in this frame to browse for a file.
+If a valid FE model file already has been specified, FEDEM will use that model
+for visualization until a separate visualization file name is entered.</td></tr>
+<tr><td>Structural Damping</td><td>Allows you to change the values of the mass-
+and stiffness-proportional damping for the Part. These parameters are described
+in the FEDEM Theory Guide, Section 7.5 "Structural damping".</td></tr>
+<tr><td>Scaling of Dynamic Properties</td><td>Allows you to scale the stiffness
+and mass of each individual Part in the dynamics simulation. The scaling is
+applied during initialization and stays in effect for the entire simulation.
+This option can be useful for sensitivity studies of deflection and stiffness.
+</td></tr></table></p>
+
+<p>Regarding the stiffness and mass scaling, and the structural damping,
+it is important to be aware of the following:<ul>
+<li>The scaling is not accounted for in any of the FE recovery analyses,
+and the recovered result will thus be misleading on FE Parts using
+stiffness scaling and/or mass scaling.
+<li>The damping matrix and the associated force vector are not affected by the
+stiffness- and mass scaling parameters. That is, when using mass- and/or
+stiffness-proportional damping, it is the unscaled mass- and stiffness matrices
+that contribute to the damping matrix and force vector.
+<li>The stiffness- and mass scaling is not accounted for during FE reduction.
+Therefore, the component mode shapes are always computed from the
+unscaled matrices. Using stiffness scaling and/or mass scaling on an
+FE Part having component modes might thus yield inaccurate results unless the
+two scaling factors are equal, because the component modes then are computed
+from a different set of matrices than the one used in the dynamics simulation.
+</ul></p>
+
+
+<h2><a name="Origin"></a>Origin tab</h2>
+
+<p><img src="../../img/prp/part-3.png"></p>
+
+<p>The figure above illustrates the <i>Origin</i> properties of the Part.
+The fields here have similar interpretation as in the
+<a href="triad.htm#Origin">Origin tab</a> of the Triad property panel.</p>
+
+
+<h2><a name="FE-Node"></a>FE Node tab</h2>
+
+<p><img src="../../img/prp/part-10.png"></p>
+
+<p>The figure above illustrates the <i>FE Node</i> properties
+(for FE Parts only), which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>FE Node</td><td>ID number of the FE node which is closest to the picked
+location in the Modeler.
+If the part is selected from the Object Browser, a value -1 is shown.</td></tr>
+<tr><td>Reference</td><td>Toggles display of Global vs. Local
+(with respect to the Part origin) coordinates.</td></tr>
+<tr><td>X, Y and Z</td><td>Global or local coordinates of the picked FE node.
+</td></tr>
+</table></p>
+
+<h2><a name="Reduction-Options"></a>Reduction Options tab</h2>
+
+<p><img src="../../img/prp/part-4.png"></p>
+
+<p>The figure above illustrates the <i>Reduction Options</i> properties
+(for FE Parts only), which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Singularity criterion</td><td>Tolerance used to decide whether the the
+stiffness- and mass matrices are singular when they are factorized during the
+FE model reduction.</td></tr>
+<tr><td>Component modes</td><td>Number of component modes representing all
+internal (eliminated) nodal DOFs after CMS model reduction.</td></tr>
+<tr><td>Eigenvalue tolerance</td><td>Maximum acceptable relative error in
+the computed eigenvalues in the fixed boundary eigenvalue analysis.</td></tr>
+<tr><td>Consistent mass matrix</td><td>Enables the use of consistent mass matrix
+in the FE model reduction process. If disabled, a lumped mass matrix approach
+is used.</td></tr>
+<tr><td>Ignore check-sum test</td><td>This toggle disables the check on whether
+the reduced FE data is consistent with the FE model file currently used.
+FEDEM may in some rare events signal that a part file needs reduction even
+though consistent reduced data are present.
+Do <u>not</u> use this toggle unless you are sure that the
+reduced FE data found on disk are compatible with the current model.
+The consequence of using incompatible FE data may be a diverging model or
+incorrect results. FEDEM issues a warning message to the user whenever this
+toggle is enabled to stress this.</td></tr>
+<tr><td>Expand mode shapes</td><td>Enables expansion of the component mode
+shapes and the free-free mode shapes of the reduced part,
+for subsequent animation.</td></tr>
+<tr><td>Eigenvalue Factorization</td><td>Specifies which matrix to be
+Choleski-factorized during the eigenvalue analysis that is performed in the
+component modes computation.</td></tr>
+<tr><td>Recovery matrix storage precision</td><td>Toggles between Single and
+Double precision storage of the recovery matrix (a.k.a. the <b>B</b>-matrix)
+on disk. Using single precision storage will reduce the needed disk space for
+this matrix by 50%, and might be advantageous for very large parts with many
+Triads that will result in a big <b>B</b>-matrix.</td></tr>
+<tr><td>Reduced [n] /<br>Needs reduction</td><td>
+See <a href="#Part">Part tab</a>.</td></tr>
+</table></p>
+
+<p>Switching to single precision storage of the B-matrix should normally have
+no influence on the dynamics simulation results. However, if the FE model is
+poorly conditioned (e.g., there is a large span in its stiffness properties)
+there might be minor loss of accuracy in the recovery results due to truncation
+of the <b>B</b>-matrix elements stored on file. For FE Parts that are reduced
+with component modes, the single/double precision storage option also applies
+to the file containing the component mode shapes (the <b>E</b>-matrix file).</p>
+
+
+<h2><a name="Advanced"></a>Advanced tab</h2>
+
+<p><img src="../../img/prp/part-5.png"></p>
+
+<p>The figure above illustrates the <i>Advanced</i> properties of the Part,
+which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Positioning algorithm<br>
+for co-rotated reference coordinate system:</td>
+<td>The options in this pull-down list are as follows:<br>
+<i>Model default</i> - The setting defined in the
+<a href="../dialogbox/solver-advanced.htm#Integration">Integration tab</a>
+of the Dynamics Solver Setup dialog box is used.<br>
+<i>Max triangle, with unit offset when necessary</i> - The original algorithm,
+and the only one available in FEDEM R3.1.1 and earlier.<br>
+<i>Max triangle, with scaled offset when necessary</i> - The same as above,
+but with adjustments of the offset to better fit the size of the Part.<br>
+<i>Mass based nodal average</i> - Algorithm based on equilibrium of a rigid
+shadow element with averaged stiffnesses at the triads.<br>
+See the FEDEM Theory Guide, Section 4.1 "Superelement local coordinate system"
+for a detailed description of these algorithms.</td></tr>
+<tr><td>Centripetal force correction:</td><td>
+The options in this pull-down list are as follows:<br>
+<i>Model default</i> - The setting defined in the
+<a href="../dialogbox/solver-advanced.htm#Integration">Integration tab</a>
+of the Dynamics Solver Setup dialog box is used.<br>
+<i>On</i> - Turns centripetal force correction on for this Part.<br>
+<i>Off</i> - Turns centripetal force correction off for this Part.</td></tr>
+<tr><td>Perform stress recovery during dynamics simulation</td><td>
+Enables recovery of internal displacements (deformation) and von Mises stresses
+for all elements of this FE Part during the dynamics simulation.
+</td></tr>
+<tr><td>Perform strain rosette recovery during dynamics simulation</td><td>
+Enables recovery of stresses and strains in the strain rosette elements
+defined on this FE Part during the dynamics simulation.
+</td></tr>
+</table></p>
+
+<p>Caution: Performing stress recovery during the dynamics simulation
+is a costly operation. So for models with large FE Parts, this will increase
+the total simulation time considerably. Therefore, use this feature only if
+the simulation time of the Dynamics solver is not essential.</p>
+
+
+<h2><a name="Mass"></a>Mass tab</h2>
+
+<p><img src="../../img/prp/part-6.png"></p>
+
+<p>The figure above illustrates the <i>Mass</i> properties
+(for Generic Parts only), which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Specify mass, inertia and CoG</td><td>The mass and inertias of the Part
+must be specified explicitly in the <i>Mass and Inertia</i> fields.
+The centre of gravity must also be specified in the <a href="#CoG">CoG tab</a>.
+</td></tr>
+<tr><td>Calculate from FE model</td><td>The mass, inertias, and the centre
+of gravity of the Part will be calculated from the FE model associated with it.
+The <i>Inertia Reference</i> is also be set to <i>Part Orientation</i>
+and editing of the <i>Mass and Inertia</i> fields are disabled.</td></tr>
+<tr><td>Calculate from CAD geometry</td><td>The mass, inertias, and the centre
+of gravity of the Part will be calculated from the <i>Visualization</i> file
+associated with it, and the chosen <i>Material</i>.
+The <i>Inertia Reference</i> is also be set to <i>Part Orientation</i>
+and editing of the <i>Mass and Inertia</i> fields are disabled.</td></tr>
+<tr><td>Material</td><td>If the <i>Calculate from CAD geometry</i> toggle is
+enabled, this pull-down list can be used to select the <a href="material.htm">
+Material</a> object from which the mass density to be used in the mass property
+calculation is taken. If no Material is selected, the value &rho;=7850.0 is used
+(appropriate for steel).</td></tr>
+<tr><td>Inertia Reference</td><td>Select whether to specify the inertia in the
+directions of the Part coordinate system, or in the directions specified as
+Principal Axes of Inertia on the <a href="#CoG">CoG tab</a>.
+<tr><td>Mass</td><td>The total mass of the Part.</td></tr>
+<tr><td>Ixx - Izz</td><td>The lower triangle of the inertia matrix at the centre
+of gravity of the Part.</td></tr>
+</td></tr>
+</table></p>
+
+<p>See the FEDEM Theory Guide, Appendix A.16 "Generic Part element", for how
+these properties are used to construct the mass matrix of the Generic Part.</p>
+
+
+<h2><a name="Stiffness"></a>Stiffness tab</h2>
+
+<p><img src="../../img/prp/part-7.png"></p>
+
+<p>The figure above illustrates the <i>Stiffness</i> properties
+(for Generic Parts only), which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Automatic / Manual</td><td>Toggles whether to set the overall
+Generic Part stiffness manually, or to have FEDEM calculate a near rigid
+stiffness.</td></tr>
+<tr><td>Translational stiffness at each triad</td><td>
+Manually defined translational stiffness.</td></tr>
+<tr><td>Rotational stiffness at each triad</td><td>
+Manually defined rotational stiffness.</td></tr>
+</table></p>
+
+<p>When setting the stiffness calculations to Automatic, FEDEM uses the
+specified mass and a high target eigenfrequency to calculate a sensible high
+stiffness. This will work as long as the mass of the Part is set to something
+reasonable. Thus, FEDEM is not able to calculate a good stiffness for a Part
+with no mass at all, or with a mass that does not correspond to the actual use.
+In such cases you will need to set the stiffness manually.</p>
+
+<p>See the FEDEM Theory Guide, Appendix A.16, "Generic part element" for details
+on how the Dynamics Solver calculates the stiffness matrix for the Generic Part
+from the specified stiffness values.</p>
+
+
+<h2><a name="CoG"></a>CoG tab</h2>
+
+<p><img src="../../img/prp/part-8.png"></p>
+
+<p>The figure above illustrates the <i>Center of Gravity (CoG)</i> properties
+(for Generic Parts only), which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Center of Gravity</td><td>These fields specify the centre of gravity
+position of the Part. They work in a similar way as the <i>Position</i> fields
+of the <a href="triad.htm#Origin">Origin tab</a>.</td></tr>
+<tr><td>Principal Axes of Inertia</td><td>These fields specify the principal
+axes of inertia of the Part, which are used as reference frame for the inertias
+specified on the <a href="#Mass">Mass tab</a>.
+They work in a similar way as the <i>Orientation</i> fields
+of the <a href="triad.htm#Origin">Origin tab</a>.</td></tr>
+<tr><td>Condense out CoG DOFs</td><td>Enables the elimination of the six DOFs
+associated with the centre of gravity in the dynamics simulation. It can be used
+to remove potential artificial internal vibrations in the Generic Part,
+and thus increase the numerical stability of the model.</td></tr>
+</table></p>
+
+
+<h2><a name="Hydrodynamics"></a>Hydrodynamics tab</h2>
+
+<p><img src="../../img/prp/part-9.png"></p>
+
+<p>The figure above illustrates the <i>Hydrodynamics</i> properties
+(for Generic Parts only), which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Perform buoyancy calculations</td><td>
+Enables the calculation of buoyancy forces for this Part, provided a geometry
+description file has been specified in the <i>Visualization</i> file field of
+the <a href="#Part">Part tab</a>. This geometry file has to define
+a closed volume that represents the total displaced fluid body when the
+Part is submerged. It can be either on the VRML-format, or FEDEM's internal
+CAD format (.ftc).</td></tr>
+</table></p>
+
+</body>
+</html>

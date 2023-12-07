@@ -1,0 +1,38 @@
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<tr><td>Constraint</td><td>This column shows the constraint type assigned to
+each joint DOF.</td></tr>
+<tr><td>Load</td><td>This column shows the applied load in
+each joint DOF.</td></tr>
+<tr><td>Model length</td><td>This column shows the modeled length/angle in
+each joint DOF.</td></tr>
+<tr><td>Init disp.</td><td>This column shows the initial deflection in
+each joint DOF.</td></tr>
+<tr><td>Length change</td><td>This column shows the function, if any,
+that controls the change of length/angle of each joint DOF.
+If the Constraint type is set to <i>Prescribed</i>, this change is enforced
+directly on the joint DOF. However, if the Constraint type is set to
+<i>Spring-Damper</i>, this function controls the Stress free length/angle change
+of the associated joint DOF spring.</td></tr>
+<tr><td>Init vel.</td><td>This column shows the initial velocity applied to
+each joint DOF.</td></tr>
+<tr><td>Spring</td><td>This column shows the spring characteristic assigned to
+each joint DOF; either a numerical value defining a constant spring stiffness,
+or a description of the spring characteristics used as a nonlinear stiffness-
+or force-deflection relationship.</td></tr>
+<tr><td>Spr. scale</td><td>This column shows the function that is used to scale
+the force developed in the spring of each joint DOF.
+Empty if no scaling.</td></tr>
+<tr><td>Damper</td><td>This column shows the damper characteristic assigned to
+each joint DOF; either a numerical value defining a constant damper coefficient,
+or a description of a function used as a nonlinear coefficient- or
+force-velocity relationship.</td></tr>
+<tr><td>Dmp. scale</td><td>This column shows the function that is used to scale
+the force developed in the damper of each joint DOF.
+Empty if no scaling.</td></tr>

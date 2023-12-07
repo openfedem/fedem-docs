@@ -1,0 +1,48 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_properties_cylindric-joint"></a>Cylindric Joint</h1>
+
+<p>The Cylindric joint object is used to represent a Cylindric joint in a FEDEM model.
+A Cylindric joint has four unconstrained DOFs that allow both translational
+displacement along the local z-axis, and rotation about the local z-axis.
+It does not constrain motion in the other two rotational directions.</p>
+
+<p>The Cylindric joint has two joint DOFs. They are the translational distance
+along the local z-axis from the first master to the slave (the slider variable)
+and the angle of rotation of the slave about the local z-axis.
+The rotation angle is measured between the x-axis of the first master triad and
+the x-axis of the slave triad.</p>
+
+<p>See the section on "Joints" in the "Mechanism Elements" chapter in the
+FEDEM User's Guide, for more information on Cylindric joints.</p>
+
+
+<h2><a name="Summary"></a>Summary tab</h2>
+
+<p><img src="../../img/prp/cylindric-joint-1.png"></p>
+
+<p>The figure above illustrates the property <i>Summary</i> of the Cylindric joint,
+which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>

@@ -1,0 +1,505 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Flexible Connections}
+\label{c:Flexible Connections}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Spring elements}
+\label{s:Spring elements}
+
+A spring may be linear with a spring constant, or it may be nonlinear with the
+spring stiffness explicitly or implicitly defined by a reference to a function.
+The stiffness function is then a function of the spring deflection.
+The spring stiffness and associated force can also be scaled by another function
+that can be a function of any model variable.
+Axial springs are specified between two supernodes in the mechanism model,
+while joint springs are specified directly on the joint DOFs.
+
+The actual stiffness expressions depend on whether the stiffness function is
+defined explicitly or implicitly, i.e.,
+%
+\begin{equation}
+K_{el}(\delta,\cdot) \;=\; \left\{\begin{array}{ll}
+S(\cdot)\left[\, k_0 + f(\delta) \right] &
+\text{: $f(\delta)$ is explicit (stiffness function)} \\[1mm]
+S(\cdot)\left[ k_0 + \frac{df}{d\delta} \right] &
+\text{: $f(\delta)$ is implicit (force function)}
+\end{array}\right.
+\label{eq:spring stiffness}
+\end{equation}
+%
+where
+%
+\begin{namelist}{$K_{el}$}
+\item[$K_{el}$] : Elastic spring stiffness
+\item[$S$]      : Scale function
+\item[$k_0$]    : Constant stiffness
+\item[$f$]      : Explicit or implicit stiffness function
+\item[$\delta$] : Spring deflection, $\delta = l - l_0$,
+where $l_0$ is the stress-free length
+\end{namelist}
+%
+The associated spring force is defined by the expression
+%
+\begin{equation}
+F_{el}(\delta,\cdot) \;=\; \left\{\begin{array}{ll}
+S(\cdot)\left[k_0\delta + \int\limits_0^\delta f(\hat\delta)d\hat\delta\right] &
+\text{: $f(\delta)$ is explicit} \\[5mm]
+S(\cdot)\,\left[\,k_0\delta + f(\delta) \,\right] &
+\text{: $f(\delta)$ is implicit}
+\end{array}\right.
+\label{eq:spring force}
+\end{equation}
+%
+where $F_{el}$ is the elastic spring force,
+and the other quantities are as above.
+
+\remark{Although the scale function $S(\cdot)$ in
+\eqsref{eq:spring stiffness}{eq:spring force} in principle
+may be a function of any model variable, you should avoid using one that
+directly or indirectly depends on the spring deflection, $\delta$, such as the
+spring velocity, $\dot\delta$, for instance.
+If such a variable is used, there might be an inconsistency between the spring
+stiffness and associated force that may lead to instabilities in the solution,
+or poor convergence.
+The best is just to let it be some explicit function of time, $t$.}
+
+For joint springs, the stiffness is added directly to the diagonal of
+the system matrix on the actual DOF involved.
+For axial springs, the stiffness and force act in the direction between
+the two end nodes.
+Since an axial spring may be rotating, geometric stiffness terms must also be
+included, such that the total stiffness matrix of the axial spring becomes
+%
+\begin{equation}
+\label{eq:springK}
+{\bf k} \;=\; K\,\bm{i}_1\otimes\bm{i}_1 \;+\;
+\frac{F}{l} \left(\bm{i}_2\otimes\bm{i}_2 + \bm{i}_3\otimes\bm{i}_3\right)
+\end{equation}
+%
+where $K$ and $F$ are the current stiffness and force in the spring,
+defined through~\eqsref{eq:spring stiffness}{eq:spring force} respectively,
+and $l$ is the current spring length.
+The local coordinate system of the spring is defined through the basis
+$\{\bm{i}_1,\bm{i}_2,\bm{i}_3\}$ where $\bm{i}_1$ goes in the length direction.
+The operator $\otimes$ denotes a dyadic product (outer product)
+between two vectors.
+The $3\times3$ stiffness matrix~\eqref{eq:springK} is then added to the global
+system stiffness matrix on the DOFs associated with the two connected nodes.
+
+A spring may be used as a passive element with fixed stress-free length/angle.
+However, it may also be used as an active drive element in the mechanism where
+the stress-free length varies as a function of time in accordance with an
+explicitly defined function.
+
+By specifying springs on joint DOFs, special constraint effects may be imposed,
+for instance the free joint may be used in this way to model nonlinear bearings
+or rubber bushings.
+Effects like end stops, backlash in gears, switches, temperature-dependent
+stiffness or other nonlinear effects may easily be modeled in this way.
+
+\subsection{Failure and yield properties}
+
+The nonlinear behavior in a spring may also be modeled by specifying certain
+failure and/or yield criteria.
+Failure is modeled by using~\eqsref{eq:spring stiffness}{eq:spring force},
+only as long as the following conditions are satisfied
+%
+\begin{equation}
+\eqalign{
+\delta_{f-} <\;\; & \delta \;\;\;<\; \delta_{f+} \cr
+F_{f-} <\;\; & F_{el} <\; F_{f+}
+}\label{eq:failure criteria}
+\end{equation}
+%
+where $\delta_{f-}$ and $\delta_{f+}$ define the maximum spring deflection
+before the spring fails, on compression and tension, respectively, whereas
+$F_{f-}$ and $F_{f+}$ are similar failure limits on the spring force.
+
+When any of the conditions~\eqref{eq:failure criteria} are no longer fulfilled,
+the spring state is changed to \textit{failed} and it will no longer contribute
+to the system stiffness matrix and force vector of the mechanism.
+This has the same effect as choosing a scale function in the stiffness and
+force expression~\eqref{eq:spring stiffness} and~\eqref{eq:spring force}
+equal to a step function
+%
+\begin{equation}
+S(t) \;=\; \left\{\begin{array}{lcl}
+1 &:& t < t_f \\
+0 &:& t \ge t_f
+\end{array}\right.
+\end{equation}
+%
+where $t_f$ is the time at which the failure occurred.
+
+When a joint spring reaches a failure state, this would normally cause an abrupt
+redistribution of the forces in the joint, and in many cases one would like to
+signal the failure in the other springs in the same joint too,
+when one of its joint springs detects failure.
+
+Hysteresis behavior and permanent deflection after unloading can be introduced
+in a spring by specifying a yield criterion, which limits the spring force to
+a specified maximum value $F_{y+}$ (on tension),
+or minimum value $F_{y-}$ (on compression).
+The actual stiffness and force in the spring will then be given by
+%
+\begin{eqnarray}
+K(\delta,\cdot) &=& \left\{\begin{array}{ll}
+K_{el}(\delta,\cdot) &: F_{y-} \le F_{el} \le F_{y+} \\[2mm]
+0                    &: F_{el} < F_{y-} \text{~~or~~} F_{el} > F_{y+}
+\end{array}\right. \\[2mm]
+F(\delta,\cdot) &=& \min\left\{\max\left\{ F_{el}(\delta,\cdot),
+F_{y-}\right\}, F_{y+}\right\} \label{eq:actual spring force}
+\end{eqnarray}
+%
+where $K_{el}$ and $F_{el}$ are the elastic stiffness and force,
+as defined by~\eqsref{eq:spring stiffness}{eq:spring force}, respectively.
+
+When the spring is yielding, i.e., $F_{el} \notin [F_{y-},F_{y+}]$, the
+``elastic'' deflection of the spring (the deflection used when evaluating the
+stiffness function) is taken as $\delta = l - (l_0 + \delta_y)$,
+where $\delta_y$ is the \textit{yield deflection} defined through
+%
+\begin{equation}
+\delta_y(t) \;=\; \int\limits_{t_y}^t \frac{F_{el}-F}{K_{el}} d\hat{t}
+\label{eq:yield deflection}
+\end{equation}
+%
+where $t_y$ is the time at which the yielding first started, and $F$ is the
+actual spring force defined by~\eqnref{eq:actual spring force}.
+When the spring re-enters an elastic state due to unloading, the integrand
+of~\eqnref{eq:yield deflection} becomes zero such that $\delta_y$ then
+remains constant until the yield limit is reached again.
+
+The yield limits, $F_{y-1}$ and $F_{y+1}$ may be either constant values or
+functions of another model variable.
+The latter may be used to to model clutch-like behavior in joint springs,
+where you can smoothly (or abruptly) engage/disengage the motion constraint
+enforced by the spring.
+
+\subsection{Interconnected spring elements}
+\label{subs:Interconnected spring}
+
+Springs with a nonlinear force--displacement curve can be used to model certain
+typical joint characteristics.
+A ``trailer-hitch'' connection has typically a certain play where it has no
+stiffness or force resisting displacement.
+This can be modeled using a spring with a stiffness--displacement curve where
+we have a zero stiffness ``play'' area around zero displacement.
+Alternatively, this is achieved with a corresponding force--displacement curve.
+However, we seek to have this play and nonlinear force--displacement behavior
+to be independent of the displacement direction, when the displacement is taken
+in an arbitrary radial direction.
+With constant stiffness and independent springs in, for instance, the $X$
+and $Y$ directions we will achieve this, but when the stiffness is nonlinear
+the force--displacement response gets a distinct ``square'' characteristic when
+subjecting the hitch or joint to a rotating force.
+This can be circumvented by interconnecting the displacements and
+force--displacement curves in the two directions.
+
+The interconnected displacement is defined as
+%
+\begin{equation}
+\bar\delta^i = \sqrt{\sum_j B_{ij}\delta^2_j} \quad\text{where~} B_{ij} =
+\left\{\begin{array}{l}
+1 : i = j \\
+1 : \text{DOF $i$ and $j$ are interconnected} \\
+0 : \text{otherwise}
+\end{array}\right.
+\end{equation}
+%
+The interpolated displacement $\bar\delta^i$ is used for calculating an
+interpolated force based on all the individual DOF springs defined according
+to~\eqnref{eq:spring force}
+%
+\begin{equation}
+\bar F^i \;=\; \sum_j \sign(\delta_j) N_{ij} F_j(\bar\delta^i\,\sign(\delta_j))
+\end{equation}
+%
+where
+%
+\begin{equation}
+N_{ij} \;=\; \left(\frac{\delta_j}{\bar\delta^i}\right)^2 \qquad\text{and}\qquad
+\sign(\delta_j) = \left\{\begin{array}{rcl}
+ 1 &:& \delta_j \ge 0 \\
+-1 &:& \delta_j < 0
+\end{array}\right.
+\label{eq:interpolation functions}
+\end{equation}
+
+We are using an interpolation of the individual spring functions in order to
+handle oval characteristics defined by different stiffness functions for,
+for instance, the $X$ and $Y$ DOFs.
+The interpolated force value $\bar F^i$ is then decomposed along each of the
+interconnected DOFs as
+%
+\begin{equation}
+\bar F^i_j \;=\; c_{ij}\bar F^i \qquad\text{with direction cosines}\qquad
+c_{ij} = \frac{\delta_j}{\bar\delta^i}
+\label{eq:interconnected force}
+\end{equation}
+%
+\remark{You should avoid using the interconnectivity functionality between
+springs with constant stiffness.
+No additional cylindrical or spherical behavior is achieved by this,
+while reduced stability can be experienced due to $0/0$ terms
+in~\eqnref{eq:interconnected force} when displacements are close to zero
+and springs are interconnected.}
+
+The (material) stiffness terms for the interconnected springs are obtained in a
+similar fashion as the force components, i.e.
+%
+\begin{equation}
+\bar K^{Mi} \;=\; \sum_j N_{ij} K_j(\bar\delta^i\,\sign(\delta_j))
+\end{equation}
+%
+where $N_{ij}$ is defined in~\eqnref{eq:interpolation functions}.
+The components of the material stiffness matrix $\bar{\bf K}^{Mi}$
+can then be written as
+%
+\begin{equation}
+\label{eq:Kijk}
+\bar K^{Mi}_{jk} \;=\; c_{ij} c_{ik} \bar K^{Mi}
+\end{equation}
+
+Since the direction of the interpolated spring force, $\bar F^i$,
+depends on the current solution state through the direction cosines $c_{ij}$,
+geometric stiffness terms are needed in addition to the material
+stiffness~\eqref{eq:Kijk}, for the translational components.
+Let $\bm{i}_1$ denote the current direction for the interconnected spring, i.e.,
+$\bm{i}_1=\{c_{i1},c_{i2},c_{i3}\}^T$ and $\bm{i}_2$ and $\bm{i}_3$ being two
+perpendicular unit vectors such that $\{\bm{i}_1,\bm{i}_2,\bm{i}_3\}$ forms an
+orthonormal basis.
+Assuming the stress-free length of the spring is zero, the total tangent
+stiffness matrix for an interconnected translatory spring is then given as
+%
+\begin{equation}
+\label{eq:springKbar3D}
+\bar{\bf K}^i \;=\; \bar{\bf K}^{Mi} \:+\: \bar{\bf K}^{Gi}
+\quad\mbox{where}\quad \bar{\bf K}^{Gi} \;=\;
+\frac{\bar F^i}{\bar\delta^i}
+\left(\bm{i}_2\otimes\bm{i}_2 + \bm{i}_3\otimes\bm{i}_3\right)
+\end{equation}
+
+The~\eqnref{eq:springKbar3D} holds for translatory springs coupled in all three
+coordinate directions (flexible ball joint behavior). If only two of the three
+coordinate directions are coupled (flexible revolute joint behavior),
+we have
+%
+\begin{equation}
+\label{eq:springKbar2D}
+\bar{\bf K}^{Gi} \;=\; \frac{\bar F^i}{\bar\delta^i}
+\bm{i}_2\otimes\bm{i}_2
+\end{equation}
+%
+where $\bm{i}_2=\bm{i}_3\times\bm{i}_1$, and $\bm{i}_3$ is the unit vector in
+the coordinate direction that is not coupled (rotation axis of the flexible
+revolute joint).
+
+\subsection{Global spring elements}
+\label{subs:Global spring}
+
+Instead of using an axial spring which has the important property that it
+contributes to stress stiffening in the overall system through its geometric
+stiffness, an alternative is to specify independent spring properties on one
+or several of the global DOFs between two nodes in the system,
+or between one node and ground.
+This is much the same as using a free joint with all DOFs spring-constrained.
+However, in the global spring element the joint variable transformation
+outlined in Section~\ref{subs:Free Joint} is not performed and the resulting
+stiffness coefficients are added directly into the system stiffness matrix for
+the DOFs associated with the two nodes in question.
+
+The updated spring lengths in a global spring element, that are needed for the
+computation of the stiffness and force in each DOF, are defined as
+%
+\begin{eqnarray}
+{\mf l} \;=\hskip13pt \left[l_x \; l_y \; l_z\right]^T &=&
+{\mf x}_2 - {\mf x}_1 \\
+{\tf\alpha} \;=\; \left[\alpha_x \; \alpha_y \; \alpha_z\right]^T &=&
+{\rm EulerZYX}({\mf R}_1^T{\mf R}_2)
+\end{eqnarray}
+%
+where ${\mf x}_i$ is the updated global position vector of node $i$, and
+${\mf R}_i$ is the orthonormal transformation matrix defining its orientation.
+The operator EulerZYX($\cdot$) extracts the Euler $Z$-$Y$-$X$ angles from
+the provided orthonormal transformation matrix,
+as outlined in Section~\ref{subs:Euler angles extraction}.
+The corresponding spring deflections are then taken as
+${\tf\delta}={\mf l}-{\mf l}_0$ and ${\tf\theta}={\tf\alpha}-{\tf\alpha}_0$,
+with ${\mf l}_0$ and ${\tf\alpha}_0$ being the initial stress free lengths.
+
+\remark{When rotational stiffness is assigned to a global spring, it is
+imperative that the orientations of the two nodes are initially identical or
+close to each other, and that they are unlikely to exhibit large relative
+rotations.
+The background for this is that the Euler angle extraction operator is valid
+for small rotations only. Actually, the operator is singular for certain
+rotation states (i.e., when one have 0/0-situations in some of
+the~\meqsref{eq:EulerZ}{eq:EulerX}.
+For the same reason, using soft global springs with rotational stiffness may
+also render the solution unstable and should be avoided.}
+
+Especially in situations when the distance between the two nodes is large,
+global spring elements may yield a more stable solution than using a regular
+free joint, since a small rotation change in one end then may correspond to
+a large translation change at the other end, due to the long arm.
+The global spring element is a system level equivalent to the BUSH element
+on the FE link level (see Section~\ref{s:BUSH}) but with the important
+distinction that a global spring may account for nonlinear spring properties.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Damper elements}
+\label{s:Damper elements}
+
+A damper may be linear with a damping constant, or it may be nonlinear with the
+damping coefficient defined by a reference to a function.
+The damping coefficient is a function of the damper velocity.
+The damping coefficient and associated force can also be scaled by another
+function that can be a function of any model variable.
+A wide range of energy dissipation effects may be modeled by damper elements.
+Axial dampers are specified between two supernodes in the mechanism model,
+while joint dampers are specified directly on the joint DOFs.
+
+The actual damping coefficient expression depend on whether the damping
+function is defined explicitly or implicitly
+%
+\begin{equation}
+C(v,\cdot) \;=\; \left\{\begin{array}{ll}
+S(\cdot)\left[\, C_0 + f(v) \right] &
+\text{: $f(v)$ is explicit (damping function)} \\[1mm]
+S(\cdot)\left[ C_0 + \frac{df}{dv} \right] &
+\text{: $f(v)$ is implicit (force function)}
+\end{array}\right.
+\label{eq:damping}
+\end{equation}
+%
+where
+%
+\begin{namelist}{$C_0$}
+\item[$C$]   : Damping coefficient
+\item[$S$]   : Scale function
+\item[$C_0$] : Constant damping
+\item[$f$]   : Explicit or implicit damping coefficient function
+\item[$v$]   : Damper velocity
+\end{namelist}
+%
+The associated damper force is defined by the expression
+%
+\begin{equation}
+F(v,\cdot) \;=\; \left\{\begin{array}{ll}
+S(\cdot) \left[\, C_0 v + \int\limits_0^v f(\hat v) d\hat v \,\right] &
+\text{: $f(v)$ is explicit} \\[5mm]
+S(\cdot) \,\left[\, C_0 v + f(v) \,\right] &
+\text{: $f(v)$ is implicit}
+\end{array}\right.
+\label{eq:damper force}
+\end{equation}
+%
+where $F$ is the damper force or moment, and the other quantities are as above.
+
+\remark{Although the scale function $S(\cdot)$
+in~\eqsref{eq:damping}{eq:damper force} in principle may be a function of any
+model variable, you should avoid using one that directly or indirectly depends
+on the damper velocity, $c$, such as the damper deflection, for instance.
+If such a variable is used, there will be an inconsistency between the damping
+coefficient and associated force that may lead to solution instabilities
+or poor convergence.
+The best is just to let it be some explicit function of time, $t$.}
+
+For joint dampers, the damping coefficient is added directly to the diagonal of
+the system damping matrix on the actual DOF involved.
+Axial dampers are handled in a similar way as axial springs, that is,
+they result both in an damping matrix and geometric stiffness matrix to be
+added into the corresponding system matrices for the nodal DOFs involved:
+%
+\begin{eqnarray}
+{\bf c} &=& C\,\bm{i}_1\otimes\bm{i}_1 \\
+{\bf k}_g &=& \frac{F}{l} \left(\bm{i}_2\otimes\bm{i}_2 + \bm{i}_3\otimes\bm{i}_3\right)
+\end{eqnarray}
+%
+where $C$ and $F$ are the current damping coefficient and damper force defined
+through~\eqsref{eq:damping}{eq:damper force} respectively,
+and $l$ is the damper length.
+
+By specifying dampers on joint DOFs, special constraint effects may be imposed,
+for instance the free joint may be used in this way to model damping in
+nonlinear bearings or rubber bushings.
+Effects like switches, temperature dependent damping or other nonlinear
+effects may be modeled in this way.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Spring-constrained joints}
+\label{s:Spring-constrained joints}
+
+All joint variables for the master-slave based joints, such as revolute joints,
+ball joints, prismatic joints, etc., may be constrained by springs.
+The free joint has no degree of freedom constraint and is usually the basis for
+modeling spring-constrained joints.
+The reason for making joints spring-constrained can be to model the flexibility
+of an actual bearing or model nonlinear effects like clearings, rubber bushings,
+etc.
+To be able to easily switch between master-slave constrained joints and
+spring-constrained joints, the position and orientation of triads for
+spring-constrained joints should be the same as for the corresponding
+master-slave constrained joint.
+
+The {\it flexible revolute joint} is usually modeled from a free joint with
+relative constraining springs on the $x$, $y$ and $z$ translational variables
+and on the $x$ and $y$ rotational joint variables.
+The rotation about the $z$-axis will be the joint variable.
+The stiffness of the springs on the different joint variables should comply with
+the actual translational and rotational stiffness of the bearing.
+Nonlinear stiffness like in rubber bushings or in bearings with clearing should
+be modeled by nonlinear springs.
+The translatory springs in the local $x$ and $y$ directions may need to be
+interconnected, as described in Section~\ref{subs:Interconnected spring},
+in order to achieve equal behavior for any load direction in the joint.
+
+The {\it flexible ball joint} will also usually be based on a free joint and
+with constraining springs for the $x$, $y$ and $z$ translational variables.
+The stiffness for the springs will be set according to joint stiffness and
+possible nonlinearities as for the revolute joint above.
+All three translatory springs may need to be interconnected, as described in
+Section~\ref{subs:Interconnected spring}, in order to achieve equal
+behavior for any load direction in the joint.
+
+The {\it flexible prismatic joint} will usually be modeled from one or more
+free joints.
+The $z$-axis of the joint triads should be along the direction of the joint
+variable, the joint axis.
+If the flexible prismatic joint is based on only one free joint, all joint
+variables should have constraining springs except the variable along the joint
+axis, that is the $z$ direction of the joint.
+If two or more free joints are used, the orientation of the corresponding triads
+should be the same and with the $z$-direction along the joint axis.
+For the free joints constituting the flexible prismatic joint, the joint
+variables in $x$ and $y$ directions and rotation about $z$ should have
+constraining springs.
+The rotation variables about the $x$ and $y$ directions for the actual free
+joints will usually have no constraining springs, see the master-slave based
+prismatic joint.
+Translational clearing in the joint could be modeled by nonlinear constraining
+springs for $x$ and/or $y$ translation and rotational clearing about the
+$z$-axis is modeled by nonlinear constraining springs for the $z$ rotation.
+
+The {\it flexible cylindric joint} is modeled in a very similar way as the
+flexible prismatic joint described above.
+However, there is no constraining spring for the $z$ rotation.
+This joint will have two joint variables, the translation along and the rotation
+about the joint axis that is the $z$-axis of the triads.
+
+Besides the options for modeling constraints mentioned above, you have almost
+unlimited options for modeling different constrained motions.
+However, you should be aware of what effects could result from the fact that
+rotations in space do not commute, see Section~\ref{subs:Euler angles}.

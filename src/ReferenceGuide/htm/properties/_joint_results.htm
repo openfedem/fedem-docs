@@ -1,0 +1,61 @@
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<h2><a name="Results"></a>Results tab</h2>
+
+<p><img src="../../img/prp/joint-7.png"></p>
+
+<p>The figure above shows the <i>Results</i> properties of the joint.
+It contains toggles for activating output of certain solution variables related
+to the joint, such that the quantities are available for curve plotting, etc.
+The <i>Spring variables</i> and <i>Damper variables</i> frames will appear only
+if the joint contains at least one <i>Spring-Damper</i> constrained DOF.</p>
+
+<p>In the <i>Joint variables</i> frame, the following toggles are available:</i>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Deflection</td><td>Output deflection in each joint DOF.</td></tr>
+<tr><td>Velocity</td><td>Output velocity in each joint DOF.</td></tr>
+<tr><td>Acceleration</td><td>Output acceleration in each joint DOF.</td></tr>
+<tr><td>Friction/Reaction force</td><td>Output either the friction force or the
+reaction for in each joint DOF, depending on the <i>Constraint Type</i>
+(see below).</td></tr>
+<tr><td>Friction Energy</td><td>Output friction energy in each joint DOF
+which have a <i>Friction</i> associated with it.</td></tr>
+</table></p>
+
+<p>In the <i>Spring variables</i> frame, the following toggles are available.
+They will apply to all spring-damper constrained DOFs in the joint:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Stiffness</td><td>Ouput the stiffness of the joint DOF springs.</td></tr>
+<tr><td>Length</td><td>Output the length of the joint DOF springs.</td></tr>
+<tr><td>Deflection</td><td>Output deflection in the joint DOF springs.</td></tr>
+<tr><td>Force</td><td>Output the joint DOF spring forces.</td></tr>
+<tr><td>Energies</td><td>Output the energy stored in the joint DOF springs.</td></tr>
+</table></p>
+
+<p>In the <i>Damper variables</i> frame, the following toggles are available.
+Also they will apply to all spring-damper constrained DOFs in the joint:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Coefficient</td><td>Output the damping coefficient in the joint DOFs.</td></tr>
+<tr><td>Length</td><td>Output the length of the joint DOF dampers.</td></tr>
+<tr><td>Velocity</td><td>Output the velocity in the joint DOF damper.</td></tr>
+<tr><td>Force</td><td>Output the joint DOF damping forces.</td></tr>
+<tr><td>Energies</td><td>Output the energy stored in the joint DOF dampers.</td></tr>
+</table></p>
+
+<p>The <i>Friction/Reaction force</i> toggle will activate output of friction
+forces in each joint DOF which is either <i>Free</i> or <i>Spring-Damper</i>
+constrained, and have a Friction associated with it.
+If the joint DOF is either <i>Fixed</i> or <i>Prescribed</i>, the same toggle
+will activate output of the associated reaction force instead.</p>

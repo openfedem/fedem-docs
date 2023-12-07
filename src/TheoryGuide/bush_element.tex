@@ -1,0 +1,109 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{BUSH}
+\label{s:BUSH}
+
+BUSH is a 2-node generalized spring element of zero length.
+The two element nodes may, or may not be coincident.
+The spring element is positioned independently of the two element nodes, and is
+connected to these nodes via rigid arms, as shown in Figure~\ref{fig:BUSH}.
+Nominal stiffness values for the 3 translational and 3 rotational DOFs are given
+in a local element coordinate system.
+This local system is either specified explicitly as an element property,
+or defined implicitly through the two nodes and a given auxiliary point.
+The implicit definition is similar to that of the local coordinate system for a
+beam element (see Section~\ref{s:BEAM2}).
+Thus, this definition is not applicable if the two element nodes are coincident.
+The BUSH element does not contribute to the mass matrix.
+
+\begin{figure}[b]
+\begin{center}
+\setlength{\unitlength}{1mm}
+\begin{picture}(100,75)
+\thinlines
+\put(15,15){\vector(1,0){70}}
+\put(15,15){\vector(0,1){55}}
+\put(15,15){\vector(-1,-1){12}}
+\put( 0, 0){$x_{\text{link}}$}
+\put(87,14){$y_{\text{link}}$}
+\put(13,72){$z_{\text{link}}$}
+\thicklines
+\put(26,20){\circle{2}}\put(22,20){$I$}
+\put(70,40){\circle{2}}\put(66,40){$J$}
+\put(50,50){\circle*{2}}
+%Eccentric arms
+\thinlines
+\put(50,50){\line(-1,-1){10}}\put(45,42){$e_x$}
+\put(40,40){\line(-1, 0){14}}\put(33,37){$e_y$}
+\put(26,40){\line( 0,-1){20}}\put(27,30){$e_z$}
+\qbezier[8](50,50)(52,52)(55,55)
+\qbezier[16](55,55)(62,55)(70,55)
+\qbezier[16](70,55)(70,48)(70,40)
+\put(71,50){\scriptsize fictitious rigid arm}
+%Local system
+\thinlines
+\put(50,50){\vector( 2, 1){20}}\put(70.5,60){$x_\text{elem}$}
+\put(50,50){\vector(-1, 2){4}} \put(42,60){$y_\text{elem}$}
+\put(50,50){\vector( 3,-1){10}}\put(60.5,46){$z_\text{elem}$}
+\end{picture}
+\end{center}
+\caption{BUSH, Generalized spring element}
+\label{fig:BUSH}
+\end{figure}
+
+The BUSH element may also be specified without any stiffness properties,
+but only the element topology.
+Such elements are automatically created during modeling in Fedem,
+for instance when a mechanism joint is attached to a link at a slave node of an
+RGD, RBAR or WAVGM element (see the \FedemUG, {\em Section~3.6,
+``Attaching and detaching elements''}).
+A property-less BUSH element is the created as the connection between this slave
+node and an added added external node (triad) at the same location.
+
+The nominal stiffness values for the property-less BUSH element are computed
+automatically based on the overall stiffness properties of the link\footnote{
+Unless the link is completely rigid, e.g., it consists of a single RGD element.
+In that case $k_t = k_r = 2.0 \cdot 10^{11}$ is used instead.}.
+For the translational and rotational stiffnesses, $k_t$ and $k_r$, respectively,
+the following three alternative procedures are available:
+%
+\begin{eqnarray}
+k_t \;=\; \frac{0.1}{\varepsilon_{\rm sing}}
+          \min\left\{{\rm diag}({\bf K}_{\rm tra})\right\} &,&
+k_r \;=\; \frac{0.1}{\varepsilon_{\rm sing}}
+          \min\left\{{\rm diag}({\bf K}_{\rm rot})\right\} \\
+%
+k_t \;=\; C_s \frac{{\rm tr}({\bf K}_{\rm tra})}{n_{\rm tra}} \hskip47pt &,&
+k_r \;=\; C_s \frac{{\rm tr}({\bf K}_{\rm rot})}{n_{\rm rot}} \\
+%
+k_t \;=\; C_s \max\left\{{\rm diag}({\bf K}_{\rm tra})\right\} \hskip7pt &,&
+k_r \;=\; C_s \max\left\{{\rm diag}({\bf K}_{\rm rot})\right\} \label{eq:defB}
+\end{eqnarray}
+%
+Here, ${\bf K}_{\rm tra}$ and ${\bf K}_{\rm rot}$ are the translational and
+rotational parts, respectively, of the fully assembled link stiffness matrix,
+and $n_{\rm tra}$ and $n_{\rm rot}$ denote the total number of translational
+and rotational DOFs, respectively.
+Moreover, diag($\cdot$) denotes the diagonal elements of a given matrix,
+whereas tr($\cdot$) is the trace operator (sum of diagonal elements).
+Finally, $\varepsilon_{\rm sing}$ denotes the {\em singularity criterion}
+used by the Fedem Link Reducer when factoring the link stiffness matrix
+(specified by the user through the Link property panel,
+see the \FedemUG, {\em Section~4.1.5,``Link properties''}),
+and $C_s$ is a user-defined scaling factor that may be specified through the
+command-line option {\tt -autoStiffScale} when running the Link Reducer
+(default is $10^2$).
+
+The wanted procedure is selected through the command-line option
+{\tt -autoStiffMethod}.
+The default is to use \eqnref{eq:defB}.

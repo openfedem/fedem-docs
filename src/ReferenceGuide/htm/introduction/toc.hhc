@@ -1,0 +1,20 @@
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="Introduction">
+	<param name="Local" value="htm\introduction\default.htm">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="What's New">
+	<param name="Local" value="htm\introduction\whatsnew.htm">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="Known Bugs">
+	<param name="Local" value="htm\introduction\knownbugs.htm">
+	</OBJECT>

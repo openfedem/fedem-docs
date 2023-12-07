@@ -1,0 +1,118 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_dialogbox_turbine-definition"></a>Turbine Definition</h1>
+
+<p>The Turbine Definition dialog box allows you to easily create a working wind
+turbine model from a set of basic parameters.
+A new model can be created the first time the dialog is used.
+Thereafter, the dialog can be used to modify the turbine model.</p>
+
+<p><img src="../../../img/dlg-turbine-definition.png" width="584" height="455"></p>
+
+<p>The various fields in the Turbine Definition dialog box are as follows:<ul>
+
+<li><i>Tower base</i>
+- This field group specifies the tower base position and tower height:<br>
+<i>X, Y, Z</i> - Global position of the bottom of the tower.<br>
+<i>T</i> - Height of the tower.
+
+<li><i>Driveline</i>
+- This field group specifies the location and size of various items
+inside the turbine nacelle:<br>
+<i>D1</i> - Distance from the tower top to the main shaft.<br>
+<i>D2</i> - Distance from the tower top to the hub flange.<br>
+<i>D3</i> - Distance from gearbox to the hub flange.
+This also equals the length of the main shaft.<br>
+<i>D4</i> - Depth of the gearbox.<br>
+<i>D5</i> - Length of the secondary shaft.<br>
+<i>D6</i> - Depth of the generator.<br>
+<i>B1</i> - Distance from the hub flange to the first bearing.<br>
+<i>B2</i> - Distance between the two bearings.<br>
+<i>S</i> - Offset distance between the shaft axes.<br>
+<i>&Theta;</i> - Offset angle of the secondary shaft.
+
+<li><i>Hub</i>
+- This field group specifies the positions and angles of the hub:<br>
+<i>H1</i> - Distance from the hub flange to the hub apex.<br>
+<i>Hr</i> - Hub radius.<br>
+<i>&alpha;</i> - Uptilt angle of the main shaft.<br>
+<i>&beta;</i> - Precone angle of the blades.
+
+<li><i>Nacelle</i>
+- This field group provides information about the nacelle:<br>
+<i>CogX, CogY, CogZ</i> - Center of gravity for the nacelle.
+Note that this only applies to the nacelle Part itself,
+which primarily is the support structures
+and not other elements of the driveline which also reside inside the nacelle.
+The mass value can be set in the property field for the nacelle Part
+after the turbine are generated.
+
+<li><i>Blade design</i> - Specifies the blade design to use.
+A set of sample blades is included in the FEDEM WindPower software package.
+They are stored as separate model files and can be selected using the browse
+button [...] just to the right of the Blade design field.
+You can also make your own blade designs by using the
+<a href="blade-definition.htm">Blade Definition</a> dialog box.
+The Blade design field will appear with a <i>pink</i> color as long as
+no valid path to a blade design file has been specified.
+It will turn <i>yellow</i> once a valid path is selected.
+A <i>green</i> field means that this blade design is now included in the model,
+and copies of the blade and its airfoil files are now located in the blade
+folder of the current model.
+
+<li><i>Number of blades</i> - Specifies the number of blades for the turbine.
+
+<li><i>Include control system</i> - Includes a
+<a href="../../properties/Windpower/controller.htm">control system</a>
+for regulating the pitch and torque behaviour of the turbine.
+</ul></p>
+
+<p>The <i>Generate turbine</i> button will generate a mechanism assembly
+of the defined turbine, consisting of Beam elements, Triads, Joints, etc.
+However, if turbine a model already has been created, the same button is
+labelled <i>Update turbine</i> and the positions and properties of the existing
+turbine components are then updated according the the field values.
+The genereated wind turbine model is contained in a Turbine object
+that will appear in the Objects browser of the Model Manager panel.
+The turbine object again consists of severel sub-objects for the logical parts
+of the turbine, such as Tower, Nacelle, Rotor, etc.
+Each of these sub-objects (which may also contain other sub-objects) then
+contain the basis objects (Beams, Triads, Joints, etc.) making up the turbine
+assembly.</p>
+
+<p>If a turbine model already exists, some of the fields in the
+Turbine Definition dialog cannot be changed and are therefore disabled (gray).
+These are <i>Driveline type</i>, <i>Bearings</i> and <i>Number of blades</i>.
+You must delete the existing model before any of these fields can be changed.
+</p>
+
+<p>The Turbine Definition dialog also provides <i>Copy data</i> and
+<i>Paste data</i> buttons to simplify the process of experimenting with
+many different turbine designs. Click the <i>Copy data</i> button
+to copy all field values of the dialog to the clipboard.
+You can paste the data back into the dialog box by clicking <i>Paste data</i>,
+or paste the data into a text editor or other applications.
+The paste operation will not affect the disabled fields.</p>
+
+</body>
+</html>

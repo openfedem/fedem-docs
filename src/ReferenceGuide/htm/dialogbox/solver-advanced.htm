@@ -1,0 +1,338 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_dialogbox_solver-advanced"></a>Solver (Advanced)</h1>
+
+<p>The control parameters for the Dynamics Solver are placed on six tabs 
+labeled Time, Integration, Tolerances, Eigenmode, Initial Equilibrium, 
+and Output.</p>
+
+<h2><a name="Time">Time tab</h2>
+
+<p>The time domain of the dynamics simulation is controlled through the 
+following parameters:</p>
+
+<p><img src="../../img/dlg-solver-advanced1.png" width="328" height="464"></p>
+
+<p><ol>
+<li>You can define the Start time and the Stop time of the dynamics simulation.
+<li>You can define the size of the Time increment to be used by the time
+integration algorithm. In addition to a constant value, you may also select a
+<a href="../properties/function.htm">Function</a> or a Time history input file
+from the pull-down list, in order to obtain a varying time increment size.
+In that case, the Minimum time increment is used as a lower bound.
+<li>You can enable/disable the use of Iteration cut-back when the dynamics
+simulation diverges, and adjust the Step size reduction factor defining the size
+of the new time step to use in the cut-back, and the Number of time steps with
+reduced size before the normal step size is resumed. If the cut-back iterations
+also diverge, another cut-back is attempted by applying the Step size
+reduction factor again. This procedure is then repeated until
+convergence is obtained or the Minimum time increment is reached. In
+the latter case, the simulation is aborted.
+<li>You can enable a Restart simulation if you already have some
+simulation results, and specify the Restart time defining the time step
+to restart from. If the specified time does not match an existing time
+step, the closest step after the specified time is used.</ol></p>
+
+<p><i>NOTE: In a restart simulation, you are allowed to adjust any of the 
+other Solver Setup parameters and options, as well as adjusting the additional 
+solver options for the Dynamics solver (see the User's Guide, 
+"Additional solver options"). However, you can not change any properties of the 
+mechanism model itself.</i></p>
+
+<p>Restarting a Dynamics simulation is very handy if you discover you need to 
+continue a simulation that was terminated abnormally, or you just want a longer 
+event than was originally defined. You may restart a simulation as many times 
+you wish.</p>
+
+<p>Each restart adds a new set of result files to the existing results 
+database such that subsequent post-processing and recovery runs can be 
+conducted over the overall time domain spanned by both the initial run and 
+the restart(s). If the time domain of the individual runs overlap, only the 
+latest produced results will be used in post-processing and recovery. See 
+the User's Guide, "Result files from restart simulations" 
+for more information on the management of results from restart simulations.</p>
+
+
+<h2><a name="Integration">Integration tab</h2>
+
+<p>You can optimize numerical performance of the time integration
+by adjusting the following parameters:</p>
+
+<p><img src="../../img/dlg-solver-advanced2.png" width="328" height="464"></p>
+
+<p><ol>
+<li>You can select among the following three integration algorithms.
+Refer to the FEDEM Theory Guide, Chapter 7 "Dynamic Simulation"
+for details on these integration methods.<ul>
+<li>Standard Newmark without numerical damping
+<li>The Hilber-Hughes-Taylor method
+(the amount of damping &alpha;<sub>H</sub> = 0.1 is then recommended).
+This is the default setting.
+<li>The generalized-&alpha; method.
+<br><img src="../../img/dlg-solver-genalpha.png"><br>
+This method allows for a separate numerical damping parameter (&alpha;<sub>m</sub>-factor)
+for the inertia terms, whereas the other parameter (&alpha;<sub>f</sub> -factor)
+applies to stiffness- and damping terms, as well as the external loads,
+see section 7.4.3 in the FEDEM Theory Guide.
+</ul>
+<li>You can enable/disable the use of Integration tolerances, and specify the Maximum and
+Minimum number of iterations for each time increment. When Ignore integration
+tolerances is set, a fixed Number of iterations is specified instead.
+<li>The nonlinear equations are solved using Modified Newton-Raphson iterations
+meaning that the system matrices are not necessarily recalculated in each iteration.
+For efficiency reasons, the number of matrix updates per time step should be as low as possible.
+However, if the increments in the input variables are large during a
+time step, the system matrices need to be updated more often, to
+ensure the nonlinear iterations converge.<br>
+You may choose between Fixed number of matrix updates or Variable number of 
+matrix updates. In either case you can also specify the Number of initial iterations 
+with matrix updates and the Maximum sequential iterations with no matrix updates. 
+The first number defines how many iterations in the beginning of each time step should be
+performed with updated matrices. If the iterations have not converged before reaching 
+that number, the subsequent iterations are performed with a matrix update frequency 
+defined by the Maximum sequential iterations with no matrix updates. However, if 
+Variable number of matrix updates is chosen, a convergence based threshold is used 
+in addition to determine when to do further system matrix updates. The factor entered 
+in Convergence tolerance factor for matrix updates is then multiplied with the active 
+convergence tolerances specified on the <a href="#Tolerances">Tolerances tab</a>.
+The resulting tolerance is compared to the error norms corresponding to the
+active convergence tolerances and the matrices are updated
+as long as the error norm is higher than this tolerance.
+<li>You can specify the default algorithm for calculation of the co-rotated
+part coordinate systems during the simulation. The selections available in
+this pull-down list correspond to those of the similar pull-down list in the
+<a href="../properties/part.htm#Advanced">Advanced tab</a>
+of the Part property panel. The setting here applies to all parts in the model,
+where the corresponding setting on the part level is <i>Model default</i>.
+<li>You can enable/disable Geometric stiffness contributions
+during the non-linear iterations. This option accounts for
+stress stiffening in FE parts, beams, and axial springs and -dampers.
+It may affect the convergence of the nonlinear iterations if the mechanism
+contains FE parts with large membrane forces, and/or beams, axial springs and dampers
+with large axial forces. This is because the forces alter the bending- or rotational
+stiffness of these elements. A tensile membrane/axial force will effectively increase
+the bending/rotational stiffness and a compressive force will reduce the bending/rational
+stiffness. For information on the computation of the geometric stiffness on FE parts,
+see the FEDEM Theory Guide, Section 4.4 "Superelement tangent stiffness".
+<li>You can enable/disable Centripetal moment correction.
+This implies an improved representation of the inertia forces on FE parts
+that have only a few Triads, but experience high-speed rotations
+(see the FEDEM Theory Guide, Section 3.3 "Inertia forces and
+high-speed rotation" for details).
+</ol></p>
+
+
+<h2><a name="Tolerances">Tolerances tab</h2>
+
+<p>Convergence criteria for the dynamics analysis are defined by enabling one, or more, convergence tolerances:</p>
+
+<p><img src="../../img/dlg-solver-advanced3.png" width="328" height="464"></p>
+
+<p><ol>
+<li>The Displacement Interation Correction allows you to enable/disable and set convergence tolerances for
+the Displacement iteration corrections.
+<li>You can define a convergence criterion on Velocity iteration correction
+<li>You can define various tolerances for Unbalanced forces.
+<li>You can define convergence tolerances for iteration energy changes.
+<li>All available convergence tests can be ignored or defined into one of two sets
+of tests: In set A, all tests must be satisfied for convergence to be satisfied. In set O, only
+one of the tests must be satisfied (in addition to all the tests in set A)
+for convergence to be satisfied.
+</ol></p>
+
+<p>The various norms used in the above convergence criteria have different
+dimension properties. Some are dimensionless, whereas others depend on the
+model units. The default values defined are suitable for the SI unit set.
+If you model in a different unit set (see <a href="model-preferences.htm">
+Model preferences</a>), you will need to adjust some of your active tolerance
+values accordingly.</p>
+
+<p>The scaled vector norm of the displacement correction is dimensionless, 
+whereas the same norm for the velocity correction has dimension 1/[time] and 
+for the force residual it is [force][length]. The Max norms have the dimension 
+corresponding to the quantity that they measure.</p>
+
+<p>For more information about convergence criteria, see the FEDEM Theory Guide, 
+Section 7.2.1 "Convergence criteria".</p>
+
+
+<h2><a name="Eigenmode">Eigenmode tab</h2>
+
+<p>You can set up the calculation of eigenmode solutions (see "Modal analysis"
+in the User's Guide) by adjusting the following parameters:</p>
+
+<p><img src="../../img/dlg-solver-advanced4.png" width="328" height="464"></p>
+
+<p><ol>
+<li>The Perform Eigenmode Solution option allows you to enable/disable calculation of the eigenmode solutions.
+<li>You can specify the number of eigenmodes to be computed.
+<li>You can specify the time interval between each eigenvalue analysis.
+<li>You can specify an Eigenmode Shift (see the FEDEM Theory Guide,
+Section 9.7.4 "Using shift when solving the eigenvalue problem").
+<li>You can enable/disable the application of the Additional Boundary Conditions
+specified for <a href="../properties/triad.htm">Triads</a>.
+<li>You can enable/disable computation of damped eigenmodes by
+accounting for structural damping (see the FEDEM Theory Guide,
+Section 9.7.2 "Damped eigenvalue problem").<br>
+CAUTION: Computation of damped eigenmodes takes considerably longer 
+time than computing the undamped modes.
+<li>You can enable/disable the Geometric Stiffness Contribution in the
+eigenvalue analyses (see the similar option in the <a href="#Integration">
+Integration tab</a>). If the mechanism contains structural members that
+experience large tensile or compression forces at certain time steps,
+the geometric stiffness contribution may have a significant effect
+on the accuracy on the computed eigenvalues at those time steps.</ol></p>
+
+
+<h2><a name="Initial-Equilibrium">Initial Equilibrium tab</h2>
+
+<p>If, during modeling, your model is not positioned at its (static) equilibrium position,
+it is recommended that you perform Initial Equilibrium analysis to move the mechanism
+to a resting position before simulating the dynamics.</p>
+
+<p><img src="../../img/dlg-solver-advanced5.png" width="328" height="464"></p>
+
+<p><ol>
+<li>You can enable the <i>Perform static equilibrium iterations at initial position</i>
+option, to perform static equilibrium iterations on the modelling configuration.
+<li>You can adjust the <i>Equilibrium iteration tolerance</i> and the <i>Iteration step-size limit</i>
+for the initial static equilibrium iterations (see below).
+<li>You can enable/disable the <i>Geometric stiffness contribution</i> in the initial static
+equilibrium iterations (see similar option in the <a href="#Integration">Integration tab</a>).
+<li>You can enable the <i>Perform dynamic ramp-up of loads/motions</i> option, as an alternative to
+(or instead of) the initial static equilibirum iterations (see below).
+<li>You can enable/disable <i>Ramp-up gravity forces as well</i>,
+which can be useful for models of heavy structures.
+<li>You can specify the <i>Number of increments in ramp-up stage</i>.
+The time step size of the ramp-up stage will then equal the Total length of the ramp-up stage,
+divided by this value.
+<li>You can adjust the <i>Maximum gradient during ramp-up stage</i>.
+The maximum gradient of the applied load/motions (and possibly gravity loads) will then equal
+<li>You can adjust the <i>Total length (in time) of ramp-up stage</i>.
+<li>You can specify a <i>Time with constant loads after ramp-up</i>.
+Usually zero is sufficient, but this can be used to allow the mechanism to approach a steady state
+with lower velocities/accelerations, before the actual load history is applied.
+</ol></p>
+
+<p>The Equilibrium iteration tolerance is the convergence criterion on the norm
+of the iterative displacement correction during the static equilibrium iterations
+(equivalent to the Scaled vector norm tolerance for Displacement iteration
+correction in the <a href="#Tolerances">Tolerances tab</a>).</p>
+
+<p>The Iteration step size limit is an upper limit on the norm of the
+displacement correction vector within one iteration. If the norm is higher
+than this value, the correction vector is scaled down such that its norm
+equals the specified value. Whenever this happens, the iteration counter that
+is compared to the Maximum and Minimum Number of Iterations parameters of the
+<a href="#Integration">Integration tab</a>, is reset to zero.</p>
+
+<p>The <i>Perform dynamic ramp-up of loads/motions</i> option is a tool which
+may be used for models with large initial external loads or prescribed motions,
+that can not be applied in full as in the initial static equilibrium iterations.
+With this option activated, the loads and motions at the start time will be scaled
+by a <a href="../properties/function.htm#smooth-trajectory">Smooth trajectory</a>
+function defined from the specified values.
+A dynamics (or quasi-static) simulation is then performed over the specified
+time span, in order to apply the initial loads over the given number of time steps
+before the actual time-history simulation starts.</p>
+
+<p>NOTE: Maximum and Minimum Number of Iterations set in the
+<a href="#Integration">Integration tab</a> also apply in the
+initial static equilibrium analysis.</p>
+
+<p>TIP: The defaults for the <i>Equilibrium Iieration tolerance</i> and
+<i>Iteration step size limit</i> are usually acceptable. However,
+if the mechanism is modeled far from the equilibrium position,
+reducing the Iteration step-size limit may improve performance.</p>
+
+<p>CAUTION: The Iteration step size limit must always be larger than the
+Equilibrium iteration tolerance.</p>
+
+<p>CAUTION: To perform the static equilibrium analysis, you may have to apply
+Additional Boundary Conditions on the <a href="../properties/triad.htm"> Triads</a>
+before starting the simulation. For instance, in all DOFs with only inertia
+(or damping) contribution and no stiffness, like unconstrained joint DOFs.</p>
+
+
+<h2><a name="Output">Output tab</h2>
+
+<p>On this tab you can control the automatic curve- and animation export from
+the Dynamics Solver to file. The automatic curve export is useful if you want
+to run FEDEM in an iterative loop with some external software, and need to
+process selected solver output in order to calculate new input for subsequent
+runs. The automatic animation export writes a GLview VTF-file with the rigid
+body motion of the computed response.
+This file may then be opened in the Ceetron GLview software for further viewing
+(see <a href="http://www.ceetron.com">ceetron.com</a>
+for further details on GLview).</p>
+
+<p><img src="../../img/dlg-solver-advanced6.png" width="328" height="464"></p>
+
+<p><ol>
+<li>The <i>Automatic curve export</i> toggle enables export of all curves
+in the model, which has <i>Export curve automatically</i> toggled on in the
+<a href="../properties/curve.htm">Curve</a> property panel.
+<li>The <i>File</i> field shows path and name of the file which the curve data
+will be written to.
+Press the <i>Browse...</i> button to change file name or format.
+<li>The <i>ASCII, tab separated</i> label below the <i>Browse...</i> button
+shows the selected file format for the curve export. Available formats are
+MTS RPC (UNIX or PC formatting), and tab-separated multi-column ASCII.
+</ol></p>
+
+<p>Only curves plotting results produced by the Dynamics Solver can be exported
+in this manner. If you need to include curves with results from other FEDEM
+solvers in the same output file (e.g., results from subsequent strain rosette
+analyses), you have to run the FEDEM Curve Export Utility module instead (see
+the User's Guide, "Automated curve export from multiple result database files").
+</p>
+
+<p><ol start="4">
+<li>The <i>Automatic export to GLview VTF file</i> toggle enables export of
+the rigid body motion of the computed response to a GLview VTF-file.
+<li>The <i>File</i> field shows path and name of the VTF-file that the
+animation will be written to.
+Press the <i>Browse...</i> button to change file name or format.
+Available formats are <i>Express</i>, <i>Binary</i> and <i>ASCII</i>,
+and the chosen format is shown in front of the <i>File</i> label.
+</ol></p>
+
+<p>CAUTION: When the automatic VTF export is enabled, the FE data for all parts
+in the model is written to the specified VTF file before the Dynamics Solver is
+started. For large models this may take some time (especially if the FE data is
+unloaded), and the FEDEM UI is blocked while the FE data is being exported.</p>
+
+<p><ol start="6">
+<li>You can enable/disable <i>Automatically start a simultaneous Rigid Body
+animation on solver start</i>. This is useful when doing rapid prototyping
+simulations of short duration, when it is essential to get quick feedback
+on the dynamic response.
+<li>You can enable/disable <i>Overwrite existing results, if any</i>.
+If enabled, you don't have to delete the existing results before starting the
+Dynamics Solver. Instead, the result files are overwritten and no incrementation
+of the results database is performed. This means that the old results are lost,
+even if you close the model without saving after a new simulation.
+</ol></p>
+
+</body>
+</html>

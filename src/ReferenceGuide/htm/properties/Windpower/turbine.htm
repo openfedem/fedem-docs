@@ -1,0 +1,75 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_properties_turbine"></a>
+Turbine</h1>
+
+<p>The Turbine object is a sub-assembly used to represent a wind turbine model in FEDEM.</p>
+
+<p>The Turbine sub-assembly with all its sub-components are created from the
+<a href="../../dialogbox/Windpower/turbine-definition.htm">Turbine Definition</a> dialog.
+In its model tree list, it typically contains a <a href="rotor.htm">Rotor</a>,
+a <a href="nacelle.htm">Nacelle</a> and a <a href="tower.htm">Tower</a>, which
+again contain further sub-components themselves.
+In addition, it contains some <a href="../beam-cross-section.htm">Beam cross section</a>s
+and <a href="../material.htm">Material</a>s used by the <a href="shaft.htm">Shaft</a>s,
+the Yaw <a href="../revolute-joint.htm">Revolute Joint</a> that connects the
+<a href="nacelle.htm">Nacelle</a> and <a href="tower.htm">Tower</a>,
+and a <a href="../free-joint.htm">Free Joint</a> connecting the tower to the ground.
+The latter is represented by a single <a href="../triad.htm">Triad</a> that may be
+reattached to a substructure, if the turbine model is to be placed on a flexible
+(or floating) foundation.</p>
+
+<p>Please see the chapter on "Wind Power Modeling" in the FEDEM User’s Guide,
+for more information on wind power modeling and simulation in FEDEM.</p>
+
+<p><img src="../../../img/prp/turbine-1.png"></p>
+
+<p>The figure above illustrates the Turbine properties,
+which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Mass</td><td>Displays the total mass of the turbine.</td></tr>
+<tr><td>Center of Gravity</td><td>Displays the location of the turbine's
+center of gravity, in either Global coordinates or in Local coordinates
+with respect to the origin of the turbine assembly.</td></tr>
+<tr><td>Position</td><td>Specifies the position of the the turbine assembly.</td></tr>
+<tr><td>Orientation</td><td>Specifies the orientation of the turbine assembly.</td></tr>
+<tr><td>Wind reference point</td><td>Specifies a <a href="../triad.htm">Triad</a>
+and a vertical offset that together define the reference point (origin) for the wind field.</td></tr>
+<tr><td>Advanced topology settings</td><td>Specifies some objects whose locations are required
+in the calculation of the aerodynamic forces on the turbine.</td></tr>
+</table></p>
+
+<p>Normally, there is no need to change the
+<i>Wind reference point</i> and <i>Advanced topology settings</i>.
+They are set automatically when generating a turbine model from the
+<a href="../../dialogbox/Windpower/turbine-definition.htm">Turbine Definition</a> dialog.
+However, sometimes the settings can become lost when modifying
+the components of the turbine. If you for example were to delete the
+tower of the turbine, you would see that the Reference triad and the
+Yaw point triad will be unassigned. If you later add a tower manually,
+you would have to reset these fields to proper values.</p>
+
+</body>
+</html>

@@ -1,0 +1,125 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+% Some useful macros for generating the Fedem Users Guide
+
+\def\IconText#1#2{
+ \hskip-25mm
+ \begin{minipage}{1.1\textwidth}
+  \begin{tabular}{p{0.1\textwidth} p{0.9\textwidth}}
+   \includegraphics[width=7mm]{Figures/Icons/#1} &
+   \raggedright\vskip-7mm #2
+  \end{tabular}
+ \end{minipage}}
+
+% Use this instead of \IconText when first paragraph in a section
+\def\IconTextFirst#1#2{
+ \vskip\parskip
+ \hskip\parindent
+ \IconText{#1}{#2}}
+
+\def\IconsText#1#2#3{
+ \hskip-28.4mm
+ \begin{minipage}{1.15\textwidth}
+  \begin{tabular}{p{0.03\textwidth} p{0.1\textwidth} p{0.85\textwidth}}
+   \includegraphics[width=7mm]{Figures/Icons/#1} &
+   \includegraphics[width=7mm]{Figures/Icons/#2} &
+   \raggedright\vskip-7mm #3
+  \end{tabular}
+ \end{minipage}}
+
+\def\IconTextFigure#1#2#3{
+ \hskip-20mm
+ \begin{minipage}{1.1\textwidth}
+  \begin{tabular}{p{0.1\textwidth} p{0.63\textwidth} p{0.25\textwidth}}
+   \includegraphics[width=7mm]{Figures/Icons/#1} &
+   \raggedright\vspace{-7mm} #2 &
+   \vspace{-7mm}\includegraphics[width=0.25\textwidth]{#3}
+  \end{tabular}
+ \end{minipage}}
+
+\def\GenericNote#1#2#3{
+ \hskip-25mm
+ \begin{minipage}{1.1\textwidth}
+  \begin{tabular}{p{0.1\textwidth} p{0.9\textwidth}}
+   \includegraphics[width=8mm]{Figures/#1} &
+   \raggedright\vskip-7mm\sl\textbf{#2}: #3
+  \end{tabular}
+ \end{minipage}}
+
+\def\GenericEnumNote#1#2#3{
+ \hskip-28.8mm
+ \begin{minipage}{1.1\textwidth}
+  \begin{tabular}{p{0.17\textwidth} p{0.83\textwidth}}
+   \includegraphics[width=8mm]{Figures/#1} &
+   \raggedright\vskip-7mm\sl\textbf{#2}: #3
+  \end{tabular}
+ \end{minipage}}
+
+% Even more generic, for use within minipages of various size
+\def\MiniGenericNote#1#2#3#4#5#6#7{
+ \hspace*{#3}
+ \begin{minipage}{#4\textwidth}
+  \begin{tabular}{p{#5\textwidth} p{#6\textwidth}}
+   \includegraphics[width=8mm]{Figures/#1} &
+   \raggedright\vskip-7mm\sl\textbf{#2}: #7
+  \end{tabular}
+ \end{minipage}}
+
+\def\Tip#1{\GenericNote{tip}{TIP}{#1}}
+\def\Note#1{\GenericNote{note}{NOTE}{#1}}
+\def\Warning#1{\GenericNote{warning}{WARNING}{#1}}
+\def\Important#1{\GenericNote{warning}{IMPORTANT}{#1}}
+\def\Caution#1{\GenericNote{caution}{CAUTION}{#1}}
+\def\EnumTip#1{\GenericEnumNote{tip}{TIP}{#1}}
+\def\EnumNote#1{\GenericEnumNote{note}{NOTE}{#1}}
+\def\EnumWarning#1{\GenericEnumNote{warning}{WARNING}{#1}}
+\def\EnumCaution#1{\GenericEnumNote{caution}{CAUTION}{#1}}
+
+\def\Chapter#1#2{\hypertarget{#2}{\chapter{#1}\label{#2}}}
+\def\Section#1#2{\hypertarget{#2}{\section{#1}\label{#2}}}
+\def\SubSection#1#2{\hypertarget{#2}{\subsection{#1}\label{#2}}}
+\def\SubSubSection#1#2{\hypertarget{#2}{\subsubsection{#1}\label{#2}}}
+
+\def\refAppendix#1#2{\protect\hyperlink{#1}{\sl Appendix~\ref{#1}, ''#2''}}
+\def\refChapter#1#2{\protect\hyperlink{#1}{\sl Chapter~\ref{#1}, ''#2''}}
+\def\refSection#1#2{\protect\hyperlink{#1}{\sl Section~\ref{#1}, ''#2''}}
+\def\refSubSection#1#2#3{\protect\hyperlink{#1}{\sl"#2"} in
+                         \protect\hyperlink{#3}{\sl Section~\ref{#3}}}
+
+\def\Registered{\textsuperscript{\textregistered}}
+
+\def\File#1{{\tt#1}}
+
+\def\Bullet#1{
+ \begin{picture}(10,10)
+  \put(5,5){\circle*{10}}
+  \put(2,2){\color{white}\tt#1}
+ \end{picture}}
+% Use this instead for double-digit bullets
+\def\BBullet#1{
+ \begin{picture}(10,10)
+  \put(5,5){\circle*{10}}
+  \put(1,3){\color{white}\tt\footnotesize#1}
+ \end{picture}}
+
+% Define environment bulletlist which uses bullets on the item numbers
+%---------------------------------------------------------------------
+\newcommand*\circled[1]{%
+ \tikz[baseline=(C.base)]
+ \node[fill=black,draw,circle,inner sep=1.2pt,line width=0.2mm,](C){
+  \color{white}\tt#1};}
+
+\newenvironment{bulletlist}{
+ \let\olditem\item
+ \renewcommand\item[1][]{
+  \stepcounter{enumi}
+  \olditem[\circled{\theenumi}]##1}
+ \renewcommand\subitem{\olditem[--]}
+ \begin{enumerate}
+ \setcounter{enumi}{0}}{
+ \end{enumerate}}
+%---------------------------------------------------------------------

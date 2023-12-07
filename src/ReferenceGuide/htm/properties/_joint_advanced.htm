@@ -1,0 +1,39 @@
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<h2><a name="Advanced"></a>Advanced tab</h2>
+
+<p><img src="../../img/prp/joint-6.png"</p>
+
+<p>The figure above shows the <i>Advanced</i> properties of the joint,
+which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Formulation</td><td>Alters the rotational formulation of the joint.
+The following choices are available:<br>
+- Sequential rotation, Follower axis - Euler angle parametrization.<br>
+- Sequential rotation, Orthogonal axis - Euler angle parametrization.<br>
+- Rotational vector - Singularity free Rodriguez parametrization.<br>
+See the FEDEM Theory Guide, Section 2.3 "Finite rotations"
+for further details on these choices. The Sequential rotation formulation
+may lead to singularities in the rotation update computations if the joint
+undergoes a 90 degrees rotation about the local Y-axis. If you have such
+behavior in the joint, you can use the <i>Rotational vector</i> formulation to
+achieve proper results.</td></tr>
+<tr><td>Sequence</td><td>Alters the update sequence of the Euler angle
+parameters. The default sequence is Z-Y-X.</td></tr>
+<tr><td>Spring inter-connectivity</td><td>Specifies how the (translational- and
+rotational) joint springs should be inter-connected (Cylindrical or Spherical
+coordinates). This can be used to describe the cylindrical or spherical behavior
+of rubber bushings, or pin joints with clearances. If you want the spring
+characteristics in the joint variables to be interpolated resulting in a
+cylindrical/spherical behavior, select the proper setting from the drop-down
+list. See the FEDEM Theory Guide, Section 5.1.1 "Interconnected Spring Elements"
+for details on how this affects the stiffness matrix.</td></tr>
+</table></p>

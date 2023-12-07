@@ -1,0 +1,107 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Introduction}
+
+\pagenumbering{arabic}
+
+Fedem, an abbreviation for Finite Element Dynamics in Elastic Mechanisms,
+is a code for effective modeling, simulation and visualization of finite element
+assemblies and control systems. The code is based on a non-linear finite element
+formulation, which predicts the dynamic response of elastic mechanisms
+experiencing non-linear effects such as large rigid-body rotations.
+The elastic and rigid-body motions of a mechanism are solved together
+with control systems. Fedem represents in this respect
+\textit{Multidisciplinary Mechanical Analysis}.
+
+This theory guide is intended to provide users and others with insight into
+the mathematical and physical basis of the numerical simulation code.
+
+\input{fedem_history}
+
+\section{System Simulation Methods}
+
+One method of System Simulation is the so-called Multi Body System Simulation, with which 
+the real physical behavior of the product under investigation can be reduced 
+to a few - for instance overall behavior relevant - characteristics and then 
+can be simulated as a numerical model on the computer. Each body is usually
+treated as completely rigid.
+
+The Finite Element Method is used for instance 
+for a vehicle to calculate fatigue, stiffness, dynamical behavior of the car 
+body, of chassis components, of engines.  
+The size and the shape of the Finite Elements are chosen according to the
+required accuracy of the results. For many years the Finite Element Method has 
+been a successful tool for product analysis with respect to 
+functionality and safety.
+
+New simulation tools are now commercially available, the so-called 
+Multi Discipline Simulation tools, which combine Multi Body System 
+Simulation, the Finite Element Method and Control Engineering. These 
+computer programs make a much more detailed modeling possible and 
+correspondingly yield much more accurate Multi Body System Simulation results.
+
+\section{Terminology and Definitions}
+
+Most of the terms and names used within Fedem is quite standard within Finite Element technology
+and dynamic simulation. However, over the years certain terms have evolved among users and
+developers of the software, to a point where the terminology has become an integral part of
+the software product. 
+
+\begin{itemize}
+
+\item[\bf DOF]
+Degree of Freedom. For the mechanism models of Fedem, a DOF is usually a translational
+or rotational degree of freedom. Regarding a control system a DOF is defined more broadly as
+simply an unknown of the equation system to be solved.
+
+\item[\bf Triad]
+Numerically a triad is simply a node with displacement DOFs. The term has
+been coined within the modeling frame to better to describe the modeling entity that eventually
+results in a node in the computational model. Because of its frequent use within the modeling
+vocabulary it has also come to be used synonymously with nodes within the numerical/theoretical
+vocabulary of Fedem.
+
+\item[\bf Link]
+Regarding numerical algorithms a link is a superelement. The element is linear within
+its corotated coordinate system. This term also has its background from the modeling
+side of Fedem and has since become a part of the theoretical vocabulary.
+
+\item[\bf Model]
+A model is defined as a more or less simplified representation 
+of a system. The model must represent the properties of a system being studied,
+as accurate as possible.
+
+\item[\bf Simulation]
+Imitation of certain properties of a (mechanical) system in a computational model.
+
+\item[\bf Kinematic simulation]
+Kinematic simulation refers to calculations of motion in a system 
+with no reference to forces and torques necessary to achieve this motion.
+
+\item[\bf Dynamic simulation]
+Dynamic simulation refers to the calculations of motion in a system 
+where both constraint forces and forces necessary to drive the system are 
+taken into account.
+
+\item[\bf Multi discipline dynamic simulation]
+The multi discipline dynamic simulation concept refers to a 
+simulation model where the overall system is modeled as a mechanism, the 
+parts are modeled as Finite Element substructures, and combined with a 
+possible control system, all is integrated in the same simulation model.
+A control system may include controllers, actuators and sensors (to model feedback loops).
+
+\item[\bf System simulation]
+The term system simulation incorporates the three terms 
+\textit{kinematic simulation}, \textit{dynamic simulation} and 
+\textit{multi discipline dynamic simulation} described above.
+\end{itemize}

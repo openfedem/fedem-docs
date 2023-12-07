@@ -1,0 +1,61 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_properties_ball-joint"></a>Ball Joint</h1>
+
+<p><img src="../../img/prp/prp-ball-joint-2.png"></p>
+
+<p>The Ball joint object is used to represent a Ball joint in a FEDEM model.
+The Ball joint has three degrees of freedom (DOFs) that allow rotation of one
+<a href="part.htm">Part</a> with respect to another Part about three axes.</p>
+
+<p>Each Ball joint uses two <a href="triad.htm">Triads</a>
+to connect the joint to Parts. One of the Triads is labeled <i>master</i>
+while the other one is labeled <i>slave</i>, with the constrained DOFs
+of the slave triad following the movement of the master triad.
+The three DOFs of the Ball joint are defined by the angles between
+the master triad and the slave triad in the x-, y-, and z-directions.
+See the FEDEM Theory Guide, Chapter 6 "Modeling of Joints".
+To determine which Triad is the master and which is the slave,
+select one of the Parts or the Ball joint itself to examine the
+<a href="../mainui/topology-view.htm">Topology panel</a> of master and slave
+triads connected to the Part or Ball joint. You can then select
+(click and hold down the mouse button) the master- or slave triad to highlight
+it in the <a href="../mainui/graphics-modeller.htm">Modeller</a> window.
+You may also interchange the master and slave triads in a Ball joint (unless
+its master triad also is a slave triad in another joint), by by clicking the
+<i>Swap Master and Slave Triad</i> button located underneath the
+ID and Topology panel.</p>
+
+<p>See the section on "Joints" in the "Mechanism Elements" chapter in the
+FEDEM User's Guide, for more information on Ball joints.</p>
+
+
+<h2><a name="Summary"></a>Summary tab</h2>
+
+<p><img src="../../img/prp/ball-joint-1.png"></p>
+
+<p>The figure above illustrates the property <i>Summary</i> of the Ball joint,
+which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>

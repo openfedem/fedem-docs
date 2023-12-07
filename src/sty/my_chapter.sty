@@ -1,0 +1,29 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+\renewcommand\chapter{\if@openright\cleardoublepage\else\clearpage\fi
+                    %\thispagestyle{plain}% 
+                    \setlength{\parindent}{0.2in}
+                    \global\@topnum\z@
+                    \@afterindentfalse
+                    \secdef\@chapter\@schapter
+                   }
+\def\@makechapterhead#1{%
+%  \vspace*{30\p@}%
+  {%\parindent \z@ \raggedright \normalfont
+    %\ifnum \c@secnumdepth >\m@ne
+      %\if@mainmatter
+        % \huge\bfseries \@chapapp\space \thechapter
+        % \hbox{\hbox to 0in{\hbox to -1in{}\hbox{\large\bfseries\@chapapp\ \thechapter}}%
+        % {\LARGE \bfseries #1}}\par\nobreak
+        %\vskip 10\p@
+      %\fi
+    %\fi
+    \interlinepenalty\@M
+     \hbox{\hbox to 0in{\hbox to -1.25in{}\mbox{\Large\bfseries\@chapapp\ \thechapter}}%
+     \parbox[t]{\textwidth}{\huge \bfseries #1}}\par\nobreak
+    \vskip 36\p@
+  }}

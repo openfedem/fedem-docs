@@ -1,0 +1,30 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%Filename: Ot1myr.fd
+%Written by Bjorn Haugen
+%THIS FILE SHOULD BE PUT IN A TEX INPUTS DIRECTORY
+\ProvidesFile{ot1myr.fd}
+        [1998/03/27 v2.5g Standard LaTeX font definitions]
+\DeclareFontFamily{OT1}{myr}{}
+\DeclareFontShape{OT1}{myr}{b}{n} {<->myrib___}{}
+\DeclareFontShape{OT1}{myr}{b}{it}{<->myribi__}{}
+\DeclareFontShape{OT1}{myr}{m}{n} {<->myrir___}{}
+\DeclareFontShape{OT1}{myr}{m}{it}{<->myrii___}{}
+\DeclareFontShape{OT1}{myr}{m}{sl}{<->myrit___}{}
+
+\DeclareFontShape{OT1}{myr}{m}{sc}{<->ssub * myr/m/n}{}
+\DeclareFontShape{OT1}{myr}{b}{sc}{<->ssub * myr/b/n}{}
+\DeclareFontShape{OT1}{myr}{b}{sl}{<->ssub * myr/b/it}{}
+\DeclareFontShape{OT1}{myr}{bx}{n}{<->ssub * myr/b/n}{}
+\DeclareFontShape{OT1}{myr}{bx}{sc}{<->ssub * myr/b/n}{}
+\DeclareFontShape{OT1}{myr}{bx}{it}{<->ssub * myr/b/it}{}
+\DeclareFontShape{OT1}{myr}{b}{ui}{<->sub * myr/b/it}{}
+\DeclareFontShape{OT1}{myr}{bx}{ui}{<->ssub * myr/b/it}{}
+\DeclareFontShape{OT1}{myr}{bx}{sl}{<->ssub * myr/b/it}{}
+\DeclareFontShape{OT1}{myr}{m}{ui}{<->sub * myr/m/it}{}
+
+\endinput

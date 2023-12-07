@@ -1,0 +1,223 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_properties_curve"></a>Curve</h1>
+
+<p>The Curve object is used to represent a set of data points
+which can be plotted as a curve in a two-dimensional graph view.
+The data points can be simulation results, calculated from explicit functions,
+or read from a specified file.
+The most commun use of Curve objects is to plot simulation results against time
+as the simulation evolves, or to plot them after the simulation has finished
+in a post-processing session.</p>
+
+<p>See the chapter on "Postprocessing Results" chapter in the FEDEM User's
+Guide, for more information on creating and manipulating Curves.</p>
+
+<h2><a name="Data"></a>Data tab</h2>
+
+<p><img src="../../img/prp/prp-curve-1.png"></p>
+<p><img src="../../img/prp/curve-2.png" width="689"></p>
+<p><img src="../../img/prp/curve-3.png" width="689"></p>
+<p><img src="../../img/prp/curve-4.png" width="689"></p>
+
+<p>The figures above illustrate the <i>Data</i> properties for the Curve,
+which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Legend</td><td> Specifies the legend
+to be used for the curve in the graph view.</td></tr>
+<tr><td>Auto legend</td><td> Enables automatic generation
+of the legend text based on the curve definition.</td></tr>
+<tr><td>Source</td><td>
+Chooses the type of data source for the curve.</td></tr>
+<tr><td>X Axis</td><td>
+Defines the x-axis data source for a <i>From RDB</i> curve.</td></tr>
+<tr><td>Y Axis</td><td>
+Defines the y-axis data source for a <i>From RDB</i> curve.</td></tr>
+<tr><td>Export curve automatically</td><td>
+Enables automatic export of this curve when the simulation is finished.
+<tr><td>Function of A,B,C</td><td>
+Specifies a mathematical expression with up to 10 variables
+(named A,B,...,J) for a <i>Combined curve</i>.
+Each variable represents another Curve.
+The expression obeys the same syntax rules as for
+<a href="function.htm#math-expression">Math expression Functions</a>.</td></tr>
+<tr><td>A: / B:</td><td>Specify the Curves
+to be represented by each variable in a <i>Combined curve</i>.
+The number of such fields is automatically set depending on the number of
+variables in the mathematical expression.</td></tr>
+<tr><td>File</td><td>Displays the data file name
+when the curve is plotting data <i>From file</i>.</td></tr>
+<tr><td>Browse...</td><td>
+Selects the data file to use for a <i>From file</i> curve.</td></tr>
+<tr><td>Reload</td><td>Reloads the curve data <i>From file</i>.
+Use this button if you change the content of the file while the graph view
+plotting the file is open.</td></tr>
+<tr><td>Column/channel</td><td>
+Displays the name of the selected named channel (or column) if the chosen file
+contains multiple channels.</td></tr>
+<tr><td>Select...</td><td>
+Specifies which channel or column to read data from, if the chosen file
+contains multiple channels/columns.</td></tr>
+<tr><td>Start x / Stop x</td><td>
+Specifies the end points of the argument domain, if the curve is plotting an
+<i>Internal function</i>.</td></tr>
+<tr><td>Increment</td><td>Specifies a constant sampling rate
+for the <i>Internal function</i> to be plotted.</td></tr>
+<tr><td>Auto Increment</td><td>Enables automatic detection
+of the curve point resolution, depending on the type of the
+<i>Internal function</i> to be plotted.</td></tr>
+<tr><td>Function</td><td>
+Specifies the <i>Internal function</i> to be plotted.</td></tr>
+</table></p>
+
+<h2><a name="Appearance"></a>Appearance tab</h2>
+
+<p><img src="../../img/prp/prp-curve-2.png"></p>
+
+<p>The figure above illustrates the <i>Appearance</i> properties of the Curve,
+which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Curve type</td><td>
+Specifies the visualization style for the curve (Lines, Dots, or Invisible).
+</td></tr>
+<tr><td>Curve thickness</td><td>
+Specifies the thickness level of the curve (0 to 4).</td></tr>
+<tr><td>Curve color</td><td>
+Specifies the color of the curve from a set of pre-defined colors.</td></tr>
+<tr><td>Symbol type</td><td>
+Specifies the symbol to be displayed at each data point in the curve.</td></tr>
+<tr><td>Symbol size</td><td>
+Specifies the size of the symbol.</td></tr>
+</table></p>
+
+<h2><a name="Curve-Statistics"></a>Curve Statistics tab</h2>
+
+<p><img src="../../img/prp/prp-curve-3.png"></p>
+
+<p>The figure above illustrates the <i>Curve Statistics</i> properties
+of the Curve, which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Calculate</td><td>
+Click this button to recalculate the statistics of the curve data.</td></tr>
+<tr><td>RMS</td><td>Displays the root mean square.</td></tr>
+<tr><td>Mean</td><td>Displays the mean value.</td></tr>
+<tr><td>Std. dev.</td><td>Displays the standard deviation.</td></tr>
+<tr><td>Integral</td><td>Displays the integrated value
+(i.e., the area under the curve).</td></tr>
+<tr><td>Max</td><td>Displays the maximum value.</td></tr>
+<tr><td>Min</td><td>displays the minimum value.</td></tr>
+<tr><td>Use scaled/shifted</td><td>
+Enables the use of the <a href="#Scale and Shift">Scale and Shift</a> values
+when calculating the curve statistics.</td></tr>
+<tr><td>X Axis Domain</td><td> Specifies the start and stop points
+of the X-axis domain to be used in the calculations.
+The <i>Entire</i> button enables the use of all data points of the curve.
+</td></tr>
+</table></p>
+
+<h2><a name="Scale-and-Shift"></a>Scale and Shift tab</h2>
+
+<p><img src="../../img/prp/prp-curve-4.png"></p>
+
+<p>The figure above illustrates the <i>Scale and Shift</i> properties of the
+Curve, which consist of the following items for each of the two axes:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Scale</td><td>
+Specifies a scaling factor for the curve data values.</td></tr>
+<tr><td>Shift values to zero</td><td>
+Enables a constant shift of the data values such that the first curve point
+has a zero value.</td></tr>
+<tr><td>Additional shift</td><td>
+Specifies a constant shift to be applied in addition to the zero-out
+operation, if enabled.</td></tr>
+</table></p>
+
+<h2><a name="Fourier-Analysis-and-Differentiation"></a>
+Fourier Analysis and Differentiation tab</h2>
+
+<p><img src="../../img/prp/prp-curve-5.png"></p>
+
+<p>The figure above illustrates the <i>Fourier Analysis and Differentiation</i>
+properties of the Curve, which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>On/Off</td><td>
+Enables the replacement of the plotted curve by its discrete Fourier transform.
+This option is avalable only if the curve uses Physical time on its X axis.
+</td></tr>
+<tr><td>Time domain</td><td>
+Specifies the time domain to be used in the Fourier transformation.</td></tr>
+<tr><td>No 0 Hz component</td><td>
+Enables cancellation of the zero Hz component in the Fourier transform.
+</td></tr>
+<tr><td>Use sample rate</td><td>
+Specifies the sampling rate to be used in the Fourier transformation,
+in case the curve data points  have a non-uniform distribution in time.
+</td></tr>
+<tr><td>Differentiate</td><td>
+Enables the replacement of the plotted curve by its derivative.</td></tr>
+<tr><td>Integrate</td><td>
+Enables the replacement of the plotted curve by its integral.</td></tr>
+</table></p>
+
+<h2><a name="Rainflow-and-Fatigue"></a>Rainflow and Fatigue tab</h2>
+
+<p><img src="../../img/prp/prp-curve-6.png"></p>
+
+<p>The figure above illustrates the <i>Rainflow and Fatigue</i> properties
+of the Curve, which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Standard</td><td>
+Specifies the fatigue standard to be used for the calculations.</td></tr>
+<tr><td>S-N curve</td><td>
+Specifies the S-N curve from the specified standard.</td></tr>
+<tr><td>Stress range threshold</td><td>
+Specifies the smallest stress range magnitude that will be accounted for
+in the stress cycle counting (rainflow analysis).</td></tr>
+<tr><td>Damage</td><td>
+Displays the calculated damage value.</td></tr>
+<tr><td>Life</td><td>
+Displays the calculated life value.</td></tr>
+<tr><td>Life unit</td><td>
+Specifies the units for the displayes life value (Repeats, Hours or Days).
+</td></tr>
+<tr><td>Time Interval</td><td>
+Specifies the time domain to be used in the Fatigue calculation.</td></tr>
+<tr><td>Show rainflow</td><td>Enables the replacement of the plotted curve
+by the results of the rainflow analysis, showing the magnitudes of the stress
+ranges that are the basis of the subsequent damage calculation.</td></tr>
+</table></p>
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+/* SPDX-FileCopyrightText: 2023 SAP SE
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * This file is part of FEDEM - https://openfedem.org
+ */
+BODY
+{
+    FONT-SIZE: x-small;
+    MARGIN: 0px 0px 24px;
+    FONT-FAMILY: Tahoma, 'Times New Roman'
+}
+H1
+{
+    FONT-SIZE: medium;
+    TEXT-INDENT: 8pt
+}
+H5
+{
+}
+P
+{
+    MARGIN: 8pt 8px 8px 24px
+}
+A
+{
+    COLOR: #0d0733
+}
+H2
+{
+    FONT-SIZE: small;
+    MARGIN: 8px 8px 8px 24px;
+    PADDING-TOP: 16px
+}
+H3
+{
+    FONT-SIZE: x-small;
+    MARGIN: 8px 8px 8px 24px;
+    PADDING-TOP: 16px
+}
+LI
+{
+    PADDING-BOTTOM: 8px
+}
+A:hover
+{
+    COLOR: #3399cc
+}
+PRE
+{
+    MARGIN: 8pt 8px 8px 48px
+}
+TABLE
+{
+    FONT-SIZE: x-small;
+    FONT-FAMILY: Tahoma, 'Times New Roman'
+}
+TR
+{
+}
+.md
+{
+    FONT-SIZE: 10pt;
+    FONT-WEIGHT: bold;
+}
+.mdname
+{
+    FONT-SIZE: 10pt;
+    FONT-WEIGHT: bold;
+}
+.mdname1
+{
+    FONT-SIZE: 10pt;
+    FONT-WEIGHT: bold;
+}

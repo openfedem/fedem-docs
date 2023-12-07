@@ -1,0 +1,92 @@
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="Dialog Box Reference">
+	<param name="ImageNumber" value="1">
+	</OBJECT>
+	<UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="General Modeling">
+		<param name="ImageNumber" value="1">
+		</OBJECT>
+		<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Event Definition">
+			<param name="Local" value="htm\dialogbox\event-definition.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Fatigue Summary">
+			<param name="Local" value="htm\dialogbox\fatigue-summary.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Model Export">
+			<param name="Local" value="htm\dialogbox\dt-export.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Model Preferences">
+			<param name="Local" value="htm\dialogbox\model-preferences.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Object Browser">
+			<param name="Local" value="htm\dialogbox\object-browser.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Solver Advanced">
+			<param name="Local" value="htm\dialogbox\solver-advanced.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Solver Basic">
+			<param name="Local" value="htm\dialogbox\solver-basic.htm">
+			</OBJECT>
+		</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Marine Modeling">
+		<param name="ImageNumber" value="1">
+		</OBJECT>
+		<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Beamstring Pair Definition">
+			<param name="Local" value="htm\dialogbox\marine\beamstring-pair-definition.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Sea Environment">
+			<param name="Local" value="htm\dialogbox\marine\sea-environment.htm">
+			</OBJECT>
+		</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Windpower Modeling">
+		<param name="ImageNumber" value="1">
+		</OBJECT>
+		<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Aerodynamic Setup">
+			<param name="Local" value="htm\dialogbox\windpower\aerodynamic-setup.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Airfoil Definition">
+			<param name="Local" value="htm\dialogbox\windpower\airfoil-definition.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Blade Definition">
+			<param name="Local" value="htm\dialogbox\windpower\blade-definition.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Turbine Definition">
+			<param name="Local" value="htm\dialogbox\windpower\turbine-definition.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Turbine Tower">
+			<param name="Local" value="htm\dialogbox\windpower\turbine-tower.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Turbulent Wind">
+			<param name="Local" value="htm\dialogbox\windpower\3d-turbulent-wind.htm">
+			</OBJECT>
+		</UL>
+	</UL>

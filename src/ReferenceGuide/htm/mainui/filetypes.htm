@@ -1,0 +1,228 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_mainui_filetypes"></a>
+File Types and Usage</h1>
+
+<p>FEDEM uses three main types of files: input, intermediate, and results files.
+FEDEM files have an ASCII text or Binary (platform-independent) format,
+a common tag syntax, and use intuitive naming conventions.</p>
+
+<p><table border="1" bgcolor="#ffffe0"><tr><td>
+Please note that the installation program may only set up a limited number of
+file associations in Windows by default (typically FMM-files only), depending
+on which product edition or installer you are using. You can install all file
+associations by choosing "Tools | Set File Associations" on the menu in FEDEM
+(requires Run as administrator mode).</td></tr></table></p>
+
+<h2>Input files</h2>
+
+<p>FEDEM uses several types of input files to import FE models, existing
+mechanism models, and simulation data as listed in the following table.</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Ext.:</b></td><td><b>File type:</b></td><td><b>Data:</b></td><td><b>Format:</b></td></tr>
+<tr><td>.fmm</td>
+	<td>FEDEM Mechanism Model file</td>
+	<td>Mechanism Model description</td>
+	<td>ASCII</td></tr>
+<tr><td>.ftl</td>
+	<td>FEDEM Technology Link file</td>
+	<td>FE model data</td>
+	<td>ASCII</td></tr>
+<tr><td>.ftc</td>
+	<td>FEDEM Technology Cad file</td>
+	<td>Cad geometry data</td>
+	<td>ASCII</td></tr>
+<tr><td>.nas<br>.bdf</td>
+	<td>Nastran Bulk Data File</td>
+	<td>FE model data</td>
+	<td>ASCII</td></tr>
+<tr><td>.flm</td>
+	<td>FEDEM Link Model (used by previous FEDEM versions)</td>
+	<td>FE model data</td>
+	<td>ASCII</td></tr>
+<tr><td>.dac</td>
+	<td>nCode DAC file</td>
+	<td>Time history data</td>
+	<td>Binary</td></tr>
+<tr><td>.asc<br>.txt</td>
+	<td>ASCII text file</td>
+	<td>Time history data (xy-paired coordinates)</td>
+	<td>ASCII</td></tr>
+<tr><td>.rsp<br>.drv<br>.tim</td>
+	<td>MTS RPC file</td>
+	<td>Time history data</td>
+	<td>Binary</td></tr>
+<tr><td>.tpf</td>
+	<td>TNO Tire file</td>
+	<td>Tire model description</td>
+	<td>ASCII</td></tr>
+<tr><td>.tir</td>
+	<td>COSIN Tire file</td>
+	<td>Tire model description</td>
+	<td>ASCII</td></tr>
+<tr><td>.rdf</td>
+	<td>Road property file</td>
+	<td>Road description</td>
+	<td>ASCII</td></tr>
+</table><br>&nbsp;</p>
+
+
+<h2>Intermediate files</h2>
+
+<p>FEDEM uses the following intermediate files to store
+analysis options and simulation data from the analyses.</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Ext.:</b></td><td><b>File type:</b></td><td><b>Format:</b></td></tr>
+<tr><td>.fsi</td>
+	<td>FEDEM Solver Input file</td>
+	<td>ASCII</td></tr>
+<tr><td>.fco</td>
+	<td>FEDEM Calculation Options file. Changes to files of this type affect the calculated results.</td>
+	<td>ASCII</td></tr>
+<tr><td>.fop</td>
+	<td>FEDEM Output Options file. Changes to files of this type do not affect the calculated results.</td>
+	<td>ASCII</td></tr>
+<tr><td>.fao</td>
+	<td>FEDEM Additional Options file</td>
+	<td>ASCII</td></tr>
+<tr><td>.fsm</td>
+	<td>FEDEM SAM data file</td>
+	<td>Binary</td></tr>
+<tr><td>.fmx</td>
+	<td>FEDEM Matrix file</td>
+	<td>Binary</td></tr>
+</table><br>&nbsp;</p>
+
+
+<h2>Results files</h2>
+
+<p>The following table lists the results file types.</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Ext.:</b></td><td><b>File type:</b></td><td><b>Format:</b></td></tr>
+<tr><td>.frs</td>
+	<td>FEDEM results database file</td>
+	<td>Binary</td></tr>
+<tr><td>.res</td>
+	<td>FEDEM results output file.</td>
+	<td>ASCII</td></tr>
+</table><br>&nbsp;</p>
+
+
+<h2>Other files</h2>
+
+<p>The following table lists all other file types used by FEDEM.</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Ext.:</b></td><td><b>File type:</b></td><td><b>Format:</b></td></tr>
+<tr><td>.fcd</td>
+	<td>FEDEM unit conversion file</td>
+	<td>ASCII</td></tr>
+<tr><td>.fsn</td>
+	<td>FEDEM S-N curves file</td>
+	<td>ASCII</td></tr>
+</table><br>&nbsp;</p>
+
+
+<h1>File usage for each program module</h1>
+
+<p>The table below is an overview of FEDEM file usage.</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>FEDEM application:</b></td><td><b>Uses these file types:</b></td><td><b>Creates these file types:</b></td></tr>
+<tr><td>User Interface</td>
+	<td>FE data files (.ftl, .nas, .bdf, .FEM, .flm)<br>
+	CAD geometry files (.wrl, .ftc)<br>
+	Time history data files (.asc, .txt, .dac, .rsp, .drv, .tim) – optional<br>
+	Tire description files (.tpf,.tir) – optional<br>
+	Unit conversion file (.fcd)	– optional<br>
+	FEDEM results files (.frs)<br>
+	S-N curve definition file (.fsn)</td>
+	<td>Model file (.fmm)<br>
+	FE data files (.ftl)<br>
+	CAD geometry files (.ftc)<br>
+	Solver input files (.fsi)<br>
+	Solver control files (.fco, .fop, .fao)</td></tr>
+<tr><td>FEDEM Reducer (FE model reduction)</td>
+	<td>FE data file (.ftl)<br>
+	Solver control files (.fco, .fop, .fao)</td>
+	<td>Matrix files (stiffness, mass, gravitation, loads, component modes, recovery) (.fmx)<br>
+	Data structure file	(.fsm)<br>
+	Result files (.frs)<br>
+	ASCII results (.res)</td></tr>
+<tr><td>FEDEM Solver (dynamics solver)</td>
+	<td>Solver input file (.fsi)<br>
+	Solver control files (.fco, .fop, .fao)<br>
+	Matrix files (stiffness, mass, gravitation,	loads) (.fmx)<br>
+	Time history data files (.asc, .txt, .dac, .rsp, .drv, .tim) – optional<br>
+	Tire description files (.tpf, .tir)	– optional<br>
+	Road description files (.rdf) – optional<br>
+	CAD geometry files (.ftc) – optional<br>
+	Solver result files (.frs) – optional, in case of restart</td>
+	<td>FEDEM results files	(time history response,	frequency response)	(.frs)<br>
+	ASCII results (.res)</td></tr>
+<tr><td>FEDEM Stress (stress recovery)</td>
+	<td>Solver input file (.fsi)<br>
+	Solver control files (.fco, .fop, .fao)<br>
+	Matrix files (recovery, component modes) (.fmx)<br>
+	Data structure file (.fsm)<br>
+	FE data file (.ftl)<br>
+	Solver result files (.frs)</td>
+	<td>Result files (.frs)<br>
+	ASCII results (.res)</td></tr>
+<tr><td>FEDEM Modes (eigenmode recovery)</td>
+	<td>Solver input file (.fsi)<br>
+	Solver control files (.fco, .fop, .fao)<br>
+	Matrix files (recovery, component modes) (.fmx)<br>
+	Data structure file (.fsm)<br>
+	FE data file (.ftl)<br>
+	Solver result files (.frs)</td>
+	<td>Result files (.frs)<br>
+	ASCII results (.res)</td></tr>
+<tr><td>FEDEM Gage (strain rosette recovery)</td>
+	<td>Solver input files (.fsi)<br>
+	Solver control files (.fco, .fop, .fao)<br>
+	Rosette input files (.ros, .dat)<br>
+	Matrix files (recovery, component modes) (.fmx)<br>
+	Data structure file (.fsm)<br>
+	FE data file (.ftl)<br>
+	Solver results files (.frs)</td>
+	<td>Result files (.frs)<br>
+	ASCII results (.res, .asc)<br>
+	DAC time history files (.dac)</td></tr>
+<tr><td>FEDEM FPP (strain coat recovery)</td>
+	<td>Solver input file (.fsi)<br>
+	Solver control files (.fco, .fop, .fao)<br>
+	Matrix files (recovery, component modes) (.fmx)<br>
+	Data structure file (.fsm)<br>
+	FE data file (.ftl)<br>
+	Solver result files (.frs)<br>
+	S-N curve definition file (.fsn) – optional</td>
+	<td>Result files (.frs)<br>
+	ASCII results (.res)</td></tr>
+</table></p>
+	
+</body>
+</html>

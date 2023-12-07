@@ -1,0 +1,80 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_properties_beam"></a>Beam</h1>
+
+<p>The Beam object is used to to represent a two-noded beam finite element
+in a FEDEM model. The Beam is connected to a <a href="triad.htm">Triad</a>
+at each end of the element. However, an arbitrary number of beam elements may
+be connected in one Triad, such that it is possible to represent both a curved
+(or straight) beamstring and 3D spaceframe structures.</p>
+
+<p><img src="../../img/prp/beam-1.png" width="692" height="156"></p>
+
+<p>The figure above illustrates the Beam properties, which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Cross-section</td><td>This pull-down list enables the selection of the
+<a href="beam-cross-section.htm">Beam cross section</a> to be used for this beam element.</td></tr>
+<tr><td>Mass and Length</td><td>Displays the length and the total mass
+of the beam element. The length is computed from the coordinates of the
+end triads, and the mass is computed from the length, and the cross
+section area and mass density, assigned via the cross section object.
+These fields are updated automatically if any of the referred property
+objects are changed.</td></tr>
+<tr><td>Visualize 3D</td><td>This toggle enables a 3D visualization of
+the beam, using the cross section parameters to render its actual geometry.
+The default visualization is a straigth line connecting the two triads,
+with coloring depending on the referred cross section object.
+The <i>Start</i> and <i>Stop</i> fields are used to specify a sector of partial 3D visualization.
+They define the start and stop angles (in degrees), relative to the local
+Y-axis of the cross section, of the sector that is to be rendered in 3D.</td></tr>
+<tr><td>Structural Damping</td><td>Allows you to change the values of
+the mass- and stiffness-proportional damping for the Beam.
+These fields are equivalent to similar fields in the
+<a href="part.htm#Part">Part tab</a> of the Part property panel.</td></tr>
+<tr><td>Scaling of Dynamic Properties</td><td>Allows you to scale
+stiffness and mass of each individual Beam in the dynamics simulation.
+These fields are equivalent to similar fields in the
+<a href="part.htm#Part">Part tab</a> of the Part property panel.</td></tr>
+<tr><td>Local Z-axis definition</td><td>These three fields allow you to specify
+a vector defining the Z-axis of the local coordinate system of the beam element.
+This vector is defined in the coordinate system of the parent
+<a href="sub-assembly.htm">Subassembly</a> of the Beam, or in the global
+coordinate system in case of no parent assembly.
+The local Y-axis is then defined as the cross product between the Z-axis
+and the local X-axis, the latter being the unit vector from end 1 towards end 2 of the element.<br>
+NOTE: If the specified vector is parallel to the local X-axis, or if all fields are zero,
+a globalized coordinate system is used instead in which the local Z-axis is chosen to be as close as possible to the global Z-axis.
+</td></tr>
+</table></p>
+
+<p><table border="1" bgcolor="#ffffe0"><tr><td>
+<b>Important:</b> Be careful when modifying the Beam properties when multiple beams are selected.
+FEDEM will assign the values in the property panel to all the selected items.
+You should therefore not set Visualize 3D on multiple beams by multiselecting them,
+since it will then change all properties of all selected beams.
+</td></tr></table></p>
+
+</body>
+</html>

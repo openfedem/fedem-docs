@@ -1,0 +1,95 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_dialogbox_airfoil-definition"></a>Airfoil Definition</h1>
+
+<p>The purpose of the Airfoil Definition dialog box is to study and modify
+a set of Airfoils, which are used in the <a href="blade-definition.htm">Blade Definition</a>
+dialog box to define the blades of wind turbine model. An Airfoil is basically a cross
+section of the blade where the different aerodynamic properties are specified.</p>
+
+<p><img src="../../../img/dlg-airfoil-definition.png" width="570" height="459"></p>
+
+<p>FEDEM WindPower uses the same airfoil file format as AeroDyn.
+The Airfoil dialog box is thus simply an editor for such files.
+See the <a href="https://nwtc.nrel.gov/AeroDyn13">AeroDyn documentation</a>
+for information on this file format.</p>
+
+<p>A set of sample Airfoils (provided by NREL) is included with the FEDEM Windpower
+package (see the Properties\AeroData sub-folder of the installation).
+In some projects, the user may be less concerned with the blade designs,
+and most of these Airfoils will be sufficient. But, in other projects,
+the user may wish to provide their own Airfoils.<p>
+
+<p>On the left side of the Airfoil definition dialog box, some global definitions are given:<ul>
+
+<li><i>Name</i> -
+Provides the name of the Airfoil file.
+
+<li><i>Number of airfoil tables in this file</i> -
+Airfoil files are designed so that they can contain many airfoils.
+The Airfoil file in the figure above contains a single Airfoil table.
+
+<li><i>Table ID parameter</i> -
+Provides an identifier for each Airfoil table.
+
+<li><i>Stall angle [deg]</i> -
+Provides the stall angle (in degrees).
+
+<li><i>Zero C<sub>n</sub> angle of attack [deg]</i> -
+Provides the zero-lift angle-of-attack of the AirFoil.
+Only used for Beddoes dynamic stall model.
+
+<li><i>C<sub>n</sub> slope for zero lift (dimensionless)</i> -
+Provides the static Cn curve slope near zero lift.
+
+<li><i>C<sub>n</sub> extrapolated to value at positive stall angle of attack</i> -
+Provides the C<sub>n</sub> value at positive static stall.
+This is the nominal stall for positive and increasing angles-of-attack.
+
+<li><i>Cn at stall value for negative angle of attack</i> -
+Provides the C<sub>n</sub> value at the negative static stall angle of attack.
+
+<li><i>Angle of attack for minimum C<sub>D</sub>[deg]</i> -
+Provides the angle of attack for the minimum drag coefficient.
+<li><i>Minimum C<sub>D</sub> value</i> -
+Provides the minimum drag coefficient of the AirFoil.</ul>
+
+On the right side of the Airfoil definition dialog box,
+The Airfoil table data (lift and drag coefficients) is given:
+
+<p><ul>
+<li><i>alpha</i> - This is the angle of attack.
+The table must be written in order of increasing angle of attack.
+It is preferable to use a table for angles in the range -180 to +180 degrees.
+The coefficient values should be the same at -180 and +180 degrees to avoid discontinuity.
+
+<li><i>CL</i> - Static lift coefficient.
+<li><i>CD</i> - Drag coefficient.
+<li><i>CM</i> - Pitching moment coefficient.
+
+</ul></p>
+
+<p>The <i>Add Row</i> and <i>Delete Row</i> buttons can be used to add and remove rows in the table.</p>
+
+</body>
+</html>

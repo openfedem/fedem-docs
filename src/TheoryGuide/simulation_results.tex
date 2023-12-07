@@ -1,0 +1,308 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Simulation Results}
+
+\iftoggle{publicedition}{}{% The following is for the in-house edition only.
+
+\section{Primary simulation variables}
+
+The primary simulation variables are the supernode orientation and position,
+the supernode translational and rotational velocity and acceleration,
+and the current superelement transformation matrix.
+Variables from the control simulation (the control variables), and the joint
+variables are also primary variables in the simulation.
+
+The orientation and position of the supernodes are represented as a $(3\times4)$
+transformation matrix (see \eqsref{eq:posDef}{eqSC:Png}):
+%
+\begin{equation}
+{\mf P}_{NG} \;=\; \left[ \begin{array}{*{20}c}
+R_{11} & R_{12} & R_{13} & p_x \\
+R_{21} & R_{22} & R_{23} & p_y \\
+R_{31} & R_{32} & R_{33} & p_z \\
+\end{array} \right] \;=\; \left[ \begin{array}{cccc}
+{\mf i}_x & {\mf i}_y & {\mf i}_z & {\mf p}
+\end{array}\right]
+\label{eqK43:1}
+\end{equation}
+%
+where ${\mf i}_x$, ${\mf i}_y$, and ${\mf i}_z$ are unit vectors in the $x$-,
+$y$-, and $z$-directions, respectively, of the supernode coordinate system, and
+the vector ${\mf p}$ represents the position of supernodes, all of which are
+referred to in the global coordinate system.
+The three unit vectors represent the direction cosine matrix, which uniquely
+defines the orientation in space.
+
+The supernode velocities are presented by two Cartesian vectors, one of which
+represents the translational velocity, and one the rotational velocity relative
+to the global coordinate system as shown below:
+%
+\begin{equation}
+\left[\begin{array}{c} {\mf v_t} \\ {\mf v_r} \end{array}\right] \;=\;
+\left[\begin{array}{cccccc}
+v_{tx} & v_{ty} & v_{tz} & v_{rx} & v_{ry} & v_{rz}
+\end{array}\right]^T
+\label{eqK43:2}
+\end{equation}
+%
+where
+%
+\begin{namelist}{$\quad{\mf v_r}$}
+\item[$\quad{\mf v_t}$] represents the translational velocity vector, and
+\item[$\quad{\mf v_r}$] represents the rotational velocity vector
+(angular velocity).
+\end{namelist}
+
+The supernode accelerations are similarly presented as two Cartesian vectors
+relative to the global coordinate system as shown below:
+%
+\begin{equation}
+\left[\begin{array}{c} {\mf a_t} \\ {\mf a_r} \end{array}\right] \;=\;
+\left[\begin{array}{cccccc}
+a_{tx} & a_{ty} & a_{tz} & a_{rx} & a_{ry} & a_{rz}
+\end{array}\right]^T
+\label{eqK43:3}
+\end{equation}
+%
+where
+%
+\begin{namelist}{$\quad{\mf a_r}$}
+\item[$\quad{\mf a_t}$] represents the translational acceleration vector, and
+\item[$\quad{\mf a_r}$] represents the rotational acceleration vector
+(angular acceleration).
+\end{namelist}
+
+The magnitudes for the modal supernode displacement, velocity, and acceleration,
+which represent fixed interface superelement modes of vibration
+(described in Section~\ref{secCMS:FixeIntMode}), are presented in a similar way
+to that of ordinary supernodes, with the exception that there are a variable
+number of DOFs per supernode.
+The variables for a modal supernode may be written:
+%
+\begin{equation}
+\left[\begin{array}{ccc}
+{\mf y} & \dot{\mf y} & \ddot{\mf y} \end{array}\right] \;=\;
+\left[ \begin{array}{*{20}c}
+y_1 & \dot{y}_1 & \ddot{y}_1 \\
+y_2 & \dot{y}_2 & \ddot{y}_2 \\
+\vdots & \vdots & \vdots \\
+y_n & \dot{y}_n & \ddot{y}_n
+\end{array} \right]
+\label{eqK43:4}
+\end{equation}
+%
+where
+%
+\begin{namelist}{$\quad\ddot{\mf y}$}
+\item[$\quad{\mf y}$]      is the modal supernode displacement magnitude,
+\item[$\quad\dot{\mf y}$]  is the modal supernode velocity magnitude, and
+\item[$\quad\ddot{\mf y}$] is the modal supernode acceleration magnitude.
+\end{namelist}
+
+The superelement position and orientation are represented as a $(3\times4)$
+transformation matrix (see \eqsref{eq:posDef}{eqK43:1}):
+%
+\begin{equation}
+{\mf P}_{SG} \;=\; \left[ \begin{array}{*{20}c}
+R_{11} & R_{12} & R_{13} & o_x \\
+R_{21} & R_{22} & R_{23} & o_y \\
+R_{31} & R_{32} & R_{33} & o_z \\
+\end{array} \right] \;=\; \left[\begin{array}{cccc}
+{\mf i}_x & {\mf i}_y & {\mf i}_z & {\mf o} \end{array}\right]
+\label{eqK43:5}\end{equation}
+%
+where the unit vectors ${\mf i_x}$, ${\mf i_y}$ and ${\mf i_z}$ represent the
+orientation of the superelement coordinate system, while ${\mf o}$ represents
+the origin's position in the superelement coordinate system.
+
+As previously stated, control variables are also primary simulation variables.
+The control variables are defined as input, state, and algebraic variables.
+
+\section{Derived simulation variables}
+
+The following simulation variables are derived from the primary variables:
+%
+\begin{itemize}
+\item   Spring variables
+\item   Damper variables
+\item   Forces and torques
+\end{itemize}
+
+A spring element is a uniaxial or a joint spring and has three variables:
+The spring length/angle; the spring deflection from the stress-free position;
+and the spring force/torque.
+The spring length of a uniaxial spring is calculated from the position of the
+two end nodes.
+In case of joint springs, the spring length or angle refers to a joint variable.
+Subtracting the specified stress-free length/angle of the spring from the
+calculated length/angle of the spring gives the spring deflection.
+In the general nonlinear case, the spring force/torque is found by integrating
+the spring stiffness over the spring deflection.
+
+A damper element is a uniaxial or joint damper and has three variables:
+The damper length/angle; the damper relative velocity;
+and the damper force/torque.
+The damper length of uniaxial dampers is calculated from the position of
+the two end nodes.
+In case of joint dampers, the damper length or angle refers to a joint variable.
+Damper velocity for uniaxial dampers is calculated from the end node velocities.
+Denoting the global coordinates of the two end points of the damper as
+%
+\begin{equation}
+{\mf p}_1 \;=\;
+\left[ \begin{array}{*{20}c} x_1 \\ y_1 \\ z_1 \end{array} \right]
+\quad\text{and}\quad
+{\mf p}_2 \;=\;
+\left[ \begin{array}{*{20}c} x_2 \\ y_2 \\ z_2 \end{array} \right]
+\label{eqK43:6}
+\end{equation}
+%
+the damper unit direction vector is calculated from
+%
+\begin{equation}
+{\mf e}_{12} \;=\; \frac{{\mf p}_2 - {\mf p}_1}{\|{\mf p}_2 - {\mf p}_1\|}
+\label{eqK43:7}
+\end{equation}
+%
+The relative velocity for these two points may be calculated from
+%
+\begin{equation}
+{\mf v}_{12} \;=\;
+\left[ \begin{array}{*{20}c}
+\dot{x}_1 \\ \dot{y}_1 \\ \dot{z}_1
+\end{array} \right] -
+\left[ \begin{array}{*{20}c}
+\dot{x}_2 \\ \dot{y}_2 \\ \dot{z}_2
+\end{array} \right]
+\label{eqK43:8}
+\end{equation}
+%
+and the damper velocity is then calculated from the scalar product
+%
+\begin{equation}
+{\mf v}_D \;=\; {\mf e}_{12}^T {\mf v}_{12}
+\label{eqK43:9}
+\end{equation}
+%
+In the case of joint dampers, the damper velocity refers directly to a joint
+variable velocity.
+The damper force/torque is found by multiplying the damping coefficient by the
+damper velocity.
+
+For calculation of superelement node forces and torques, refer to the stiffness
+relation of \eqnref{eqSC:forceLocal}, see Section~\ref{sec:SupElIntForce}.
+The forces are transformed to global direction and added into the system vector.
+This system vector is then used to present the nodal forces and torques in
+relation to a global coordinate system.
+Joint forces and torques are found on the corresponding master or slave DOFs
+of the joint, and based on the superelement forces from deformation,
+\eqnref{eqSC:forceLocal}, combined with the contributions from inertia
+and damping, we get:
+%
+\begin{equation}
+\tilde{\mf f}_e \;=\;
+\tilde{\mf k}_e \tilde{\mf v}_d +
+\tilde{\mf c}_e \dot{\tilde{\mf v}} +
+\tilde{\mf m}_e \ddot{\tilde{\mf v}}
+\label{eqSR:TotalSupElForce}
+\end{equation}
+
+\section{Substructure retracking}
+
+The co-rotated superelement formulation developed in
+Chapter~\ref{chap:SupElCorot} shows the derivation of the superelement
+deformation vector for an external node, \eqnref{eqSC:nodeDefDisp}.
+The modal coordinates ${\mf y}$ are primary integration variables;
+and the superelement deformation vectors for all external nodes and modal
+coordinates are given by \eqnref{eqSC:supelDefDisp}.
+
+The inverse CMS transformation gives
+%
+\begin{equation}
+\label{eqK43:10}
+\eqalign{
+{\mf v}_i \;=\; & {\mf v}_i^i + {\mf v}_i^e \cr
+            =\; & {\mf B} {\mf v}_e + {\tf \Phi}{\mf y}
+}
+\end{equation}
+%
+and the expanded substructure displacement vector may be written
+%
+\begin{equation}
+{\mf v} \;=\;
+\left[ \begin{array}{c} {\mf v}_e \\ {\mf v}_i \end{array} \right] \;=\;
+{\mf H} \left[ \begin{array}{c} {\mf v}_e \\ {\mf y} \end{array} \right]
+\label{eqK43:11}
+\end{equation}
+%
+(see \eqnref{eqCMS:Hdef}).
+
+Nodal displacements for substructure primary element $j$ may now be extracted
+from the substructure displacement vector:
+%
+\begin{equation}
+{\mf u}_j \;=\; {\mf A}_j {\mf v}
+\label{eqK43:13}
+\end{equation}
+%
+where
+%
+\begin{namelist}{${\mf u}_j$}
+\item[${\mf u}_j$] represents the displacement vector of primary element $j$
+in the substructure,
+\item[${\mf A}_j$] is the incidence matrix that represents the topology
+for primary element $j$ in the substructure, and
+\item[${\mf v}$] is the substructure displacement vector of \eqnref{eqK43:10}.
+\end{namelist}
+
+\section{Finite element stress analysis}
+
+The strain field within a finite element is expressed by the nodal DOFs
+${\mf u}$ and a set of interpolation polynomials.
+For instance, for a membrane finite element:
+%
+\begin{equation}
+{\mf\varepsilon}(x,y) \;=\; \bar{\mf B}(x,y)\,{\mf u}
+\label{eqK43:17}
+\end{equation}
+%
+where
+%
+\begin{namelist}{$\quad\bar{\mf B}$}
+\item[$\quad{\tf\varepsilon}$] is the element strain vector, and
+\item[$\quad\bar{\mf B}$]      is the strain interpolation matrix,
+\end{namelist}
+%
+The stress is then according to Hooke's Law:
+%
+\begin{equation}
+{\tf\sigma} \;=\; {\mf C} {\tf\varepsilon}
+\label{eqK43:18}
+\end{equation}
+%
+where
+%
+\begin{namelist}{$\quad{\mf E}$}
+\item[$\quad{\tf\sigma}$] is the element stress vector, and
+\item[$\quad{\mf C}$] is the constitutive matrix.
+\end{namelist}
+%
+For further details, refer to textbooks on the finite element method.
+
+\input{strain_gages}
+} % End in-house edition only
+\input{fatigue_analysis}
+\iftoggle{publicedition}{}{% The following is for the in-house edition only.
+\input{eigenvalue_problem}
+} % End in-house edition only
+\input{energy_calc}

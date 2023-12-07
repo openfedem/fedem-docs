@@ -1,0 +1,100 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_addons_casingfls"></a>
+Casing FLS</h1>
+
+<p>Casing FLS is used to calculate fatigue along a string of pipes in FEDEM, like 
+for example a casing. The application can calculate single-run fatigue or 
+statistical fatigue from several simulations made with the Multi-Event setup in 
+FEDEM:</p>
+
+<p>There are 3 steps involved with performing the analysis:</p>
+
+
+<p><b>1. Generate a list of hotspots (HS) along the pipestring in the FEDEM model.</b></p>
+
+<p>Specify the top triad of the pipestring and click the traverse button to perform the 
+traversal. The application will try to connect to the running instance of FEDEM on your 
+computer. Next, a list of hotspot will be generated for each endpoint of a pipe (beam 
+element). If 2 joining endpoints have the same OD and ID, only one hotspot list item is 
+created. If the dimensions differ, 2 separate hotspots are created, one for each pipe 
+dimension.</p>
+
+
+<p><b>2. Rainflow</b></p>
+
+<p>The rainflow counting will find and store all stress ranges for each hotspot. 
+The stress is nominal pipe stress on outer wall.</p>
+
+<p><i>Gate value:</i> Stress ranges below this value, specified in units of Mpa, are not stored. 
+This saves computational time and storage. The gate value should be selected so that 
+omitting values below do no influence fatigue significantly.</p>
+
+<p><i>Moment axis:</i> This refer to one of the 2 short axis of the pipe, local coordinate system. 
+Multiaxial will calculate stress at several points around the circumference. Specify the 
+number of discrete points to use.</p>
+
+<p><i>Histogram:</i> Histogram data are more suited for visualization than rainflow counts. You can 
+create an annual histogram of stress ranges (i.e. scaled to a 365 day period). Histogram 
+data for all hotspots are listed in the output. If you do not fill in the "Max" field, then 
+a max value will be calculated for each Hotspot. The max value will be rounded upwards to 
+the nearest one digit whole number (e.g. 399 becomes 400). If you fill in the "Max" field, 
+then this max value will be used for all Hotspots. Note: The histogram settings do not 
+influence the damage calculations.</p>
+
+
+<p><b>3. Damage</b></p>
+
+<p>Damage calculation is done on basis of stress ranges from the rainflow counting, based on 
+the settings in the parameter table.</p>
+
+<p><b>Note:</b> The S-N curve standards available in the pull-down menu are defined in the file 
+sn_curves.fsn located in the installation directory of Fedem. The syntax of the S-N curve 
+definitions is description in the header of this file, and it is possible to add your own 
+S-N curve definitions to that file.</p>
+
+
+<p><b>Results listings:</b></p>
+
+<p><i>Damage period:</i> The basic results are for the given time interval defined by Start time and 
+Stop time. By selecting a different time frame, results are scaled accordingly.</p>
+
+<p><i>Data to list:</i></p>
+
+<p><i>&nbsp;&nbsp;&nbsp;Weighted damage:</i> One line for each hotspot. One column for each line in the parameter list. 
+Damage for all events is weighted with the event probability and summed up.</p>
+
+<p><i>&nbsp;&nbsp;&nbsp;Separate damage for each event:</i> One line for each hotspot. One column for each event. 
+Damage is not weighted with probability. The S-N and SCF used depend on the selected 
+line in the parameter list.</p>
+
+<p><i>&nbsp;&nbsp;&nbsp;Damage for each angle:</i> One line for each hotspot. One column for each angle. 
+Weighted damage for all events. The S-N and SCF used depend on the selected line in the parameter list.</p>
+
+
+<p><b>Search path for sn_curves.fsn:</b></p>
+<p>If edited versions of these two files are located in the home-directory of the user profile, 
+they are loaded instead of the default files located in the installation folder.</p>
+
+</body>
+</html>

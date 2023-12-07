@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<!-- Sitemap 1.0 -->
+</HEAD><BODY>
+<UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="beamstring">
+		<param name="Local" value="htm\dialogbox\beamstring-pair-definition.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="event">
+		<param name="Local" value="htm\dialogbox\event-definition.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="fedem">
+		<param name="Local" value="htm\introduction\default.htm">
+		<param name="Local" value="htm\introduction\whatsnew.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="fatigue">
+		<param name="Local" value="htm\dialogbox\fatigue-summary.htm">
+		<param name="Local" value="htm\dialogbox\solver-advanced.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="sea environment">
+		<param name="Local" value="htm\dialogbox\sea-environment.htm">
+		<param name="Local" value="htm\properties\vessel-motion.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="topology">
+		<param name="Local" value="htm\mainui\topology-view.htm">
+		<param name="Local" value="htm\mainui\default.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="solver">
+		<param name="Local" value="htm\dialogbox\solver-basic.htm">
+		<param name="Local" value="htm\dialogbox\solver-advanced.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="turbulent wind">
+		<param name="Local" value="htm\dialogbox\windpower\3d-turbulent-wind.htm">
+		<param name="Local" value="htm\dialogbox\windpower\aerodynamic-setup.htm">
+		<param name="Local" value="htm\dialogbox\windpower\airfoil-definition.htm">
+		<param name="Local" value="htm\dialogbox\windpower\blade-definition.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="windpower">
+		<param name="Local" value="htm\dialogbox\windpower\3d-turbulent-wind.htm">
+		<param name="Local" value="htm\dialogbox\windpower\aerodynamic-setup.htm">
+		<param name="Local" value="htm\dialogbox\windpower\airfoil-definition.htm">
+		<param name="Local" value="htm\dialogbox\windpower\blade-definition.htm">
+		<param name="Local" value="htm\dialogbox\windpower\turbine-definition.htm">
+		<param name="Local" value="htm\dialogbox\windpower\turbine-tower.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="windpower properties">
+		<param name="Local" value="htm\properties\windpower\blade.htm">
+		<param name="Local" value="htm\properties\windpower\gearbox.htm">
+		<param name="Local" value="htm\properties\windpower\generator.htm">
+		<param name="Local" value="htm\properties\windpower\nacelle.htm">
+		<param name="Local" value="htm\properties\windpower\rotor.htm">
+		<param name="Local" value="htm\properties\windpower\shaft.htm">
+		<param name="Local" value="htm\properties\windpower\tower.htm">
+		<param name="Local" value="htm\properties\windpower\turbine.htm">
+		</OBJECT>
+</UL>
+</BODY></HTML>

@@ -1,0 +1,67 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_mainui_graphics-modeller"></a>Graphics Modeller</h1>
+
+<p>The Graphics Modeller is used to interactively view, select and modify objects.</p>
+
+<p>You can navigate the 3D model view with the following main operations:<p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Operation:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></td><td><b>Description:</b></td></tr>
+<tr><td>Pan view</td><td>Press and hold the F1 key on the keyboard, while moving the mouse
+	over the view to pan the view in the x/y-plane of the view.</td></tr>
+<tr><td>Zoom view</td><td>Press and hold the F2 key on the keyboard, while moving the mouse
+	over the view to zoom the view along the z-axis of the view. You can alternatively roll
+	the middle mouse button to zoom as well. The Z-key will also zoom the view.</td></tr>
+<tr><td>Rotate view</td><td>Press and hold the middle mouse button. If you do this on the
+	center part of the view, it will rotate the view around the x- and y-axis of the view.
+	If you do this at the edge of the view, it will rotate around the z-axis of the view.
+	You can alternatively press and hold the F3 key (instead of the middle mouse button).
+	Further, you can also rotate the view by using the arrow keys, in combinaton with the
+	Alt key for rotation around the z-axis.</td></tr>
+<tr><td>Center on object</td><td>Press and hold F4 while clicking on an object to select
+	and zoom to that object. This will set the rotation center for the view.</td></tr>
+</table></p>
+
+<h2>Snapping</h2>
+<p>When selecting objects in your model, the selection automatically snaps to a point on
+the object such as the nearest node on an FE part, the center point of a joint, and so on.
+This makes your selection quick and accurate.</p>
+
+<h2>Multiple selection</h2>
+<p>Some FEDEM commands, such as Smart Move and Delete, allow you to select several items
+at once. To select more than one item, press and hold down the Ctrl key and then click
+the items you want to add to your selection.</p>
+
+<h2>Selection history</h2>
+<p>FEDEM maintains a history of the items you select in the current session. This history
+can be accessed using the Select Backward and Select Forward commands.</p>
+
+<h2>Co-located items</h2>
+<p>Sometimes several items in a model are located very close together or on top of each
+other; in FEDEM, these are called co-located items. To select a co-located item, click
+the same spot several times to cycle through the items. FEDEM cycles from the item closest
+to the viewer to the one furthest from the viewer.</p>
+
+</body>
+</html>

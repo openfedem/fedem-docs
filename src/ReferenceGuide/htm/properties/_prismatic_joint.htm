@@ -1,0 +1,58 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_properties_prismatic-joint"></a>Prismatic Joint</h1>
+
+<p><img src="../../img/prp/prp-prismatic-joint-2.png"></p>
+
+<p>The Prismatic joint object is used to represent a Prismatic joint in a FEDEM model.
+
+<p>A Prismatic joint consists of a slave triad sliding along a straight path
+defined by two or more master triads. The local coordinate system of the joint
+is defined with its z-axis directed along the slide path. The x- and y-axes
+are defined from the coordinate systems of the master triads.
+</p>
+
+<p>The Prismatic joint has three unconstrained DOFs, but only a single DOF
+(the slider variable, i.e., the distance from the first master to the slave
+triad in the direction of the local z-axis) with property settings that allows
+you to control the translational displacement of the slave triad.
+Rotation is constrained about the z-axis, but not in the other two directions
+(the slave triad can rotate about the local x- and y-axes independently of the
+masters triads).Two prismatic joints can be combined to make a stiff
+translating connection, by attaching the master triads for the two joints to
+the same FE nodes (in the same order) and attaching the two slave triads to
+the same FE part but on different nodes.</p>
+
+<p>See the section on "Joints" in the "Mechanism Elements" chapter in the
+FEDEM User's Guide, for more information on Prismatic joints.</p>
+
+
+<h2><a name="Summary"></a>Summary tab</h2>
+
+<p><img src="../../img/prp/prismatic-joint-1.png"></p>
+
+<p>The figure above illustrates the property <i>Summary</i> of the Prismatic joint,
+which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>

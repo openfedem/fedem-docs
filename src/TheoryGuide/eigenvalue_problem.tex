@@ -1,0 +1,355 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Eigenvalue results}
+
+The general eigenvalue problem may be written
+%
+\begin{equation}
+{\mf A}{\mf x} = \lambda{\mf B}{\mf x} \quad\text{or}\quad
+({\mf A} -\lambda{\mf B}){\mf x} = {\mf 0}
+\label{eqEIG:Def}
+\end{equation}
+%
+where $\mf A$ and $\mf B$ need not necessarily be positive definite
+or symmetrical.
+
+\subsection{Undamped eigenvalue problem}
+
+The second order differential equation governing free undamped vibration of the
+discretized system can be written
+%
+\begin{equation}
+{\mf M}\ddot{\mf v} + {\mf K}{\mf v} = {\mf 0}
+\label{eqEIG:DiffUndamped}
+\end{equation}
+%
+Assuming a solution of the form ${\mf v}(t) = {\mf v}_\lambda e^{\lambda_u t}$
+gives
+%
+\begin{equation}
+{\mf v}(t) \;=\; {\mf v}_{\lambda} e^{\lambda_u t}, \quad
+\dot{\mf v}(t) \;=\; \lambda_u{\mf v}_{\lambda} e^{\lambda_u t}, \quad
+\ddot{\mf v}(t) \;= \lambda_u^2{\mf v}_{\lambda} e^{\lambda_u t}
+\label{eqEIG:AssumedSol}
+\end{equation}
+%
+Substituting into \eqnref{eqEIG:DiffUndamped} gives
+%
+\begin{equation}
+\left({\mf K} + \lambda_u^2 {\mf M}\right) {\mf v}_{\lambda} \;=\; {\mf 0}
+\label{eqEIG:Undamp1}
+\end{equation}
+%
+or
+%
+\begin{equation}
+\left({\mf A} - \lambda{\mf B}\right){\mf x}_{\lambda} \;=\; {\mf 0}
+\quad\text{where}\quad
+\left\{\begin{array}{l}
+{\mf A} \;=\; {\mf K} \\
+{\mf B} \;=\; {\mf M} \\
+\lambda \;=\; -\lambda_u^2 \quad\Rightarrow\quad \lambda_u = \sqrt{-\lambda}
+\end{array}\right.
+\label{eqEIG:Undamp2}
+\end{equation}
+%
+When both $\mf A$ and $\mf B$ are positive definite, one will have positive
+eigenvalues $\lambda$, and thus purely imaginary values for $\lambda_u$;
+in other words, $\lambda_u = \text{i}\,\omega$.
+In addition, because $\mf A$ and $\mf B$ are symmetrical, the eigenvectors
+${\mf x}_{\lambda}$ are real.
+
+The general solution of \eqsref{eqEIG:DiffUndamped}{eqEIG:Undamp2}
+can then be written as
+%
+\begin{equation}
+{\mf v}(t) \;=\; {\mf v}_{\lambda} e^{\text{i}\,\omega t} \;=\;
+{\mf v}_{\lambda} \left(\cos\omega t + \text{i}\sin\omega t\right)
+\label{eqEIG:UndampSolution}
+\end{equation}
+%
+where the circle frequency $\omega$ is given by $\omega = \sqrt{\lambda}$.
+
+\subsubsection{Animation of the eigenvectors}
+
+The real and imaginary parts of the solution above are solutions of the original
+homogeneous \eqnref{eqEIG:DiffUndamped}.
+However, when animating the eigenvector, the real part of the solution of
+\eqnref{eqEIG:UndampSolution} is displayed.
+For example:
+%
+\begin{equation}
+{\mf v}(t) \;=\; {\mf v}_{\lambda} \cos\omega t
+\label{eqEIG:UndampAnimation}
+\end{equation}
+
+
+
+\subsection{Damped eigenvalue problem}
+
+The second order differential equation governing free damped vibration of the
+discretized system can be written
+%
+\begin{equation}
+{\mf M}\ddot{\mf v} + {\mf C}\dot{\mf v}+ {\mf K}{\mf v} \;=\; {\mf 0}
+\label{eqEIG:DiffDamped}
+\end{equation}
+%
+Assuming a solution on the form ${\mf v}(t) = {\mf v}_{\lambda} e^{\lambda_d t}$
+gives
+%
+\begin{equation}
+{\mf v}(t) \;=\; {\mf v}_{\lambda} e^{\lambda_d t}, \quad
+\dot{\mf v}(t) \;=\; \lambda_d{\mf v}_{\lambda} e^{\lambda_d t}, \quad
+\ddot{\mf v}(t) \;=\; \lambda_d^2{\mf v}_{\lambda} e^{\lambda_d t}
+\label{eqEIG:AssumedSol2}
+\end{equation}
+%
+and substituting into \eqnref{eqEIG:DiffDamped} gives
+%
+\begin{equation}
+\left({\mf K} + \lambda_d{\mf C} + \lambda_d^2{\mf M}\right){\mf v}_{\lambda}
+\;=\; {\mf 0}
+\label{eqEIG:Damp1}
+\end{equation}
+%
+which cannot be cast directly into the form of \eqnref{eqEIG:Def}
+unless the damping matrix $\mf C$ is given by Rayleigh damping:
+${\mf C} = \alpha{\mf K} + \beta{\mf M}$
+(see Section~\ref{sec:RayleighDamping}).
+
+For a general damping matrix, the $n$-dimensional second order system of
+\eqnref{eqEIG:DiffUndamped} can be cast into a first order system of dimension
+$2n$ by introducing
+%
+\begin{equation}
+{\mf u} \;= \left[\begin{array}{c} {\mf v} \\ \dot{\mf v} \end{array}\right]
+\label{eqEIG:uDef}
+\end{equation}
+%
+Equation~\eqref{eqEIG:uDef} allows a number of different ways of writing
+\eqnref{eqEIG:DiffUndamped} as a first order equation; but to
+preserve possible symmetry, the canonical form is chosen:
+%
+\begin{equation}
+{\mf A u} - {\mf B}\dot{\mf u} \;=\; {\mf 0} \quad\text{where}\quad
+\left\{\begin{array}{l}
+{\mf A} \;= \left[\begin{array}{cc} {\mf K} & {\mf 0} \\ {\mf 0} & {\mf -M}
+            \end{array}\right] \\[5mm]
+{\mf B} \;= \left[\begin{array}{cc} {\mf -C} & {\mf -M} \\ {\mf -M} & {\mf 0}
+            \end{array}\right]
+\end{array}\right.
+\label{eqEIG:Canonical}
+\end{equation}
+%
+Assuming the solution on the form ${\mf u} = {\mf u}_\lambda e^{\lambda_d t}$
+gives
+%
+\begin{equation}
+{\mf u} \;=\; {\mf u}_\lambda e^{\lambda_d t}, \quad
+\dot{\mf u} \;=\; \lambda_d{\mf u}_\lambda e^{\lambda_d t}
+\label{eqEIG:AssumedSol3}
+\end{equation}
+%
+and the first order eigenvalue problem has the familiar standard form
+%
+\begin{equation}
+\left({\mf A} - \lambda_d{\mf B}\right){\mf u}_\lambda \;=\; {\mf 0}
+\label{eqEIG:FirstOrderEig}
+\end{equation}
+%
+In general, the solution of the damped eigenvalue problem above has
+complex eigenvalues $\lambda_d$ and complex eigenvectors ${\mf u}_\lambda$:
+%
+\begin{equation}
+\lambda_d \;=\; \mu + \text{i}\omega \qquad\text{and}\qquad
+{\mf u}_\lambda \;=\; {\mf u}_{\Re} + \text{i}{\mf u}_{\Im} \;=
+\left[\begin{array}{c}{\mf v}_{\Re} \\ \dot{\mf v}_{\Re} \end{array}\right] +
+\text{i}\left[\begin{array}{c}{\mf v}_{\Im} \\ \dot{\mf v}_{\Im} \end{array}\right]
+\label{eqEIG:EigSolDamp}
+\end{equation}
+%
+The imaginary part $\omega$ signifies circle frequency, as in the undamped
+problem; whereas the real part $\mu$ represents the damping of the eigenmode.
+This value is (usually) a negative number, and tells at what rate the amplitude
+of the free vibration will decrease.
+
+A positive-values $\mu$ signifies an unstable system in which the amplitude
+is increasing.
+This can happen with axially loaded structures in which the axial load
+is higher than the critical buckling load.
+This gives a negative definite stiffness matrix and possible negative damping.
+
+A negative-valued $\mu$ without an accompanying $\omega$, such as a real
+eigenvalue, signifies a critically damped mode.
+
+\subsubsection{Animation of complex eigenvectors}
+
+Extracting the $n$ dimensional vector ${\mf v}_\lambda$ from the solution
+\eqnref{eqEIG:AssumedSol3} and combining it with \eqnref{eqEIG:EigSolDamp} gives
+%
+\begin{equation}
+\label{eqEIG:DampedSol}
+\eqalign{{\mf v}(t)
+\;=\; & e^{\lambda_d t}{\mf v}_\lambda
+\;=\; e^{(\mu + \text{i}\omega)t}{\mf v}_\lambda
+\;=\; e^{\mu t} e^{\text{i}\omega t} ({\mf v}_{\Re} + \text{i}{\mf v}_{\Im}) \cr
+  =\; & e^{\mu t}(\cos\omega t + \text{i}\sin\omega t)
+                 ({\mf v}_{\Re} + \text{i}{\mf v}_{\Im}) \cr
+  =\; & e^{\mu t}\left[({\mf v}_{\Re}\cos\omega t - {\mf v}_{\Im}\sin\omega t) +
+          \text{i}({\mf v}_{\Im}\cos\omega t +{\mf v}_{\Re}\sin\omega t)\right]}
+\end{equation}
+%
+As in the undamped case, the real part of the solution is selected for animation
+of the eigenvalue and eigenvector:
+%
+\begin{equation}
+{\mf v}_{\Re}(t) \;=\;
+e^{\mu t}({\mf v}_{\Re}\cos\omega t - {\mf v}_{\Im}\sin\omega t)
+\end{equation}
+
+\subsubsection{Diagonalizing the damped eigenvalue problem}
+
+Having calculated a set of eigenvectors, ${\mf u}_{\lambda_i}$, the canonical
+form~\eqref{eqEIG:Canonical}, the quadratic expression~\eqref{eqEIG:Damp1},
+or the original differential \eqnref{eqEIG:DiffUndamped} can be diagonalized.
+Of primary interest is diagonalizing the mass, stiffness
+and damping matrices of \eqsref{eqEIG:Damp1}{eqEIG:DiffDamped}:
+%
+\begin{eqnarray}
+m_i &=& \bar{\mf v}_{\lambda_i}^T {\mf M}{\mf v}_{\lambda_i} \nonumber \\
+c_i &=& \bar{\mf v}_{\lambda_i}^T {\mf C}{\mf v}_{\lambda_i} \\
+k_i &=& \bar{\mf v}_{\lambda_i}^T {\mf K}{\mf v}_{\lambda_i} \nonumber
+\label{eq:modalMCK}
+\end{eqnarray}
+%
+where $\bar{\mf v}_{\lambda_i}$ is the complex conjugate of ${\mf v}_{\lambda_i}$.
+In other words:
+%
+\begin{equation}
+{\mf v} \;=\; {\mf v}_{\Re} + \text{i}{\mf v}_{\Im}
+\quad\text{and}\quad
+\bar{\mf v} \;=\; {\mf v}_{\Re} - \text{i}{\mf v}_{\Im}
+\end{equation}
+
+
+\subsection{Calculating damping ratios}
+
+Once the eigenvalues and eigenvectors have been calculated,
+one can calculate damping ratios for the different eigenmodes.
+For a single-DOF system with mass $m$, stiffness $k$ and damping $c$,
+one has the undamped eigenvalue given by
+%
+\begin{equation}
+\omega \;=\; \sqrt{\frac{k}{m}}
+\end{equation}
+
+For a system with damping one can show that no true vibration will occur when
+the damping $c$ is sufficiently high; called critical damping $c_\textit{cr}$.
+In this case the dynamic motion will be an asymptotic motion to the static
+equilibrium position.
+The critical damping is given by
+%
+\begin{equation}
+c_\textit{cr} \;=\; 2 m \omega %= 2 m \sqrt{\frac{k}{m}} = 2 \sqrt{k m}
+\end{equation}
+
+The critical damping is a convenient reference point for describing
+the amount of damping in a system.
+This is done by defining the damping ratio
+%
+\begin{equation}
+\xi \;=\; \frac{c}{c_\textit{cr}} = \frac{c}{2 m \omega}
+\end{equation}
+%
+This is often given in percent (\%) of the critical damping.
+
+\subsubsection{Based on damped eigenvalue problem}
+
+The eigenvectors ${\mf v}_{\lambda_i}$ for each eigenmode $i$ of the damped
+system will diagonalize the mass, stiffness, and damping matrix
+as given by \eqnref{eq:modalMCK}.
+This gives the damping ratio for eigenmode $i$ as
+%
+\begin{equation}
+\xi_i \;=\; \frac{c_i}{c_{\textit{cr}_i}} = \frac{c_i}{2 \sqrt{k_i m_i}}
+\end{equation}
+
+\subsubsection{Based on undamped eigenvalue problem}
+
+The eigenvectors ${\mf v}_{\lambda_i}$ for each eigenmode $i$ of the undamped
+system will diagonalize the mass matrix, i.e. create the modal mass
+%
+\begin{equation}
+m_i \;=\; {\mf v}_{\lambda_i}^T {\mf C}{\mf v}_{\lambda_i}
+\label{eq:modalMass}
+\end{equation}
+
+An approximate damping coefficient can be calculated based on the
+same eigenvector
+%
+\begin{equation}
+c_i \;\approx\; {\mf v}_{\lambda_i}^T {\mf C}{\mf v}_{\lambda_i}
+\label{eq:approxDampingCoeff}
+\end{equation}
+%
+which gives an approximate damping ratio
+%
+\begin{equation}
+\xi_i \;\approx\; \frac{c_i}{2 m_i \omega_i} = \frac{c_i}{2\sqrt{k_i m_i}}
+\end{equation}
+
+Note that if the damping matrix constitutes Rayleigh damping, see
+Section~\ref{sec:RayleighDamping}, the damping ratios calculated above are exact.
+For damping ratios $\ll 1$ the approximation is very good
+also for a more general damping matrix.
+
+
+\subsection{Using shift when solving the eigenvalue problem}
+
+To improve the convergence of the iterations, or to find eigenvalues in the
+neighborhood of a particular value, a \textit{shift} can be applied to the
+initial eigenvalue problem.
+The eigenvalue problem $({\mf K} - \lambda {\mf M}){\mf v} = {\mf 0}$ may be
+written as the equivalent expression
+%
+\begin{equation}
+\left( \hat{\mf K} - \hat{\lambda}{\mf M} \right) {\mf v} \;=\; {\mf 0}
+\quad\text{where}\quad
+\hat{\mf K} \;=\; {\mf K} - \mu{\mf M}
+\label{eqK25:21}
+\end{equation}
+%
+and $\mu$ is the shift value.
+The modified eigenvalues $\hat{\lambda}_i$ are given by the relation
+%
+\begin{equation}
+\hat{\lambda}_i \;=\; \lambda_{i} - \mu
+\end{equation}
+%
+where $\lambda_i$ represents the eigenvalues and  the eigenvectors are the same
+as those in the original eigenvalue problem.
+
+Matrix $\hat{\mf K}$ must be invertible.
+If, for instance, the original $\mf K$ is not positive definite, as is the case
+with a free structure, a negative shift can be applied that makes the matrix
+$\hat{\mf K}$ positive definite.
+This makes it possible to find the zero frequency (rigid body) modes of a free
+system, as well as the other lowest eigenvalues and eigenvectors.
+
+The iteration procedure for eigenvalue solvers, such as Lanczos and sub-space
+iterations, converges toward a set of eigenvectors that have corresponding
+eigenvalues closest to $\mu$, which are a set of eigenvalues with
+$\hat{\lambda}_i=\lambda_i-\mu$ and the smallest absolute value.
+This procedure can be used to add desired generalized modes around a particular
+frequency for the CMS-reduction of Chapter~\ref{chap:CMS}.

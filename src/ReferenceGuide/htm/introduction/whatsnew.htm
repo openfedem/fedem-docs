@@ -1,0 +1,544 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_introduction_whatsnew"></a>
+What's New</h1>
+
+<h2>New features with release 7.6</h2>
+
+<ul>
+	<li><b>Export of Digital Twin cloud simulation apps.</b>
+	A new dialog box for exporting the current model to a cloud simulation app
+	is now available. This also includes export to a FMU (Functional Mock-up Unit).
+	The new dialog is launched from the <i>File</i> menu and replaces the two
+	commands for exporting Stream- and Batch apps directly.
+
+	<li><b>Stress- and Strain Rosette recovery during dynamics simulation.</b>
+	Toggles for performing recovery of internal displacements and strains/stresses
+	are available in the Advanced tab of the Part property panel.
+
+	<li><b>Smooth ramp-up of input loads/motions and gravity forces.</b>
+	Toggles and fields for doing a smooth ramp-up of the loads over a specified
+	time domain are available in the Initial Equilibrium tab of the Solver setup dialog box.
+	This can be used instead of (or as a supplement to) the initial static equilibrium iterations.
+
+	<li><b>Scaling and shift for External functions.</b>
+	The property panel for <i>External funcion</i> now contains fields for applying
+	a scaling factor and a shift value, in similar way as for the Polyline from file functions.
+</ul>
+
+
+<h2>New features with release 7.5</h2>
+
+<ul>
+	<li><b>Parabolic shell finite elements.</b>
+	6-noded trinagular and 8-noded quadrilateral shell elements
+	are now available for the FE reduction and linear FE analysis modules.
+
+	<li><b>Overwrite FE reductions.</b>
+	A new toggle in the Model Preferences dialog box has been added,
+	which allows you to overwrite the existing FE reduction results instead
+	of creating a new sub-folder parallel to the folder containing the old
+	reduction results of that FE part.
+
+	<li><b>Stress recovery of FE parts.</b>
+	The "Linear analysis" option on FE parts can now be followed by a stress
+	recovery using the computed displacements from the linear analysis.
+	The resulting stresses can then be plotted in an Animation object in
+	the usual manner, but the animation will only contain a single frame.
+
+	<li><b>Co-rotated reference coordinate system.</b>
+	For the default method (Max triangle with scaled offset), the tolerance
+	used to decide whether an offset is applied to the third triad picked
+	is now configurable by editing the model file. The default tolerance is
+	now 5\% of the distance between the first to Triads. It used to be 50\%.
+
+	<li><b>Object-level output control.</b>
+	A new Results tab is added in the property panel for some object types
+	where the output of specific result quantitites can be specified.
+
+	<li><b>Object tags.</b>
+	The property panel now has a new <i>Tag</i> field to the right of the
+	Description field, in which a tag may be assigned to the object.
+	The tag may be used to reference the objects in python modelling scripts
+	instead of using the base ID.
+
+	<li><b>External functions from file.</b>
+	A text file may now be specified as input for the solver, from which it
+	will read the values of the external functions for each time step
+	instead of expecting them to be assigned by an external process.
+
+	<li><b>Export of Digital Twin cloud simulation apps.</b>
+	Commands for exporting current model to a cloud simulation app (zip-file)
+	is now available from the <i>File</i> menu.
+
+	<li><b>Reverse direction of Cylindric/Prismatic Joints.</b>
+	A new button is added under the topology panel in the Property view for
+	Cylindric- and Prismatic Joints. It changes the direction of the joint
+	by reversing the master triad connectivity list.
+</ul>
+
+
+<h2>New features with release 7.4</h2>
+
+<ul>
+	<li><b>Detection of externally reduced FE parts.</b>
+	If an FE part has been reduced manually outside the GUI (e.g., by using
+	the "Prepare for batch execution" feature, the reduced matrix files
+	are automatically detected when the model is opened in the GUI afterwards.
+
+	<li><b>Improved stress animation.</b>
+	Stresses in solid elements can now be plotted together with shell
+	Top/Bottom surface stresses, if the model contains both types of elements.
+
+	<li><b>Frequency response analysis.</b>
+	Loads and prescribed motions on Triad- and Joint DOFs can now be
+	applied in the frequency domain instead of time domain.
+
+	<li><b>Creating new modelling configuration from simulation.</b>
+	The <b>Save As...</b> dialog box has been extended to allow creation
+	of a new stress-free modelling configuration for the saved model,
+	based on a specified state of the current simulation.
+
+	<li><b>Overwrite results.</b>
+	A new toggle in the Output tab of the Solver setup dialog box has been added,
+	which allows you to overwrite the existing simulation results instead of
+	incrementing the resultsdatabase using the "Delete results" button.
+
+	<li><b>FE beam visualization.</b>
+	Beam elements with eccentricities in FE models are now visualized in
+	their eccentric position with respect to the connected nodal poinst.
+	The local orientation of the element is also indicated with a short line
+	in the local XZ-plane of the element, extending from the mid-point of the
+	beam axis forming a 45-degree angle with the beam axis towards local end 1.
+</ul>
+
+
+<h2>New features with release 7.3</h2>
+
+<ul>
+	<li><b>Utility for solution mapping.</b>
+	A new program module <i>fedem_solmap</i> is provided for extracting nodal displacements
+	from one model to use as boundary conditions on a refined sub-model.
+
+	<li><b>Improved support for (quasi-)static simulation of big models.</b>
+	It is now possible to skip the mass matrix reduction, and also the calculation of gravitation forces,
+	if they are not needed in a pure quasi-static simulation, in order to save computation time.
+	It is also possible to run the solver in a linar static mode, where each step is
+	considered an independent load case and no incrementation or iterations are performed.
+
+	<li><b>Eigenvalue analysis of FE parts.</b>
+	The "Linear analysis" option on FE parts can now be used to perfrom an eigenvalue analysis
+	of the part, without reducing it. The mode shapes of this analysis can be animated by
+	selecting "Eigenmodes of non-reduced part" in the Animation property panel.
+
+	<li><b>Mooring line generation.</b>
+	A command for generation of mooring lines has been added.
+	It will create a catenary curve of beam elements, or any two-noded user-defined element.
+
+	<li><b>Beam cross section database.</b>
+	A database with some standard cross sections is provided with the installation,
+	as a set of csv-files in the <i>Properties/CrossSections</i> folder.
+	A new dialog is then provided in the GUI from which the desired cross section(s)
+	can be imported into the FEDEM model.
+
+	<li><b>Generalized-&alpha; time integration.</b>
+	The Newmark time integration algorithm has been extended to also cover the generalized-&alpha; method.
+
+	<li><b>Grouping of beam result quantities.</b>
+        Triad result quantities that are related to the local coordinate system of the (first) beam element
+        the Triad is connected to, are now placed in a sub-group named "Beam quantities".
+
+	<li><b>Shell elements.</b>
+	The three- and four-noded shell elements used in FE parts are now based on the ANDES formulation.
+
+	<li><b>SESAM FEM file format.</b>
+	The SESAM input interface file parser now supports BELFIX and BLDEP.
+
+	<li><b>Strain Rosette position and orientation.</b>
+	The strain rosettes can now measure their absolute position through
+	the position vector and the Euler angles describing its orientation.
+
+	<li><b>Strain Rosette quantities as Function arguments.</b>
+	It is now possible to select Strain Rosettes as arguments to
+	General Functions.
+
+	<li><b>Graph view font size.</b>
+	The font size of the Graph title and axis labels
+	can now be customized in the Graph property panel.
+
+	<li><b>Disable simulation stop time.</b>
+	A toggle has been added in the Dynamics Solver setup dialog that
+	can disable the specified Stop time. If disabled, the solver will
+	continue to run indefinitly, or until it is stopped for other reasons.
+
+	<li><b>Linear static analysis of FE parts.</b>
+	A new "Linear analysis" item has been added under the <i>Solve</i> menu,
+	which appears when right-clicking on an FE part.
+	This will perform a direct static linear elastic analysis of that part.
+
+	<li><b>Dynamics solver API.</b>
+	The solvers are now built as shared object libraries (DLL's on windows),
+	containing an API that makes it possible to interact with the solution
+	process via Python scripts, etc.
+</ul>
+
+
+<h2>New features with release 7.2</h2>
+
+<ul>
+	<li><b>Nastran DMAP files.</b>
+	A new DMAP-file for NX Nastran has been added in the Templates folder.
+	The old DMAP file located there has been updated for work with
+	MSC.Nastran 2005r1 and 2005r2.
+
+	<li><b>New math expression functions.</b>
+	The mod operator (a%b) may now be used in math expression functions.
+	Also the functions max(a,b) and min(a,b) have been added.
+
+	<li><b>External functions.</b>
+	A new function type called <i>External funcion</i> is now availabe.
+	These functions have no arguments or parameters, and are used as input
+	channels from external programs or scripts.
+
+	<li><b>User-defined wave functions.</b>
+	The user-defined function API has been extended to also cover wave
+	functions, that can be used in hydrodynamic load calculations.
+
+	<li><b>Measurement of distances and angles.</b>
+	Two new commands have been added in the <i>Tools</i> menu, that allows you
+	to measure the relative distance between two points, and the angle of
+	rotation from one point to another about a specified rotation centre.
+
+	<li><b>Toggle visualization of various Joint types.</b>
+	Separate toggles for the various Joint types have been added in the
+	General Appearance dialog.
+
+	<li><b>Picking of FE nodes.</b>
+	The FE node ID and its global or local coordinates are now displayed in the Part property panel when picking in the Modeler view.
+
+	<li><b>Pan and zoom on graphs using mouse.</b>
+	A graph view can now be zoomed using the mouse wheel, and panned by pressing the right mouse button while moving the mouse.
+	This replaces using the F2 and F1 keys, respectively, while moving the mouse.
+
+	<li><b>Creating Subassemblies.</b>
+	A Subassembly may now be created from a group of selected objects.
+
+	<li><b>Mass properties for Generic parts.</b>
+	Generic parts may now be assigned a Material property object in the property panel.
+	The mass, inertia and centre of gravity of the Part may then be calculated
+	based on the mass density of the assigned Material property,
+	and the geometry (.vrml or .ftc file) associated with it.
+
+	<li><b>Surface connectors on Triads.</b>
+	The type of the surface connector, whether it is Flexible or Rigid, can now be
+	set on the Triad property panel, also after the connector has been generated.
+	When a Triad has a cylinder surface connector associated with it,
+	the geometry of the cylinder is displayed when the Triad is highlighted.
+
+	<li><b>Creating Joints on existing triads.</b>
+	We have added new commands in the main toolbar for creation of Free-, Prismatic- and Cylindric Joints from selected existing Triads.
+	The Joints created by these commands are automatically attached to the selected Triads (no need for separate Attach operations).
+
+	<li><b>Setting all DOFs Fixed or Free.</b>
+	We have added two buttons in the Triad and Joint property panels,
+	which can be used to set all DOFs in the Triad/Joint either Fixed or Free.
+</ul>
+
+
+<h2>New features with release 7.1</h2>
+
+<ul>
+	<li><b>FEDEM Addons/API.</b>
+	We have increased the flexibility of the FEDEM user interface by allowing for add-on applications
+	through a separate top-level menu. The FEDEM Addons are individual programs that communicate with
+	the main user interface through a COM API. The FEDEM Addons may be programmed in many different
+	languages, such as C#, Visual Basic, Python, etc. Included addons:
+	<br><br><ul>
+	<li><b><i>Connect.</i></b> Connect is an assistive tool to simplify the process of connecting Triads, nodes on FE parts, and the Ground with a Joint.
+	<li><b><i>Scatter.</i></b> The Scatter application is used to import and manage wave scatter diagrams for the FEDEM event system.
+	<li><b><i>Soil Creator.</i></b> Soil Creator is used to apply soil springs to a Beamstring based on user-defined p-y, t-z and q-z curves.
+	</ul>
+
+	<li><b>User-defined elements.</b>
+	We have added a C++ and Fortran API for user-defined elements in the FEDEM dynamics solver.
+	Advanced users may then program their own specialized elements, with Newton matrix
+	and right-hand-side load vector contributions to enter the linearized system of equations.
+
+	<li><b>Fortran API for user-defined functions.</b>
+	User-defined function plugins may now be implemented in the Fortran language.
+	A separate Fortran template file is included with the installation.
+
+	<li><b>Create Beamstring functionality.</b>
+	We have added a command for defining a single beam element between two selected Triads,
+	or a Beamstring through a sequence of three or more Triads.
+
+	<li><b>Split Beam into several pieces.</b>
+	A command for splitting a beam element into several elements of equal length has been added.
+	The command may be invoked repeatedly to create a non-uniform length distribution.
+
+	<li><b>Local beam element orientation.</b>
+	The local beam orientation vector may now be edited in the property panel.
+
+	<li><b>Partial visualisation of pipe cross sections.</b>
+	The start and stop angle for a partial visualisation of pipe cross sections
+	may now be defined in the Beam property panel.
+
+	<li><b>Duplication of objects.</b>
+	Functions of any type, Beam properties, Beam material properties and RAO objects
+	may now be duplicated through a "Copy Object" right-click menu entry in the Model Manager panel.
+
+	<li><b>Prismatic and Cylindric Joints along a Beamstring.</b>
+	Prismatic and Cylindric Joints may now be attached to Beamstrings, provided that the beam elements
+	are along the line between the two (end) master Triads of the Joint.
+	All beam nodes in between then automatically become master Triads as well.
+
+	<li><b>Fixed nodes in FE parts.</b>
+	Flexible FE parts may now contain fixed nodes, such that they will appear as fixed to ground in all those nodes.
+	This will reduce the computational cost for such models considerably, where the alternative is to use large rigid spiders
+	connecting all the nodes to be fixed to a reference node which then is fixed to ground via a Triad.
+
+	<li><b>Import of Subassemblies from file.</b>
+	It is now possible to import an existing FEDEM model as a Subassembly into another FEDEM model.
+	A Subassembly may also be saved in a separate file and reused in another FEDEM model by importing it.
+
+	<li><b>Scaling function for wave-induced hydrodynamic forces.</b>
+	A new field in the Sea Environment dialog has been added, where a hydrodynamic force scaling function may be specified.
+	This is useful, e.g., if you need to perform a quasistatic equilibirum analysis over several time increments
+	in the beginning of a simulation with loads from an irregular wave spectrum.
+
+	<li><b>Event-setup from file when running batch.</b>
+	When running FEDEM batch from the command-line, a simulation event definition file
+	may be specified as command-line argument.
+
+	<li><b>Automatic export of all curves in a Graph group.</b>
+	The automatic export may be toggled on/off for all curves in the selected Graph group
+	through two new right-click commands in the Model Manager Results list.
+
+	<li><b>Search path for the sn_curves.fsn and units.fcd files</b>
+	If edited versions of these two files are located in the home-directory of the user profile,
+	they are loaded instead of the default files located in the installation folder.
+
+	<li><b>Directional wave distribution.</b>
+	The JONSWAP sea wave spectrum function may now be defined with multiple wave directions.
+	The visualization of the sea waves is then performed on a 2D rectangular grid.
+
+	<li><b>Copying of Subassemblies.</b>
+	A Subassembly may now be duplicated by choosing "Copy Subassembly" from the right-click menu.
+	All the objects in that Subassembly are then duplicated.
+
+	<li><b>Center of Gravity for Subassemblies.</b>
+	Property fields reporting the Center of Gravity for Subassemblies have been added.
+</ul>
+
+
+<h2>New features with release 7.0</h2>
+
+<ul>
+	<li><b>Wind turbine modeling.</b>
+	We have extended our product offerings with a wind power specific edition of the software,
+	to accommodate the specific needs of the wind power industries. This edition includes:
+	<br><br><ul>
+		<li><i>Turbine definition.</i>
+		The turbine definition tool lets you easily create a working wind turbine model
+		from a set of basic parameters. The main parameters are driveline type, bearings,
+		tower base, driveline configuration, hub configuration and nacelle configuration.
+
+		<li><i>Blade definition.</i>
+		The Blade definition tool specifies a wind turbine blade.
+		Both aerodynamic and structural properties are specified.
+		The aerodynamic properties are used by the integrated <i>AeroDyn</i> module
+		from NREL (<a href="http://wind.nrel.gov">wind.nrel.gov</a>),
+		to calculate forces on the blades of the wind turbine.
+		The calculated forces are then applied as loads on the structural model.
+
+		<li><i>Airfoil definition.</i>
+		The Airfoil definition tool is used for definition of drag, lift and moment
+		coefficients for airfoil sections.
+		We use the same Airfoil format as is used in the latest version of <i>AeroDyn</i>.
+
+		<li><i>Tower definition.</i>
+		The Tower definition tool is used to define a tower representation
+		by automatic generation of beam element sections.
+		The turbine model does not require a separate tower assembly,
+	 	it may therefore be deleted after the wind turbine model has been generated.
+		This makes it easier to model turbines where the tower is an integrated part
+		of the support structure modelled externally and imported as a Spaceframe/Jacket or FE part.
+
+		<li><i>Air environment.</i>
+		The Air environment tool is used to specify the global air environment for the wind turbine.
+		We can use a constant wind field with a specific wind speed or use more complex/turbulent
+		wind fields by the <i>TurbWind</i> tool.
+
+		<li><i>TurbWind tool.</i>
+		The turbulent wind tool is used to generate turbulent wind files for FEDEM WindPower.
+		FEDEM TurbWind is basically a dialog box front-end for the <i>TurbSim</i> tool from NREL.
+		FEDEM WindPower sends characteristic parameters of the wind turbine to FEDEM TurbWind,
+		such as grid height, time step, duration, output folder, hub height, reference height, etc.
+
+		<li><i>Output of wind speed on blade tip Triads.</i>
+		The wind speed at the tip Triad of each wind turbine blade is avaliable for plotting.
+		In addition, a set of user-defined points may be defined on an additional solver input file
+		(extension .fsi) for measuring the wind speed at arbitrary fixed points.
+
+		<li><i>SESAM .wind file extension for exported graphs.</i>
+		This is the same as the ASCII file format without the header information.
+	</ul>
+
+	<li><b>Marine modeling.</b>
+	We have further extended our software product with several features to support modelling
+	of structures in Marine evironments. Among these features are the following:
+	<br><br><ul>
+		<li><i>Sea environment.</i>
+		The new Sea environment dialog box is used to specify some global settings related
+		to the sea, such as the water density, mean sea level, water depth, wave direction, etc.
+		It also contains fields for definition of marine growth on submerged beam elements.
+
+		<li><i>Sea wave and current functions.</i>
+		We have added two new function groups for representing sea waves and current.
+
+		<li><i>JONSWAP sea wave spectrum.</i>
+		Wave kinematics may be represented by JONSWAP sea wave spectrum functions.
+
+		<li><i>3D-visualization of sea state.</i>
+		The mean sea level, water depth, and orientation of the wave and current
+		coordinate system may be visualized as a blue box in the 3D view.
+
+		<li><i>Plotting of wave elevation.</i>
+		The wave elevation at the global origin (x=0,y=0,z=0)
+		is available as a result quantitiy in the Result Selector.
+
+		<li><i>Hydrodynamic load calculation.</i>
+		Drag and added mass loads on slender beams based on the Morison equation.
+		Buoyancy is also accounted for.
+
+		<li><i>Import of Beamstrings.</i>
+		Beamstrings are chains of beam elements that can be used to model flexible risers,
+		mooring lines, etc. Such Beamstrings may be defined on a simple text file that
+		is imported into FEDEM. The Beamstring definition file contains structural
+		properties for the beam and hydrodynamic load coefficients.
+
+		<li><i>Import of Soil Pile.</i>
+		A Soil Pile is a special type of Beamstring which is connected to ground by a
+		set of nonlinear springs. Soil Piles may be defined on a simple text file that
+		is imported into FEDEM. The Soil Pile definition file contains structural properties
+		of the pile, and nonlinear spring data at different depth levels (p-y curves).
+
+		<li><i>Import of Spaceframes.</i>
+		A Spaceframe is any assembly of beam elements. They may be defined in any of the
+		supported file formats for FE parts, and imported into FEDEM. However, the FE part
+		will now not become a superelement that is reduced. Instead, each individual beam
+		element in the FE model is treated as a nonlinear element on the system level.
+		In addition, point mass elements defined on the FE data file are converted to
+		additional mass on the Triads, whereas defined ground springs are converted to
+		Free Joints to ground with the possibility for off-diagonal coupling stiffnesses.
+		The Spaceframe import accounts also for BNBCD entries in SESAM fem-files,
+		such that DOFs with status code Fixed are set accordingly on the
+		generated Triad in the FEDEM model.
+
+		<li><i>Added mass from internal fluid in beam elements.</i>
+		The calculation of added mass from internal fluid supports
+		separate fluid densities (and level) for the different Beamstrings and Soil Piles.
+		Spaceframe/Jacket elements are assumed to be filled with sea water only.
+
+		<li><i>Response amplitude operators.</i>
+		A response amplitude operator (RAO) is used to derive the motion of a vessel floating
+		in the sea, when subjected to waves from a given direction. The RAO is given as
+		tables of motion amplitudes and phase delays, as function of frequency, and may be
+		imported into FEDEM to create <i>Vessel Motion</i> objects. They may then be connected
+		to a Triad or a Free Joint to apply the motion on the structure.
+	</ul>
+
+	<li><b>Beam cross section and Material property objects.</b>
+	We have added Beam cross section and Material property objects for improved flexibility
+	in representations of Beam cross sections and Materials.
+	Structural and hydrodynamic properties can be defined and edited.
+
+	<li><b>Beam and turbine blade visualization.</b>
+	We have added automatic 3D visualization of circular beam cross sections and blade profiles.
+	The 3D visualization may be toggled on/off for individual beam elements through the property panel.
+	The visualization of all beam elements of a specific Subassembly may also be toggled on/off
+	through right-clicking the assembly node in the object tree.
+
+	<li><b>Beamstring pair definition.</b>
+	This tool enables easy coupling of two Beamstrings for pipe-in-pipe constructions.
+	It will basically set up Free Joints between the overlapping Triads of the two Beamstrings.
+	Arbitrary spring functions can be used for setting the contact clearance and stiffness.
+
+	<li><b>Beam force graph.</b>
+	We have added a new command for creation of Graphs plotting all the
+	force components at the selected Triad(s) or Beam(s).
+	The command is available from the right-click menu in the objects tree view under the <i>Result</i> sub-menu,
+	when one or more Triads or Beams are selected.
+
+	<li><b>Simulation events.</b>
+	Simulation events may be defined in an ASCII file and imported into FEDEM. They may contain certain
+	perturbations of the current model, and is an efficient tool to perform multiple load case simulations.
+	The simulation events may be executed in parallel for optimal performance.
+
+	<li><b>Event definition dialog.</b>
+	The Event Definition dialog box is used to get an overview of the simulation event setup of the model.
+	"Events" are used to define specific conditions in the FEDEM model, with specific properties,
+	that are used when solving the model for these varying conditions.
+
+	<li><b>Object browser dialog.</b>
+	A new object browser dialog box displaying all model file fields has been added.
+	This is useful when setting up simulation event definitions.
+
+	<li><b>Multiselect from topology window.</b>
+	All items in the topology window can be selected by right-clicking and choosing the "Select all" option.
+
+	<li><b>Basic solver dialog.</b>
+	We have added a simpler solver dialog for the basic functionality most often needed.
+	The new dialog is an extension on top of the previous advanced dynamics solver dialog.
+	The basic solver dialog also contains support for quasi-static solver configurations.
+
+	<li><b>SESAM FEM file format.</b>
+	The SESAM input interface file format is now supported when importing FE parts.
+
+	<li><b>Fatigue summary interface.</b>
+	With this tool you can do a fatigue summary analysis on any graph or set of curves in FEDEM.
+	Just select a graph or set of curves, right click them, and choose "Fatigue Summary..".
+	If you have multiple events in your model, the fatigue summary will be calculated for each event.
+
+	<li><b>Optional header in exported ASCII files.</b>
+	When exporting graphs to ASCII file, the text header may be excluded through a toggle.
+	This is useful when the file is to be imported into SESAM or other systems which cannot handle headers.
+
+	<li><b>Graph group defintions.</b>
+	Graphs may now be defined in groups and stored in separate model files.
+	This is useful when having multiple almost identical models, where the result sets are to be the same.
+
+	<li><b>Pan by right-click.</b>
+	The model may now be panned in the 3D view by right-click-and-hold while moving the mouse.
+
+	<li><b>64-bit version.</b>
+	A 64-bit version is now available on Windows for all the program modules.
+
+	<li><b>Help system and documentation.</b>
+	We have significantly enhanced the help system and documentation of the software.
+	A start guide is offered when users start the software to provide links to educational videos,
+	chapters in the User's Guide and the new Reference Guide.
+</ul>
+
+</body>
+</html>

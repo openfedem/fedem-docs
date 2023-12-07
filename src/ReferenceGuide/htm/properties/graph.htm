@@ -1,0 +1,75 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_properties_graph"></a>Graph</h1>
+
+<p>The Graph object is used to represent a set of
+<a href="curve.htm">Curves</a> in a FEDEM model,
+to be displayed together in a graph view.
+You can create several Graph objects in a model, and an arbitrary number of
+Graphs can be displayed simultaneously in separate views in the workspace area.
+</p>
+
+<p><img src="../../img/prp/graph-1.png"></p>
+
+<p>The figure above illustrates the Graph properties,
+which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Title</td><td>
+Specifies the title to be displayed above the graph.</td></tr>
+<tr><td>X-axis label</td><td>
+Specifies the label to be displayed on the abscissa axis.</td></tr>
+<tr><td>Y-axis label</td><td>
+Specifies the label to be displayed on the ordinate axis.</td></tr>
+<tr><td>Font size:</td><td>
+Specifies the font size to be used in the graph view for the Title, X-axis label
+and Y-axis label, respectively.</td></tr>
+<tr><td>Grid</td><td>Specifies the grid style.
+Possible choices are <i>None</i>, <i>Coarse</i> and <i>Fine</i>.</td></tr>
+<tr><td>Legend</td><td>
+Enables the display of the legends of each Curve in the Graph.</td></tr>
+<tr><td>Autoscale</td><td>
+Enables automatic scaling of the X- and Y-axes to accomodate the curves in the
+graph each time a new Curve is added to the Graph while its graph view is open,
+and also when opening the graph view associated with this graph.</td></tr>
+<tr><td>Start time</td><td>
+Specifies the beginning of the time interval to be used for all Curves plotting
+simulation results in the Graph.</td></tr>
+<tr><td>Stop time</td><td>
+Specifies the end of the time interval to be used for all Curves plotting
+simulation results in the Graph.</td></tr>
+<tr><td>Use time interval</td><td>
+Enables the use of the specified time interval [<i>Start time,Stop time</i>]
+for the Curves plotting simulation results.
+Use this option to speed up the process of loading data from disk if you have
+a very long time series, but only a small part of it contains interesting data.
+</td></tr>
+</table></p>
+
+<p>See the section on "Graphs" in the "Postprocessing Results" chapter in the
+FEDEM User's Guide, for more information on creating and manipulating Graphs.
+</p>
+
+</body>
+</html>

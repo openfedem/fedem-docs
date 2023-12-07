@@ -1,0 +1,162 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_properties_animation"></a>Animation</h1>
+
+<p>The Animation object is used visualize kinematic motions and structural results of the model.
+This includes <a href="part.htm">Part</a> motion and deformation,
+and various scalar result quantities visualized as color contour plots.
+You can create several Animation objects in a model with different options for each.
+The created Animations can then be loaded into the Modeler window one at a time.</p>
+
+<p><img src="../../img/prp/animation-1.png"></p>
+<p><img src="../../img/prp/animation-2.png"></p>
+<p><img src="../../img/prp/animation-3.png"></p>
+
+<p>The figures above illustrate the Animation properties,
+which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Type</td><td>You can switch between three different animation types:<br>
+- <i>Time History</i>: Visualizes time history results.
+This can be the rigid body component of Part motion calculated in the dynamics solver,
+or recovered stress, strain and the deformational part of the Part motion.<br>
+- <i>Eigen Mode</i>: Visualizes the shape of a system eigenmode at a specific point in time.
+It can also be used to visualize the component mode shape of an FE Part,
+or the free-free mode shape of a reduced FE Part.<br>
+- <i>Time Summary</i>: Visualizes accumulated structural results within a specified time interval.
+These types of results are produced by running the Strain Coat Recovery Summary.
+</td></tr>
+<tr><td>Load face contours</td><td>If this toggle is enabled, the results
+specified in the <i>Contours</i> tab are loaded and displayed as color contours
+on the element faces of the mechanism assembly.
+</td></tr>
+<tr><td>Load line contours</td><td>This toggle controls whether or not the results
+specified in the <i>Contours</i> tab are displayed as color contours on the FE-mesh lines.
+</td></tr>
+<tr><td>Load deformations</td><td>If this toggle is enabled,
+Part deformations are loaded and displayed, if such results are present.
+If this toggle is disabled, or stress recovery has not been performed,
+only the rigid body motion of each Part is displayed.
+</td></tr>
+<tr><td>Load Animation</td><td>Click this button to actually load the animation
+using the current property settings.
+</td></tr>
+<tr><td>Time Window</td><td>You can choose to display the complete duration
+of the simulation or a specific time interval.
+If you select <i>Time Interval</i>, specify the values for the interval's
+<i>Start</i> and <i>Stop</i> time.
+</td></tr>
+<tr><td>Animation Frames</td><td>These options are useful if you specified different
+time steps for the dynamics simulation and the stress recovery calculation.
+Enabling <i>For every time step</i> loads deformation results and color contour
+values for all the time steps for which such results have been calculated
+within the time window specified.
+For all the other time steps only the rigid body Part motion will be displayed.
+If you enable <i>Only for requested results</i>, only those time steps having
+deformation/contour results will be loaded.
+</td></tr>
+</table></p>
+<p><img src="../../img/prp/animation-2.png"></p>
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Contour value</td><td>These options are used to select
+the results that will be displayed as color contours.<br>
+- <i>Result class</i>: Selects the FE entities for which you want to show color contours.
+You can select either <i>Node</i>, <i>Element</i> (one single result for each element),
+or <i>Element node</i> (one result value for each node within an element).<br>
+- <i>Result</i>: Specifies which type of result to display in the animation.
+The options available here depend on the <i>Result class</i> setting,
+and on the results currently available in the results database.<br>
+- <i>Operation</i>: Specifies the scalar value to extract from the selected result,
+if that is a non-scalar quantity.
+The operations available depend on both the <i>Result class</i> and <i>Result</i> settings.
+</td></tr>
+<tr><td>Result Set</td><td>This setting is used to distinguish between
+multiple results for the specified FE entity, including results from different
+layers within an element or multiple deformation results on a node.<br>
+- <i>By operation</i>: Consolidates the result set of the same type
+using the selected operation (<i>Average</i>, <i>Maximum</i>, <i>Minimum</i>, etc.).<br>
+- <i>By name</i>: Loads and displays only the result sets with the specified name.
+Elements of an FE Part without that result set will be rendered gray,
+whereas complete Parts without that result set will remain unchanged.
+</td></tr>
+<tr><td>Averaging</td><td>These options control how a continuous contour plot is
+obtained when the underlying results are discontinuous across the finite elements.
+They are available only when the selected <i>Result class</i> is <i>Element node</i>.<br>
+- <i>Operation</i>: Selects the averaging operation to use (<i>Average</i>, <i>Max</i>,
+<i>Min</i>, etc.), or select <i>None</i> if averaging is not wanted.<br>
+- <i>on</i>: Averaging on <i>Node</i> calculates a single value for each node
+in the FE model, based on the selected <i>Operation</i> and the values specified
+in the <i>Contour Value</i> settings.
+Averaging on <i>Element</i> calculates a single value for each element in the same way.<br>
+- <i>Max shell average angle</i>: Specifies an angle above which the averaging between shells stops.
+The angle is used as a tolerance when comparing the globalized coordinate systems of
+the elements in question.<br>
+- <i>Average across element type</i>: Toggles averaging of contour values across element type borders.
+</td></tr>
+<tr><td>Multiple Face Results</td><td>Specifies the averaging behavior across elements that interface
+on a surface (such as stacking of elements with the same size and shape but different thicknesses).
+You can either specify an averaging operation, or select a named element group containing the result
+to be shown.
+</td></tr>
+<tr><td>Export animation automatically to VTF</td><td>Enables export of the animation to a VTF-file
+after a batch stress recovery, if FEDEM is run with the command-line option -exportAnimation.
+</td></tr>
+</table></p>
+<p><img src="../../img/prp/animation-3.png"></p>
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Mode Selection</td><td>These options are available for <i>Eigen Mode</i> animations:<br>
+- Select between <i>System modes</i>, <i>Component modes of part</i> and
+<i>Free-free modes of reduced part</i>.<br>
+- <i>Time</i>: For <i>System modes</i>, this pull-down list shows the
+times at which an Eigenmode solution is specified in the
+<a href="../dialogbox/solver-advanced.htm#Eigenmode">Eigenmode tab</a>
+of the Dynamics Solver Setup dialog.<br>
+- <i>Part</i>: For <i>Component modes of part</i> or <i>Free-free modes
+of reduced part</i>, this pull-down lists all FE Parts in the model.
+It also have an entry <i>(All parts)</i> to enable simultaneous mode shape
+animations for all FE Parts.<br>
+- <i>Mode</i>: Shows either the modes specified in the
+<a href="../dialogbox/solver-advanced.htm#Eigenmode">Eigenmode tab</a>,
+the component mode numbers in the <a href="part.htm#Reduction-Options">Reduction Options tab</a>
+of the Part property, or the free-free mode numbers for the reduced part,
+depending on the selected mode type in the first pull-down list.<br>
+- <i>Scale</i>: Specifies a scaling factor to exaggerate the shapes during the animation.
+</td></tr>
+<tr><td>Frame Generation</td><td>These options set the number of animation frames
+and the duration of the animation:<br>
+- <i>Frames per cycle</i>: Entering a higher value increases the continuity of the animated motion.<br>
+- <i>Length</i>: Specify either a <i>Time</i>, <i>No. of cycles</i>, or <i>Until % damped</i>
+to limit the duration of the animation.
+These fields are available only for <i>System modes</i>.
+For the other two options the duration of the animation will always be equal one full cycle.
+</td></tr>
+</table></p>
+
+<p>See the section on "Animation" in the "Postprocessing Results" chapter in the
+FEDEM User's Guide, for more information on manipulating Animations.</p>
+
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_properties_jacket"></a>
+Jacket</h1>
+
+<p>The Jacket object is a sub-assembly used to represent a marine spaceframe structure.</p>
+
+<p>The Jacket sub-assembly normally contains sets of
+<a href="../beam.htm">Beam</a>s and
+<a href="../triad.htm">Triad</a>s in its model tree list.
+In addition, it contains some <a href="../beam-cross-section.htm">Beam cross section</a>s
+and <a href="../material.htm">Material</a>s used by the <a href="../beam.htm">Beam</a> elements.
+
+<p>Please see the chapter on "Marine Modeling" in the FEDEM User’s Guide
+for more information on how to create spaceframes.</p>
+
+<p><img src="../../../img/prp/jacket-1.png"></p>
+
+<p>The figure above illustrates the Jacket properties,
+which consist of the folliwing items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Subassembly model file</td><td>Specifies a model file for the spaceframe.
+A separate model file may be assigned to the jacket assembly by using the Browse button.</td></tr>
+<tr><td>Mass</td><td>Displays the total mass of the spaceframe structure
+(excluding additional mass due to marine growth and/or internal liquid).</td></tr>
+<tr><td>Center of Gravity</td><td>Displays the location of the spaceframe's
+center of gravity, in either Global coordinates or in Local coordinates
+with respect to the origin of the jacket assembly.</td></tr>
+<tr><td>Visualize 3D</td><td>Enables or disables 3D visualization of the beams,
+using the cross section parameters to render its actual geometry. If disabled,
+each beam is visualized as a straigth line connecting the two triads,
+with coloring depending on the referred
+<a href="../beam-cross-section.htm">Beam cross section</a> object.</td></tr>
+<tr><td>Mass proportional</td><td>Specifies mass proportional structural damping.</td></tr>
+<tr><td>Stiffness proportional</td><td>Specifies stiffness proportional structural damping.</td></tr>
+<tr><td>Stiffness scale</td><td>Specifies stiffness scale.</td></tr>
+<tr><td>Mass scale</td><td>Specifies mass scale.</td></tr>
+<tr><td>Position</td><td>Specifies the position of the jacket assembly.</td></tr>
+<tr><td>Orientation</td><td>Specifies the orientation of the jacket assembly.</td></tr>
+</table></p>
+
+<p>If a separate model file is assigned to a jacket assembly, all beams, triads
+and properties of that spaceframe are stored in the specified file when the model is saved.
+It is then possible to reuse this spaceframe in another model by importing it into an existing model.
+If the <i>Subassembly model file</i> field is left empty, the elements of the spaceframe are stored in
+the main model file together with the rest of the model.</p>
+
+<p>Editing any of the Structural Damping and Scaling of Dynamic Properties fields,
+the values entered will apply to all the underlying <a href="../beam.htm">Beam</a> elements of the spaceframe,
+which can be verified by selecting any of the beam elements.
+But, if such a field is edited for one beam element such that the beams
+making up a spaceframe no longer have identical properties, the corresponding field
+in the Jacket property panel will be blank (no value displayed).
+
+<p>Note: The Visualize 3D toggle has a tri-state value.
+In addition to the usual ON and OFF states,
+it can also have a neither-ON-nor-OFF state, in which the corresponding
+ON/OFF settings on each underlying beam element are applied instead.
+This is usually the default setting for such tri-state toggles.</p>
+
+</body>
+</html>

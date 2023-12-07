@@ -1,0 +1,103 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_mainui_commandline-options"></a>Command-line Options</h1>
+
+<p>Each of the FEDEM programs may be run manually from a console window or
+using the Run... option from the Start menu in Windows. To facilitate such
+batch-execution of the programs, the complete list of command-line options
+for each solver module is given in Appendix C in the FEDEM User's Guide.
+Below, the options for the FEDEM user interface (i.e., Fedem.exe) are shown.</p>
+
+<table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Command-line option:</b></td><td><b>Description:</b></td><td><b>Default value:</b></td></tr>
+<tr><td>-checkRDBinterval</td>
+	<td>Time [ms] between each RDB check/update during solve</td>
+	<td>500</td></tr>
+<tr><td>-console</td>
+	<td>Enable console window</td>
+	<td>- (false)</td></tr>
+<tr><td>-debug</td>
+	<td>Run in debug mode</td>
+	<td>- (false)</td></tr>
+<tr><td>-events</td>
+	<td>Simulation event definition file</td>
+	<td></td></tr>
+<tr><td>-exportAnimations</td>
+	<td>Auto-export animations to VTF on batch solve</td>
+	<td>- (false)</td></tr>
+<tr><td>-exportCurves</td>
+	<td>Auto-export curves on batch solve. Specify folder to export curve files to.</td>
+	<td></td></tr>
+<tr><td>-f</td>
+	<td>Model file to open</td>
+	<td>untitled.fmm</td></tr>
+<tr><td>-help</td>
+	<td>Display this help and exit</td>
+	<td>- (false)</td></tr>
+<tr><td>-logFile</td>
+	<td>Write all Output List contents to log-file. Log-file name: (modelFilePrefix).log</td>
+	<td>+ (true)</td></tr>
+<tr><td>-noFEData</td>
+	<td>Load model file without FE-Models and FE-Results info. Use together with -f.</td>
+	<td>- (false)</td></tr>
+<tr><td>-plotElements</td>
+	<td>Enable plotting of element results</td>
+	<td>- (false)</td></tr>
+<tr><td>-plotNodes</td>
+	<td>Enable plotting of nodal results</td>
+	<td>- (false)</td></tr>
+<tr><td>-prepareBatch</td>
+	<td>Prepare for batch execution. This option can have the following arguments:<br>
+	all = all solvers<br>
+	reducer = reduction of all parts<br>
+	dynamics = dynamics solver<br>
+	stress = stress recovery for in parts<br>
+	modes = mode shape recovery in all parts<br>
+	straingage = strain gage recovery in all parts<br>
+	straincoat = strain coat recovery in all parts</td>
+	<td></td></tr>
+<tr><td>-purgeOnSave</td>
+	<td>Purge inactive mechanism objects on Save</td>
+	<td>- (false)</td></tr>
+<tr><td>-solve</td>
+	<td>Start given solver(s) in batch mode. This option can have the following arguments:<br>
+	all = all solvers<br>
+	events = all solvers on all events<br>
+	reducer = reduction of all parts<br>
+	dynamics = dynamics solver<br>
+	stress = stress recovery for in parts<br>
+	modes = mode shape recovery in all parts<br>
+	straingage = strain gage recovery in all parts<br>
+	straincoat = strain coat recovery in all parts</td>
+	<td></td></tr>
+<tr><td>-version</td>
+	<td>Display program version and exit</td>
+	<td>- (false)</td></tr>
+<tr><td>-timerange</td>
+	<td>Time specification for batch stress recovery.<br>
+        Format: [startTime,stopTime(,timeInc)]. timeInc is optional.</td>
+	<td></td></tr>
+</table>
+
+</body>
+</html>

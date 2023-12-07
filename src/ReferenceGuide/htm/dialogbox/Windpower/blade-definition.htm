@@ -1,0 +1,132 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_dialogbox_blade-definition"></a>Blade Definition</h1>
+
+<p>The Blade Definition dialog box is used to define the wind turbine blades.
+The FEDEM WindPower package includes some example blades (e.g., the "Sample 5MW Blade").
+If the blades of the turbine are not the main focus area for your simulation, you can simply
+specify one of the example blades in the <a href="turbine-definition.htm">Turbine definition</a> dialog box.
+Many projects will, however, require the blades to be defined in detail before the simulation is conducted.</p>
+
+<p>The Blade Definition dialog box consists of the following four main parts:<ul>
+<li><b><i>Blade visualization</i></b> -
+The area at the top of the dialog displays the blade segments (length and chord) on the left side,
+and a drawing of the cross section for the selected blade segment on the right side.
+<li><b><i>Blades</i></b> -
+Beneath the blade visualization, the drop list <i>Blades</i> is located showing the available blade designs.
+Just click on a file name to display its properties in the visualization area and in the data table.
+Blades that are included with the FEDEM WindPower installation are not editable, as indicated by the lock symbol.
+To the far right, use the green <b>+</b> button to browse for new blade design libraries,
+and the red <b>-</b> button to remove a selected folder from the Blades list.
+<li><b><i>Description</i></b> - Use this field to assign a name to the blade.
+You can add and remove blade segments by clicking the <i>Add Segment</i> and <i>Remove Segment</i> buttons.
+The <i>New Blade</i> button can be used to create a new (initially empty) blade design.
+<li><b><i>Data table</i></b> -
+The table in the lower part of the dialog contains the aerodynamic and structural properties of the blade design.
+The columns correspond to the blade segments making up the entire blade, from the blade root to the tip.
+Click one of the columns to display a drawing of the cross section of that segment in the upper right area.
+</ul></p>
+
+<h2>Aerodynamic properties</h2>
+
+<p><img src="../../../img/dlg-blade-definition-3.png" width="508" height="364"></p>
+
+<p>The figure above shows the Blade Definition dialog box when it displays the
+Aerodynamic properties in the data table. It consists of the following rows:<ul>
+<li><i>Segment length [m]</i> - Length of the blade segment along the pitch of the blade).
+<li><i>Chord length [m]</i> - Width of the blade segment (perpendicular to the length direction).
+<li><i>Aerodynamic twist angle [deg]</i> - Twist of the blade (&alpha; in the figure below)
+relative to the rotor plane.
+<li><i>Pitch center parallel</i> - Location of the pitch center (a in the figure below)
+along the chord line, given as a fraction of the chord length.
+This value is typically between 0 and 1, but can be negative if the center is located
+in front of the leading edge, and larger than one if it is located behind the trailing edge.
+<li><i>Pitch center normal</i> - Offset of the pitch center (b in the figure below)
+in the normal direction of the chord line, given as a fraction of the chord length.
+<li><i>Aero center parallel</i> - Location of the aero center (c in the figure below)
+along the chord line, relative to the leading edge and given as a fraction of the chord length.
+<li><i>Airfoil type</i> - File name of the airfoil data of this blade segment.
+If you click on the file name a browse button [...] appears besides it,
+and by clicking that one you can browse for another airfoil file.
+The contents of the airfoil files can be viewed and edited using the
+<a href="airfoil-definition.htm">Airfoil Definition</a> dialog box.
+<li><i>Thickness ratio</i> - Thickness of the blade relative to the chord length.
+This value does not affect the aerodynamic load calculations.
+It is only used to estimate the circumference of the cross section when
+calculating the weight of ice on the turbine blades.
+In addition, it is used to to create the cross section drawing in the upper right part of the dialog box.
+</ul></p>
+
+<p><img src="../../../img/dlg-blade-definition-1.png" width="534" height="341"></p>
+
+<h2>Structural properties</h2>
+
+<p>The figure below shows the Blade Definition dialog box when it displays the
+Structural properties of the blade segments in the data table.
+In addition, the <i>Blades</i> area has been contracted here,
+to show only the path of the currently selected blade design.
+It can be expanded again to show all available blade designs,
+by clicking the black triangle to the right of the file path.</p>
+
+<p><img src="../../../img/dlg-blade-definition-4.png" width="511" height="367"></p>
+
+<p>The structural property table consists of the following rows:<ul>
+<li><i>Elastic center parallel</i> - Location of the elastic center, or neutral axis
+(e in the figure below) along the chord line, given as a fraction of the chord length.
+This value is typically between 0 and 1, but can be negative if
+the center is located in front of the leading edge,
+and larger than one if it is located behind the trailing edge.
+<li><i>Elastic center normal</i> - Offset of the elastic center
+(f in the figure below) in the normal direction, given as a fraction of the chord length.
+<li><i>Elastic axes relative rotation [deg]</i> - Angle (in degrees) between the
+chord line and the local y-axis of the structural beam element, for which the flapwise
+bending stiffness is referring to. The edgewise bending stiffness is then referring
+to the local z-axis, defined via the cross product of the length axis of the beam and the local y-axis.
+<li><i>Mass center offset-x, parallel</i> - Offset of the mass center from the elastic center,
+along the rotated elastic x-axis, given as a fraction of the chord length.
+<li><i>Mass center offset-y, normal</i> - Offset of the mass center from the elastic center,
+along the rotated elastic y-axis, given as a fraction of the chord length.
+<li><i>Mass per unit length [kg/m]</i> - Mass density of this blade segment.
+Only nominal structural mass should be given here. Mass from ice and other effects
+can be set on the <a href="../../properties/Windpower/blade.htm">Blade</a> object.
+<li><i>Torsional inertia per unit length [kg]</i> - Torsional inertia of this blade segment.
+<li><i>Bending stiffness, flapwise [Nm<sup>2</sup>]</i> - Bending stiffness <i>EI<sub>yy</sub></i>,
+with respect to local elastic axes.
+<li><i>Bending stiffness, edgewise [Nm<sup>2</sup>]</i> - Bending stiffness <i>EI<sub>zz</sub></i>,
+with respect to local elastic axes.
+<li><i>Torsion stiffness [Nm<sup>2</sup>]</i> - Torsional stiffness <i>GI<sub>t</sub></i>.
+<li><i>Axial stiffness [N]</i> - Axial stiffness, <i>EA</i>.
+<li><i>Shear stiffness, flapwise [N]</i> - Shear stiffnesses <i>GA<sub>sy</sub></i>,
+with respect to local elastic axes.
+<li><i>Shear stiffness, edgewise [N]</i> - Shear stiffnesses <i>GA<sub>sz</sub></i>,
+with respect to local elastic axes.
+<li><i>Shear center, parallel</i> - Offset of the shear center from the elastic center,
+along the rotated elastic y-axis, given as fractions of the chord length.
+<li><i>Shear center, normal</i> - Offset of the shear center from the elastic center,
+along the rotated elastic z-axis, given as fractions of the chord length.
+</ul></p>
+
+<img src="../../../img/dlg-blade-definition-2.png" width="432" height="284">
+
+</body>
+</html>

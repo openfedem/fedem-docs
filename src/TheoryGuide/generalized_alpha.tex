@@ -1,0 +1,211 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{The generalized-$\alpha$ method}
+\label{subs:The generalized alpha method}
+
+The generalized-$\alpha$ method by Chung and Hulbert~\cite{HulbertChung}
+seeks to introduce high frequency dissipation into the numerical solution
+by interpolating the inertia forces between time increments $k$ and $k+1$
+using a factor $\alpha_m$, and interpolating the elastic, damping and
+external forces using another factor $\alpha_f$.
+The dynamic equilibrium \eqnref{eq:DynEquil} then takes the form
+%
+\begin{equation}
+\eqalign{
+(1-\alpha_m)\Fi_\kp1 + \alpha_m\Fi_k & \;\;+ \cr
+(1-\alpha_f)\Fd_\kp1 + \alpha_f\Fd_k & \;\;+ \cr
+(1-\alpha_f)\Fs_\kp1 + \alpha_f\Fs_k & \;=\;
+(1-\alpha_f)\Q_\kp1  + \alpha_f\Q_k
+}\label{eq:GenAlphaEquil}
+\end{equation}
+
+The Newmark integration of \eqnref{eq:GenAlphaEquil} is a second order accurate
+algorithm provided that
+%
+\begin{equation}
+\gamma = \frac{1}{2} - \alpha_m + \alpha_f
+\end{equation}
+%
+This algorithm is unconditionally stable if the following conditions are met
+%
+\begin{equation}
+\alpha_m \leq \alpha_f \leq \frac{1}{2} \quad\text{and}\quad
+\beta \geq \frac{1}{4} + \frac{1}{2}(\alpha_f - \alpha_m)
+\end{equation}
+%
+This region of stability is depicted by the shaded area in
+Figure~\ref{fig:GAstab}, which is bounded by the two lines
+$\lambda_{1,2}^\infty=-1$ corresponding to $\alpha_m\le\alpha_f$, and
+$\lambda_3^\infty=-1$ corresponding to $\alpha_f\le\frac{1}{2}$.
+According to~\cite{HulbertChung}, the high frequency modes (relative to the time
+increment length $h$) will be damped out if we choose
+%
+\begin{equation}
+\beta = \frac{1}{2}(1 - \alpha_m + \alpha_f)^2
+\end{equation}
+
+\begin{figure}[b]
+\begin{center}
+\setlength{\unitlength}{0.8mm}
+\begin{picture}(130,125)(-70,-60)
+% Make shaded triangles (the units are [cm])
+\put(-50,0){\begin{tikzpicture}
+\fill[black!20!white](0,0)--(4,0)--(6,2)--(0,0);
+\end{tikzpicture}}
+\put(-60,-60){\begin{tikzpicture}
+\filldraw[left color=white,right color=black!20!white,draw=white]
+(0,0)--(4.8,4.8)--(0.8,4.8)--(0,4.73)--(0,0);
+\end{tikzpicture}}
+% Axis system
+\thinlines
+\put(-60,0){\vector(1,0){120}}
+\put(0,-60){\vector(0,1){120}}
+\multiput(-50,-2)(25,0){5}{\line(0,1){4}}
+\multiput(-2,-50)(0,25){5}{\line(1,0){4}}
+\put(62,-1){$\alpha_m$}
+\put(-1,61){$\alpha_f$}
+\put(-55,-8){$-1$}
+\put(-30,-8){$-\frac{1}{2}$}
+\put(23.7,-8){$\frac{1}{2}$}
+\put(48.7,-8){$1$}
+\put(3,-51.5){$-1$}
+\put(3,-26.5){$-\frac{1}{2}$}
+\put(1, 27){$\frac{1}{2}$}
+\put(3, 49){$1$}
+\put(25,25){\line(-1,0){90}}
+%
+\thicklines
+\put(25,25){\line(-1,-1){85}}
+\put(25,25){\line(-3,-1){97}}
+\put(0,0){\line(0,1){16.7}}
+\put(-50,0){\line(1,0){50}}
+\put(0,0){\circle*{1.5}}
+\put(25,25){\circle*{1.5}}
+\put(0,16.7){\circle*{1.5}}
+\put(-50,0){\circle*{1.5}}
+\put(-46,-50){$\lambda_{1,2}^\infty=-1$}
+\put(-55,26.5){$\lambda_3^\infty=-1$}
+\put(-82,-12){$\lambda_3^\infty=\lambda_{1,2}^\infty$}
+%
+\thinlines
+\put(25,9){\vector(-1,0){24.5}}
+\put(26,7){HHT-$\alpha$}
+\put(-21,14){\vector(0,-1){4}}
+\qbezier(25,40)(-21,30)(-21,14)
+\put(26,39){Generalized-$\alpha$}
+\end{picture}
+\end{center}
+\caption{Classification of the generalized-$\alpha$ method in the
+$\alpha_m-\alpha_f$ space. From~\cite{HulbertChung}.}
+\label{fig:GAstab}
+\end{figure}
+
+Inserting the internal force linearizations from \meqsref{eq:37}{eq:39} into
+\eqnref{eq:GenAlphaEquil} and using $\Q_\kp1=\Q_k+\Delta\Q_k$,
+we obtain the generalized-$\alpha$ equation on incremental form
+%
+\begin{equation}
+\eqalign{
+(1-\alpha_m){\mf M}_k\Delta\ddot{\mf r}_k + \Fi_k & \;+ \cr
+(1-\alpha_f){\mf C}_k\Delta \dot{\mf r}_k + \Fd_k & \;+ \cr
+(1-\alpha_f){\mf K}_k\Delta     {\mf r}_k + \Fs_k & \;=\;
+(1-\alpha_f)\Delta\Q_k + \Q_k }
+\end{equation}
+%
+or,
+by collecting all known quantities of time increment $k$ on the right hand side
+%
+\begin{equation}
+\eqalign{
+(1-\alpha_m){\mf M}_k\Delta\ddot{\mf r}_k \;+\; &
+(1-\alpha_f){\mf C}_k\Delta \dot{\mf r}_k \;+\;
+(1-\alpha_f){\mf K}_k\Delta     {\mf r}_k \cr =\; &
+(1-\alpha_f)\Delta\Q_k - \left(\Fi_k + \Fd_k + \Fs_k - \Q_k \right)
+}\label{eq:IncGenAlphaEquil}
+\end{equation}
+%
+The last term on the right hand side of \eqnref{eq:IncGenAlphaEquil} can be
+recognized as the force residual of time increment $k$, and as such can be
+omitted since this should be equal to zero if convergence has been achieved
+before advancing to time increment $k+1$.
+
+Inserting the Newmark incremental acceleration and velocity expressions from
+\eqsref{eq:322}{eq:324} into \eqnref{eq:IncGenAlphaEquil} yields
+%
+\begin{equation}
+\eqalign{
+(1-\alpha_m){\mf M}_k&\left(
+\frac{1}{\beta h^2} \Delta{\mf r}_k - {\mf a}_k - \ddot{\mf r}_k \right) \;+ \cr
+(1-\alpha_f){\mf C}_k&\left(
+\frac{\gamma}{\beta h} \Delta{\mf r}_k - {\mf d}_k - \dot{\mf r}_k \right) \;+ \cr
+(1-\alpha_f){\mf K}_k&\Delta{\mf r}_k \;=\;
+(1-\alpha_f)\Delta\Q_k - \left(\Fi_k + \Fd_k + \Fs_k - \Q_k \right) }
+\end{equation}
+%
+which after rearranging the known quantities on the right hand side becomes
+%
+\begin{equation}
+{\mf N}_k \Delta{\mf r}_k \;=\; \widehat{\mf R}_k
+\end{equation}
+%
+with
+%
+\begin{equation}
+{\mf N}_k \;=\;
+\frac{1-\alpha_m}{\beta h^2}{\mf M}_k \;+\;
+\frac{(1-\alpha_f)\gamma}{\beta h} {\mf C}_k \;+\;
+(1-\alpha_f){\mf K}_k
+\label{eq:NewtonGenAlpha}
+\end{equation}
+%
+and
+%
+\begin{equation}
+\eqalign{
+\widehat{\mf R}_k \;=\; &
+(1-\alpha_f)\Delta\Q_k - \left(\Fi_k + \Fd_k + \Fs_k - \Q_k \right) \cr +\; &
+(1-\alpha_m){\mf M}_k({\mf a}_k + \ddot{\mf r}_k) \;+\;
+(1-\alpha_f){\mf C}_k({\mf d}_k + \dot{\mf r}_k)
+}\label{eq:PredictorGenAlpha}
+\end{equation}
+
+For a linear system, the state at time $t_\kp1$ given by $\Delta{\mf r}_k$,
+$\Delta\dot{\mf r}_k$ and $\Delta\ddot{\mf r}_k$, and the associated inertia,
+damping and elastic forces forces $\Fi_\kp1$, $\Fd_\kp1$ and $\Fs_\kp1$,
+respectively, will satisfy the equilibrium \eqnref{eq:GenAlphaEquil}.
+For nonlinear systems, the increments $\Delta{\mf r}_k$, $\Delta\dot{\mf r}_k$
+and $\Delta\ddot{\mf r}_k$ will in general not satisfy
+\eqnref{eq:GenAlphaEquil}.
+In order to ensure dynamic equilibrium before advancing to the next time
+increment, the dynamic residual seeks to be minimized through a similar
+Newton--Raphson procedure as described in
+Section~\ref{s:Newton-Raphson iteration}.
+Thus, in each iteration we have to solve the linearized system of equations
+%
+\begin{equation}
+\ls{i}{\mf N}_k \ls{i}\dr_k \;=\; \ls{i-1}{\mf R}^\alpha_k
+\end{equation}
+%
+where the Newton matrix $\ls{i}{\mf N}_k$ is the same as in
+\eqnref{eq:NewtonGenAlpha}, and the right-hand-side vector
+$\ls{i-1}{\mf R}^\alpha_k$ equals
+%
+\begin{equation}
+\eqalign{
+\ls{i-1}{\mf R}^\alpha_k \;=\; &
+(1-\alpha_f)\:\ls{i-1}\Q_\kp1  + \alpha_f\Q_k \cr -\; &
+(1-\alpha_m)\,\ls{i-1}\Fi_\kp1 - \alpha_m\Fi_k \cr -\; &
+(1-\alpha_f)\:\ls{i-1}\Fd_\kp1 - \alpha_f\Fd_k \cr -\; &
+(1-\alpha_f)\:\ls{i-1}\Fs_\kp1 - \alpha_f\Fs_k
+}\label{eq:CorrectorGenAlpha}
+\end{equation}

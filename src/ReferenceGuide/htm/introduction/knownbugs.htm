@@ -1,0 +1,311 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_introduction_knownbugs"></a>
+Known bugs and limitations in release 8.0</h1>
+
+<ul>
+	<li><b>Using old version model files.</b>
+	Existing results related to FE parts and beams created in older versions
+	of FEDEM are not recognized when the model is opened in version 7.0 and later.
+	This is due to the change of "Link" to "Part" or "Beam" as type names of these objects.
+	The old FRS-files use the "Link" keyword which is no longer recognized.
+	The solution is to delete all results, including the reduction if component modes
+	have been used, and do a new simulation.
+
+	<li><b>Memory overflow for large models.</b>
+	When running an animation over a long time series for a large model, the memory my be exhausted.
+	Resolve by closing the animation window after a solving process is started, or toggle off
+	"Automatically start a simultaneous Rigid Body animation on solver start" in the Output tab of
+	the Advanced Solver Setup dialog.
+
+	<li><b>Exporting animation aborts the GUI.</b>
+	When exporting an animation to MPEG or AVI,
+	the user interface shuts down after the export is finished.
+
+	<li><b>Graph view and properties.</b>
+	The sub-title field is now absent.
+
+	<li><b>Number of curve symbols.</b>
+	It is not possible to select how many symbols to use on each curve.
+	There will always be one symbol for each data point, or no symbols at all.
+
+	<li><b>Zoom with auto-scale.</b>
+	The button and menu entry for zooming a graph view with auto-scaling
+	to the windowed curve points is no longer available.
+
+	<li><b>Print graph view.</b>
+	The button and menu entry for printing a graph view is no longer available.
+</ul>
+
+<h1>Fixed bugs in release 7.6.2</h1>
+
+<ul>
+	<li>Update of some properties when selecting multiple parts does not work.
+	<li>Single-selection of elements in the control editor view does not work.
+	<li>Stress recovery during dynamics simulation fails if the number of FE parts is larger than 4 and recovery results are saved in the results database.
+</ul>
+
+<h1>Fixed bugs in release 7.6.1</h1>
+
+<ul>
+	<li>The total deformations calculated during dynamics simulation are incorrect.
+</ul>
+
+<h1>Fixed bugs in release 7.6</h1>
+
+<ul>
+	<li>The toggles in "Spring variables" and "Damper variables" groups in the Results tab of the joint property view do not work.
+	<li>The FE part reducer fails for models with 10-noded tetrahedrons and/or 15-noded wedge elements, if consistent mass and component modes are used.
+</ul>
+
+<h1>Fixed bugs in release 7.5.4</h1>
+
+<ul>
+	<li>The GUI is locked for any user interaction if it fails to open a specified model file.
+</ul>
+
+<h1>Fixed bugs in release 7.5.3</h1>
+
+<ul>
+	<li>The GUI may crash when creating new Control Output elements.
+</ul>
+
+<h1>Fixed bugs in release 7.5.2</h1>
+
+<ul>
+	<li>The check-sum calculation for FE parts has a flaw yielding different results on Windows and Linux.
+</ul>
+
+<h1>Fixed bugs in release 7.5.1</h1>
+
+<ul>
+	<li>Curve plotting of comma-separated two-column ASCII files does not work.
+	<li>Curve plotting of multi-column ASCII files with duplicated 1st column values does not work.
+</ul>
+
+<h1>Fixed bugs in release 7.4.3</h1>
+
+<ul>
+	<li>Loading VRML-files for visualization of Generic parts does not work using relative path specification.
+</ul>
+
+<h1>Fixed bugs in release 7.4.2</h1>
+
+<ul>
+	<li>Stress animation does not work on models consisting of sub-assemblies with FE parts with the same user ID.
+	<li>There is a minor inconsistency in the internal force calculation for slave Triads connected to FE parts.
+</ul>
+
+<h1>Fixed bugs in release 7.4.1</h1>
+
+<ul>
+	<li>The "Use deformational velocity" toggle has no effect for Cam Joint dampers.
+	<li>Animation of expanded system mode shapes does not work for eccentric beam elements.
+	<li>"Switch to internal repository..." for a model using external FE part repository does not work.
+	<li>Restart of dynamics simulation does not work properly.
+</ul>
+
+<h1>Fixed bugs in release 7.4</h1>
+
+<ul>
+	<li>The moments of inertias for general beam cross sections are swapped when parsing SESAM input files.
+</ul>
+
+<h1>Fixed bugs in release 7.3.2</h1>
+
+<ul>
+	<li>Spring stiffness functions of type "Poly line from file" does not work.
+	<li>Mode-shape animation does not work for models containing user-defined elements.
+	<li>Smart-Move of Parts does not work.
+	<li>Stress recovery does not work for FE parts containing beam elements with end release, or with absent Z-orientation vector.
+	<li>Non-symmetric beam cross sections are not parsed correctly from Nastran bulk data files.
+	<li>The shear stiffness is too low for system level beam elements with Pipe cross section, and for FE beam elements imported from SESAM input files.
+</ul>
+
+<h1>Fixed bugs in release 7.3.1</h1>
+
+<ul>
+	<li>Strain gage results from the dynamics solver are incorrect if initial static equilibrium is used.
+	<li>Plotting functions measuring strain gage results experience a one-step time delay.
+	<li>Incorrect file format when auto-exporting curves from the Dynamics solver.
+</ul>
+
+<h1>Fixed bugs in release 7.3</h1>
+
+<ul>
+	<li>Initial velocity in Joints that are connected via Gears is not handled consistently
+	<li>The Triad DOF loads always act in the local with-rotated directions of the Triad and not in the System directions
+</ul>
+
+<h1>Fixed bugs in release 7.2.2</h1>
+
+<ul>
+	<li>Joints and Triads are not always moved along when Parts are moved by editing the Origin property fields
+	<li>Triads in sub-assemblies that are attached to Ground do not move along when the sub-assembly is moved
+	<li>Loading the pre-defined animation with von Mises stress does not work, unless you toggle the "Load face contours" button twice first
+	<li>If a control element has more than one output lines the value can be plotted for only one of these lines
+	<li>The FE part reducer has an upper limit on the model size restricted to 2<sup>31</sup> non-zero elements in the stiffness-matrix
+	<li>Adding ice layer on a wind turbine blade has no effect on the mass
+	<li>Stress recovery on implicit element groups does not work
+	<li>Functions of type "Polyline from file" with only one line of data does not work
+	<li>Importing an existing model as a sub-assembly does not work if the model to be imported contains sub-assemblies itself
+	<li>Initial conditions are applied in global directions for Triads with local system directions
+	<li>Wrong default settings for spring/damper-constrained free joint DOFs
+</ul>
+
+<h1>Fixed bugs in release 7.2.1</h1>
+
+<ul>
+	<li>Wrong orientation on prismatic/cylindric master triads when adding existing triads along the master line.
+	<li>Zooming curves in a graph view during simulation does not work.
+	<li>The "Set All Fixed/Free" buttons do not work for multi-selected items.
+	<li>The odometer in the 3D display disappears when creating free joints and axial springs and -dampers.
+	<li>Connecting a Triad to an FE part and also (at least) one generic part does not work.
+	<li>The VTF-export does not work for models with FE parts in sub-assemblies.
+	<li>The FE part reducer may hang on the 64-bit version for very large FE parts.
+	<li>The FE part reducer and stress recovery modules do not work properly for parts with 4-noded shell elements.
+</ul>
+
+<h1>Fixed bugs in release 7.2</h1>
+
+<ul>
+	<li>Plot of wind speed at the Hub and Blade tips does not work when the model is reopened.
+	<li>Using the output option -allHDvars on models containing both FE parts and beams with hydrodynamic loads does not work.
+	<li>The COM API does not work with Addons written in Python.
+	<li>Prescribed velocity and acceleration in triads yields incorrect results.
+	<li>Loading stress animation does not work unless all FE parts have stress results.
+	<li>Editing property fields may change focus onto irrelevant windows.
+</ul>
+
+<h1>Fixed bugs in release 7.1.4</h1>
+
+<ul>
+	<li>The dynamics solver may use all CPU resources available on the PC if the model contains JONSWAP wave functions.
+	<li>Stress recovery does not work for FE parts containing beam elements that lack a valid local Z-axis definition vector.
+</ul>
+
+<h1>Fixed bugs in release 7.1.3</h1>
+
+<ul>
+	<li>Strain gage recovery does not work if the strain gages are placed in a subassembly.
+	<li>Graph plotting Polyline from file function is not updated when changing file content and "Reload" or "Show" button is pressed.
+	<li>FE part is not re-reduced when an attached triad or joint is deleted
+	<li>Attaching Cam Joint to ground does not work.
+	<li>'Save As...' for models with event results deletes the results from the original model.
+	<li>The data of the reduced parts are not copied when switching to external part repository, such that a new reduction is forced.
+</ul>
+
+<h1>Fixed bugs in release 7.1.2</h1>
+
+<ul>
+	<li>Memory leak on event switching.
+	<li>The mass summary in the fedem_solver.res file may be incorrect if triads with additional masses exist.
+	<li>Evaluation of Polyline functions may fail with out-of-range error if evaluated at the end point.
+	<li>Simulation of wind turbines with pre-bended blades does not work.
+	<li>Incorrect mass matrix for the linear tetrahedron element.
+	<li>Import of Nastran bulk data files from Strand7 does not work.
+</ul>
+
+<h1>Fixed bugs in release 7.1.1</h1>
+
+<ul>
+	<li>The Fourier transform and Differentiation/Integration of curves does not work.
+	<li>The calculated damage might be too low, if a relatively high gate value is used.
+	<li>The FE part reducer may fail for larger FE parts.
+</ul>
+
+<h1>Fixed bugs in release 7.1</h1>
+
+<ul>
+	<li>Scale functions on joint springs are ignored if the springs are interconnected.
+	<li>The energy loss due to sliding friction in looping cam joints is incorrect when the follower passes the start point of the cam curve.
+	<li>Combined curves with beam diagram curves does not work unless the end triad with the lowest ID is selected.
+	<li>Additional BC's on prismatic joints does not work.
+	<li>Specifying initial velocity on a joint used by a Gear yields inconsistent initial conditions.
+	<li>Starting a wind turbine model with an initial rotor velocity does not work properly.
+	<li>The object browser dialog box is not updated when selecting another object.
+	<li>Beamstring pair definition does not work unless the triads along the beamstrings are defined in consequtive order.
+	<li>Stress and strain rosette recovery does not work if the option -savestart has been used for the dynamics solver.
+	<li>A master triad can not be attached to a Part where it matches a slave triad of another joint.
+	<li>Plotting Center of Buoyancy for the Mechanism object gives incorrect value.
+	<li>The "Fatigue Summary" right-click command on curves does not work properly for models containing simulation events.
+	<li>Objects belonging to subassemblies cannot be event-modified.
+	<li>The "Motion scale" field in the Vessel Motion (RAO) property view is not in use.
+	<li>When viewing animations, Triads that are not attached to a Part or Beam do not move according to their displacement.
+	<li>If the Start/Stop/Increment time fields are changed in the Basic solver dialog without pressing Apply,
+	    the value is not transferred to the Advances dialog when pressing the Advanced button.
+	<li>Interconnected p-y springs in Soil Piles does not work.
+	<li>Direction of beam section forces: When a spaceframe is imported, the local axes on the beams might have been flipped.
+	<li>Calculation of the free-free modes does not work in the 64-bit version of the software.
+</ul>
+
+<h1>Fixed bugs in release 7.0.4</h1>
+
+<ul>
+	<li>The objects browser does not show the mechanism object.
+	<li>The wave direction vector cannot be event-modified.
+	<li>Using komma "," as column-separator in polyline-from-file functions does not work.
+	<li>Incorrect hydrodynamic forces if the wave direction is not alligned with local element axes.
+	<li>Combined curves with some curves being scaled, shifted, differentiated or integrated does not work.
+	<li>Incorrect gravity forces for beam elements with internal fluid.
+	<li>Using -double2 as additional solver option may render the results database inconsistent such that subsequent curve plotting hangs.
+	<li>Combined curves based on beam diagram curves with only partially overlapping X-domain does not work.
+	<li>A non-zero initial velocity on joint DOFs may not work if connected to a Generic Part.
+</ul>
+
+<h1>Fixed bugs in release 7.0.3</h1>
+
+<ul>
+	<li>Tower shadow in Aerodynamic Setup, inconsist behaviour.
+	<li>Graphs will occasionally not be drawn/updated.
+	<li>FEDEM shuts down due to memory exhaustion when viewing large res-file in the Results File Browser.
+	<li>Combined curves (e.g., the Generator power curve) do not always update after repeated solving.
+	<li>Period range for JONSWAP sea wave spectrum functions is always auto-calculated when importing simulation events.
+	<li>Solve events from console with multiple processes does not work.
+	<li>Marine growth thickness value is not stored on the model file.
+	<li>Aerodyn can not find tower shadow file when relative path is used.
+	<li>Incorrect default Hub height value in the 3D Turbulent Wind dialog.
+	<li>Incorrect sectional forces near end of beamstring for models containing several beamstrings.
+	<li>Automatic curve export makes the 64-bit dynamics solver crash.
+	<li>Beam and material property objects cannot be event-modified.
+	<li>Automatic curve export does not work if the dynamics solver option -allPrimaryVars- is used.
+	<li>The beam sectional forces stored under Triads for jacket models are sometimes incorrect.
+</ul>
+
+<h1>Fixed bugs in release 7.0.2</h1>
+
+<ul>
+	<li>Buoyancy calculation based on geometry file failes due to incorrect file path.
+	<li>The <i>Update turbine</i> button will reset the mass properties to the Tower, Nacelle and Hub parts to their default values.
+	<li>Integer values larger than 2<sup>31</sup> are not read correctly when importing simulation events from file.
+	<li>Dynamics solver may fail due to NaN values if a large finite water depth is specified.
+	<li>Using path relative to model-file location does not work when selecting wind file in the Aerodynamic Setup dialog.
+	<li>Generation of long wind time series may fail due to memory exhaustion.
+	<li>Improper handling of inconsistent E, G and nu values on Beamstring import.
+	<li>Math expression function containing 1.0/exp(x) explodes for large values of x.
+	<li>The version number is added to the title bar each time on every <i>Save</i>.
+	<li>The toggle in the Generator property view is incorrectly set unless the joint DOF is set to Free.
+</ul>
+
+</body>
+</html>

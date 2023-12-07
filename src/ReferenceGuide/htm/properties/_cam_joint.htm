@@ -1,0 +1,46 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_properties_cam-joint"></a>Cam Joint</h1>
+
+<p>The Cam joint object is used to represent a Cam joint in a FEDEM model.
+A Cam joint has one (or two) spring-damper constrained DOFs, and five (or four)
+unconstrained DOFs that allow the slave triad (called the follower) to move
+over a curved surface (or curve), referred to as the cam surface.
+The cam surface is defined by a curve consisting of circular arc segment.
+Each arc segment is defined by the location of three master triads.
+A Cam joint must consist of one slave/follower triad and at least three
+master triads. See also the FEDEM Theory Guide, Section 6.3.3 "Cam joint."</p>
+
+<p>See the section on "Joints" in the "Mechanism Elements" chapter in the
+FEDEM User's Guide, for more information on Cam joints.</p>
+
+
+<h2><a name="Summary"></a>Summary tab</h2>
+
+<p><img src="../../img/prp/cam-joint-1.png"></p>
+
+<p>The figure above illustrates the property <i>Summary</i> of the Cam joint,
+which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>

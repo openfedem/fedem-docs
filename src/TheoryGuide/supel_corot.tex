@@ -1,0 +1,849 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Co-rotated Formulation}
+\label{chap:SupElCorot}
+
+During mechanism simulation, elements may undergo
+significant translational and rotational displacements.
+Elements in this context may be superelements, generic parts,
+or more ``standard'' elements as described in Chapter~\ref{chap:ElLibrary}.
+These large displacements can have both rigid body and deformational components.
+To obtain these components from the total displacements, a method called
+{\it Shadow Element Configuration} is used, see Figure~\ref{figSC:61}.
+In this figure, the configurations are denoted as follows:
+%
+\begin{namelist}{$C_{0n}$}
+\item[$C_0 $]   \mdash~initial (reference) configuration
+\item[$C_{0n}$] \mdash~co-rotated shadow element configuration
+\item[$C_n $]   \mdash~current (deformed) configuration
+\end{namelist}
+%
+\begin{figure}[b]
+\center{
+\setlength{\unitlength}{1mm}
+\begin{picture}(93,65)
+\thinlines
+% Global coordinate system
+\put( 7,10){\vector(-1,-2){3.5}}\put(1.5, 0){${\mf I}_1$}
+\put( 7,10){\vector( 1, 0){ 10}}\put( 19, 9){${\mf I}_2$}
+\put( 7,10){\vector( 0, 1){ 10}}\put(  7,21){${\mf I}_3$}
+% C0 element and coordinate system
+\thinlines
+\put( 30,50){\vector(-2,-1){  9}}\put( 18,45){${\mf i}_1^0$}
+\put( 30,50){\vector( 3,-4){  6}}\put( 36,43){${\mf i}_2^0$}
+\put( 30,50){\vector( 1, 4){2.5}}\put( 32,61){${\mf i}_3^0$}
+\thicklines
+\put(  7,45){\circle*{1.5}}\put(  0,44){$R2$}
+\put( 41,62){\circle*{1.5}}\put( 43,62){$R1$}
+\put( 39,37){\circle*{1.5}}\put( 37,32){$R3$}
+\qbezier( 7,45)(24,53.5)(41,62)
+\qbezier(41,62)(40,49.5)(39,37)
+\qbezier(39,37)(23,41)(7,45)
+% Cn element and coordinate system
+\thinlines
+\put( 75,25){\vector(-4,-1){  9}}\put( 62,23){${\mf i}_1^n$}
+\put( 75,25){\vector( 1,-2){  3}}\put( 78,20){${\mf i}_2^n$}
+\put( 75,25){\vector( 1, 2){  3}}\put( 79,29){${\mf i}_3^n$}
+\thicklines
+\put( 50,25){\circle*{1.5}}\put( 38,23){$R2$}
+\put( 86,34){\circle*{1.5}}\put( 89,38){$R1$}
+\put( 82,15){\circle*{1.5}}\put( 81,8){$R3$}
+\qbezier[30](50,25)(68,29.5)(86,34)
+\qbezier[30](86,34)(84,24.5)(82,15)
+\qbezier[30](82,15)(66,20)(50,25)
+\put( 45,25){\circle*{1.5}}
+\put( 89,36){\circle*{1.5}}
+\put( 83,13){\circle*{1.5}}
+\qbezier(45,25)(67,30.5)(89,36)
+\qbezier(89,36)(86,24.5)(83,13)
+\qbezier(83,13)(64,19)(45,25)
+\thinlines
+\put(50,50){$C_0$ : initial or reference}
+\put(35,14){$C_n$ : deformed}
+\put(45, 8){$C_{0n}$ : ``shadow''}
+%\graphpaper[2](0,0)(100,75)
+\end{picture}
+}
+\caption{Coordinate systems and configurations for an element}
+\label{figSC:61}
+\end{figure}
+%
+$C_0$ is the initial, undeformed configuration, and $C_n$ is the deformed
+position at step $n$.
+The shadow element configuration, $C_{0n}$, is obtained by translating and
+rotating the initial configuration $C_0$ as a rigid body in such a way that the
+``distance'' between $C_{0n}$ and $C_n$ is minimized.
+
+This rigid body motion moves element nodes from their initial position within
+the undeformed configuration, $C_0$, to their position in the shadow element
+configuration, $C_{0n}$, whereas the deformational displacement moves the nodes
+from their position in the shadow element configuration, $C_{0n}$,
+to their positions in the deformed configuration $C_n$.
+
+The local coordinate system of configuration $C_0$ moves and rotates with the
+element and becomes the co-rotated coordinate system of $C_{0n}$.
+In addition, because the superelement matrices established in
+Chapter~\ref{chap:CMS} were defined in the element's local coordinate system,
+the matrices remain constant with respect to this co-rotated coordinate system.
+Thirdly, the co-rotated coordinate system is common to both $C_{0n}$ and $C_n$.
+
+When establishing the system matrices as described in
+Chapter~\ref{c:Dynamics Simulation}, the superelement matrices defined in
+Chapter~\ref{chap:CMS} must be transformed to the global coordinates for each
+new position of the mechanism during simulation.
+This transformation to global coordinates is the subject of the next section.
+
+\input{corot_coord_sys}
+
+\iftoggle{publicedition}{}{% The following is for the in-house edition only.
+
+\section{Deformational displacements}
+\label{s:Deformational displacements}
+
+During mechanism simulation, supernodes move to new positions as a result of the
+elastic and rigid body motion of the superelements, see Figure~\ref{figSC:51}.
+To calculate the deformations of a superelement, the Element Corotated
+Coordinate System (ECCS) transformation matrix ${\mf P}_{SGi}$
+(described in the previous section) and its inverse must first be calculated.
+
+\begin{figure}[t]
+\center{
+\setlength{\unitlength}{1mm}
+\begin{picture}(90,70)
+\thinlines
+% Global coordinate system
+\put( 0,0){\vector( 1, 0){ 85}}\put(87,-1){${\mf I}_1$}
+\put( 0,0){\vector( 0, 1){ 65}}\put(-1,67){${\mf I}_2$}
+\thicklines
+% C0 element and nodal vectors
+\put(11,11){\vector( 4, 1){8}}
+\put(11,11){\vector( -1,4){2}}
+\put(61,19){\vector( 4, 1){8}}
+\put(61,19){\vector( -1,4){2}}
+\qbezier(13,8)(8,7)(7,10)
+\qbezier(7,10)(6,13)(11,14)
+\qbezier(11,14)(34.5,18)(58,22)
+\qbezier(58,22)(63,23)(64,20)
+\qbezier(64,20)(65,18)(62,17)
+\qbezier(62,17)(37.5,12.5)(13,8)
+%
+\put( 30.0, 54.0){\vector( 3,-1){8}}
+\put( 30.0, 54.0){\vector( 1, 3){3.5}}
+\put( 77.3, 36.0){\vector( 3,-1){8}}
+\put( 77.3, 36.0){\vector( 1, 3){3.5}}
+\qbezier[10]( 30.3, 50.4) ( 25.4, 52.1) ( 26.1, 55.2)
+\qbezier[10]( 26.1, 55.2) ( 26.7, 58.3) ( 31.5, 56.6)
+\qbezier[60]( 31.5, 56.6) ( 53.9, 48.3) ( 76.2, 40.1)
+\qbezier[10]( 76.2, 40.1) ( 81.1, 38.4) ( 80.4, 35.3)
+\qbezier[ 8]( 80.4, 35.3) ( 80.3, 33.1) ( 77.2, 33.7)
+\qbezier[60]( 77.2, 33.7) ( 53.7, 42.1) ( 30.3, 50.4)
+%
+\put( 27.0, 55.0){\vector( 1,0){8}}
+\put( 27.0, 55.0){\vector( 0,1){8}}
+\put( 80.3, 35.0){\vector( 1,-1){6}}
+\put( 80.3, 35.0){\vector( 1, 1){6}}
+\qbezier( 27.3, 51.4) ( 22.4, 53.1) ( 23.1, 56.2)
+\qbezier( 23.1, 56.2) ( 23.7, 59.0) ( 28.5, 58.0)
+\qbezier( 28.5, 58.0) ( 55.9, 55.3) ( 80.5, 39.5)
+\qbezier( 80.5, 39.5) ( 84.1, 37.2) ( 83.4, 33.0)
+\qbezier( 83.4, 34.3) ( 83.3, 31.9) ( 79.2, 32.7)
+\qbezier( 79.2, 32.7) ( 51.7, 50.1) ( 27.3, 51.4)
+\put(34,6){$C_0$ : initial or reference}
+\put(62,52){$C_n$ : deformed}
+\put(24,38){$C_{0n}$ : ``shadow''}
+%\graphpaper[2](0,0)(100,75)
+\end{picture}
+}
+\caption{Element deformations}
+\label{figSC:51}
+\end{figure}
+
+Next, the initial positions and orientations ${\mf P}_{NSj}^0$ of the supernodes
+(index~$j$) relative to the superelement coordinate system (index~$i$) must be
+determined:
+%
+\begin{equation}
+{\mf P}_{NSj}^0 =
+\left[\begin{array}{cc}
+\tilde{\mf R}_j^0 & \tilde{\mf x}^0 \\
+{\mf 0} & 1
+\end{array}\right]
+\end{equation}
+%
+where the index~$^0$ represents the initial positions and orientations,
+and $\tilde{}$ indicates values measured in the superelement coordinate system.
+
+Using the inverse of the superelement transformation in {\underline g}lobal
+coordinates, ${\mf P}_{SGi}^{-1}$, and the supernode position in relation to the
+global system, ${\mf P}_{NGj}$, the new position of the supernode $j$ in the
+superelement coordinate system, ${\mf P}_{NSj}$, is determined:
+%
+\begin{equation}
+{\mf P}_{NSj} =  {\mf P}_{SGi}^{-1}
+{\mf P}_{NGj} = \left[\begin{array}{cc}
+\tilde{\mf R}_j & \tilde{\mf x} \\
+\mf 0 & 1 \end{array}\right]
+\label{eqSC:Png}
+\end{equation}
+%
+where $\tilde{\mf R}_j$ is the rotation/orientation, and $\tilde{\mf x}$ is the
+position in the superelement coordinate system.
+
+The rigid body motion is now eliminated by subtracting the initial position from
+the current position to form the translational displacement of the node
+(measured in the superelement coordinate system) as:
+%
+\begin{equation}
+\tilde{\mf u}_{d_j} = \left[\begin{array}{c}
+\tilde{v}_x \\
+\tilde{v}_y \\
+\tilde{v}_z
+\end{array}\right]_j = \left[\begin{array}{c}
+\tilde{x} - \tilde{x}^o \\
+\tilde{y} - \tilde{y}^o \\
+\tilde{z} - \tilde{z}^o
+\end{array}\right]_j
+\label{eq:defTranslation}
+\end{equation}
+
+For the rotations, the present orientation can be achieved from the undeformed
+orientation by an incremental rotation $\Delta\tilde{\mf R}_j$ as
+%
+\begin{equation}
+\tilde{\mf R}_j = \Delta\tilde{\mf R}_j\tilde{\mf R}_j^0
+\end{equation}
+%
+from which the incremental rotation is obtained
+%
+\begin{equation}
+\Delta\tilde{\mf R}_j = \tilde{\mf R}_j \tilde{\mf R}_j^{0^T}
+%
+%\approx
+%\left[\begin{array}{ccc}
+%{1} & {-\Delta\tilde\gamma} & {\Delta\tilde\beta}  \\
+% {\Delta\tilde\gamma} & {1} & {-\Delta\tilde\alpha} \\
+% {-\Delta\tilde\beta} & {\Delta \tilde\alpha} & {1}
+%\end{array}\right]
+%
+= \Delta\tilde{\mf R}_j(\tilde{\tf \theta}_{d_j})
+\quad\text{where}\quad
+\tilde{\tf \theta}_{d_j} = \textbf{axial}(\Delta\tilde{\mf R}_j)
+\label{eq:defRotation}
+\end{equation}
+%
+The subscript $d_j$ denotes deformation for node $j$, and $\textbf{axial}(\;)$
+represents the inverse relationship of \eqnref{eq:RodriguesDef}.
+
+\subsection{Deformational displacement vector}
+
+The supernode deformation vector, $\tilde{\mf v}_{d_j}$, for node $j$ may now be
+collected from the terms in \eqsref{eq:defTranslation}{eq:defRotation}
+%
+\begin{equation}
+\tilde{\mf v}_{d_j} = \left[\begin{array}{c}
+\tilde{v}_x \\
+\tilde{v}_y \\
+\tilde{v}_z \\
+\tilde{\theta}_x \\
+\tilde{\theta}_y \\
+\tilde{\theta}_z
+\end{array}\right]_j =
+\left[\begin{array}{c}
+\tilde{x} - \tilde{x}^0 \\
+\tilde{y} - \tilde{y}^0 \\
+\tilde{z} - \tilde{z}^0 \\
+\tilde{\theta}_{d_x} \\
+\tilde{\theta}_{d_y} \\
+\tilde{\theta}_{d_z}
+\end{array}\right]_j
+\label{eqSC:nodeDefDisp}
+\end{equation}
+%
+where $\tilde{x}^0$, $\tilde{y}^0$ and $\tilde{z}^0$ are the undeformed $x$-,
+$y$- and $z$-positions of the supernode relative to the superelement coordinate
+system.
+
+Repeating the formation of \eqnref{eqSC:nodeDefDisp} for all the supernodes of a
+superelement, and noting that the generalized coordinates from the internal
+superelement modes of vibration are explicit variables in the simulation,
+the superelement deformation vector, $\tilde{\mf v}_d$, may be assembled
+(refer to \eqnref{eqCMS:Hdef}) as:
+%
+\begin{equation}
+\left[\begin{array}{c} {\mf v}_e \\ {\mf y} \end{array} \right] =
+\left[\begin{array}{*{20}c}
+\tilde{\mf v}_{d_1} & \tilde{\mf v}_{d_2} & \cdots & \tilde{\mf v}_{d_l} &
+y_1 & y_2 & \cdots & y_s
+\end{array}\right]^T
+\label{eqSC:supelDefDisp}
+\end{equation}
+%
+In this general case, the superelement has $l$ supernode deformations
+calculated from \eqnref{eqSC:nodeDefDisp} and $s$ generalized coordinates.
+
+\section{Superelement internal forces}
+\label{sec:SupElIntForce}
+
+The internal superelement force vector is calculated based on the deformational
+displacement vector as
+%
+\begin{equation}
+\tilde{\mf f} = \tilde{\mf k}_e \tilde{\mf v}_d
+\label{eqSC:forceLocal}
+\end{equation}
+%
+where
+%
+\begin{namelist}{$\tilde{\mf k}_e$}
+\item[$\tilde{\mf f}$]   \mdash~element force vector, superelement system
+\item[$\tilde{\mf k}_e$] \mdash~element stiffness matrix, superelement system
+\item[$\tilde{\mf v}_d$] \mdash~element displacement vector, superelement system
+\end{namelist}
+%
+and from \eqnref{eqCMS:ReducedModelEq} we have
+%
+\begin{equation}
+\tilde{\mf f} = \left[\begin{array}{c}
+\tilde{\mf f}_e \\ {\mf f}_G
+\end{array}\right] = \left[\begin{array}{cc}
+\tilde{\mf k}_{11} & \tilde{\mf k}_{12} \\
+\tilde{\mf k}_{21} & {\mf k}_{22} \\
+\end{array} \right] \left[\begin{array}{c}
+\tilde{\mf v}_d \\ {\mf y} \end{array} \right]
+\label{eqSC:forceFinal}
+\end{equation}
+
+\subsection{Transforming internal forces to the global system}
+
+Supernode DOFs are generally expressed in the global coordinate system,
+which is the default in Fedem.
+However, they can also be expressed in the local coordinate system of the
+supernode or another specified supernode.
+DOFs referencing to the supernode in this way are said to have
+{\it updated local directions}.
+Before adding the superelement forces to the system vector,
+each node is transformed to either the global or the updated local directions.
+
+Assuming the rotational part of the inverse superelement transformation matrix,
+${\mf P}_{SGi}^{-1}$, for superelement $i$ is ${\mf R}^T_{SGi}$, the
+transformation for supernode $k$ before adding it to the system matrices is
+%
+\begin{equation}
+{\mf T}_k = {\mf R}_{SGi}^T
+\label{eqSC:57}
+\end{equation}
+%
+when global direction is specified for the node.
+If the local updated direction for node $k$ is specified as that of supernode
+$j$ ($j$ may be the same as node $k$), the transformation ${\mf T}_k$ is
+%
+\begin{equation}
+{\mf T}_k = {\mf R}_{SGi}^T {\mf R}_{NGj}
+\label{eqSC:58}
+\end{equation}
+%
+when the rotational part of the position matrix ${\mf P}_{NGj}$ for node $j$
+is ${\mf R}_{NGj}$.
+
+The transformation matrix ~${\mf T}_k$ of dimension $3\times3$ is valid for
+supernode $k$ for both translation and rotation transformation.
+For a superelement with $m$ external nodes and $n$ generalized DOFs,
+the overall superelement transformation matrix may be written
+%
+\begin{equation}
+{\mf T}_{Si} = \left\lceil \begin{array}{*{20}c}
+{\mf T}_1 & {\mf T}_1 & {\mf T}_2 & {\mf T}_2 & \cdots &
+{\mf T}_m & {\mf T}_m & {\mf I}_G \\
+\end{array} \right\rfloor
+\label{eqSC:59}
+\end{equation}
+%
+where the dimension of ${\mf I}_G$ is $n\!\times\!n$, $n$ being the number of
+generalized coordinates for the superelement.
+The superelement force vector is now transformed to the directions for the DOFs
+at system level through
+%
+\begin{equation}
+{\mf f} = {\mf T}_{Si}^T \tilde{\mf f}
+\label{eqSC:forceTrans}
+\end{equation}
+
+\section{Superelement tangent stiffness}
+\label{s:Superelement tangent stiffness}
+
+The tangent stiffness matrix is said to be consistent with the internal forces
+if it relates the variation of internal force, ${\mf f}$, to variations in the
+total displacement, ${\mf v}$, i.e.
+%
+\begin{equation}
+\eqalign{
+\delta{\mf f} =\;&
+\frac{\partial{\mf f}}{\partial{\mf v}} \delta{\mf v} =
+{\mf k}\delta{\mf v} \cr =\;&
+\delta{\mf T}^T \tilde{\mf k}_e\tilde{\mf v}_d +
+{\mf T}^T\delta\tilde{\mf k}_e \tilde{\mf v}_d +
+{\mf T}^T\tilde{\mf k}_e \delta\tilde{\mf v}_d =
+{\mf k}_G\delta{\mf v} + {\mf k}_M \delta{\mf v}
+}\label{eqSC:64}
+\end{equation}
+%
+The parts of \eqnref{eqSC:64} are:
+%
+\begin{eqnarray}
+\delta{\mf T}^T \tilde{\mf k}_e\tilde{\mf v}_d &=& {\mf k}_G \delta{\mf v}
+\mbox{~~: described in detail in Section~\ref{s:Rigid rotation gradient matrix}}
+\\
+{\mf T}^T \delta\tilde{\mf k}_e &=&
+{\mf T}^T \frac{\partial\tilde{\mf k}_e}{\partial\tilde{\mf v}_d}
+\delta\tilde{\mf v}_d = {\mf 0}
+\mbox{~~: since $\tilde{\mf k}_e$ is constant}
+\\
+{\mf T}^T\tilde{\mf k}_e\delta\tilde{\mf v}_d &=&
+{\mf T}^T\tilde{\mf k}_e\frac{\partial\tilde{\mf v}_d}{\partial\tilde{\mf v}}
+\delta\tilde{\mf v} =
+{\mf T}^T\tilde{\mf k}_e\tilde{\mf P}\delta\tilde{\mf v} \approx
+{\mf T}^T\tilde{\mf k}_e\delta\tilde{\mf v} =
+{\mf T}^T\tilde{\mf k}_e{\mf T}\delta{\mf v}
+\label{eqSC:65}
+\end{eqnarray}
+%
+where
+%
+\begin{namelist}{${\mf k}_M$}
+\item[${\mf f}$]         \mdash~internal force vector
+\item[${\mf k}$]         \mdash~tangent stiffness matrix
+\item[${\mf k}_G$]       \mdash~rotational geometric stiffness matrix
+\item[${\mf k}_M$]       \mdash~material stiffness matrix
+\item[$\tilde{\mf k}_e$] \mdash~element stiffness matrix
+\item[${\mf v}$]         \mdash~total displacement vector, ordered node by node
+\item[$\tilde{\mf v}_d$] \mdash~deformational displacement vector
+\item[${\mf T}_n$]       \mdash~transformation matrix from local to global
+coordinate system
+\end{namelist}
+
+The rotational geometric stiffness term is defined by \eqnref{eqSC:64},
+but first the variation of the transformation matrix needs to be established:
+%
+\begin{equation}
+\eqalign{
+\delta{\mf T}_n =\;&
+\frac{\partial{\mf T}_n}{\partial\tilde{\tf\omega}_i}
+\delta\tilde{\mf\omega}_i \cr =\;&
+\left[\begin{array}{c}
+  {\mf 0}^T \\
+ {{\mf i}_3^n}^T \\
+-{{\mf i}_2^n}^T
+\end{array}\right] \delta\tilde\omega_x +
+\left[\begin{array}{c}
+-{{\mf i}_3^n}^T \\
+  {\mf 0}^T \\
+ {{\mf i}_1^n}^T
+\end{array}\right] \delta\tilde\omega_y +
+\left[\begin{array}{c}
+ {{\mf i}_2^n}^T \\
+-{{\mf i}_1^n}^T \\
+  {\mf 0}^T
+\end{array}\right] \delta\tilde\omega_z \cr =\;&
+\left[\begin{array}{ccc}
+0 & \delta\tilde\omega_z  & -\delta\tilde\omega_y \\
+-\delta\tilde\omega_z & 0 & \delta\tilde\omega_x  \\
+ \delta\tilde\omega_y & -\delta\tilde\omega_x & 0 \\
+\end{array}\right]
+\left[\begin{array}{c}
+{{\mf i}_1^n}^T \\
+{{\mf i}_2^n}^T \\
+{{\mf i}_3^n}^T \\
+\end{array}\right] \cr =\;&
+-\widehat{\delta\tilde{\tf\omega}}{\mf T}_n
+}\label{eqSC:68}
+\end{equation}
+%
+and
+%
+\begin{equation}
+\delta{\mf T}_n^T = {\mf T}_n^T \widehat{\delta\tilde{\tf\omega}}
+\label{eqSC:69}
+\end{equation}
+%
+where $\delta{\tf\omega}_i$ is the instantaneous rotation axis.
+
+The rotational geometric stiffness matrix can now be established as follows
+%
+\begin{equation}
+\eqalign{
+\delta{\mf T}^T   \tilde{\mf f} =\;& \left[\begin{array}{c}
+\delta{\mf T}_n^T \tilde{\mf n}_1 \\
+\delta{\mf T}_n^T \tilde{\mf m}_1 \\ \vdots \\
+\delta{\mf T}_n^T \tilde{\mf n}_N \\
+\delta{\mf T}_n^T \tilde{\mf m}_N \\
+\end{array}\right] = \left[\begin{array}{c}
+{\mf T}_n^T \widehat{\delta\tilde{\tf\omega}}_r \tilde{\mf n}_1 \\
+{\mf T}_n^T \widehat{\delta\tilde{\tf\omega}}_r \tilde{\mf m}_1 \\ \vdots \\
+{\mf T}_n^T \widehat{\delta\tilde{\tf\omega}}_r \tilde{\mf n}_N \\
+{\mf T}_n^T \widehat{\delta\tilde{\tf\omega}}_r \tilde{\mf m}_N
+\end{array}\right] \cr =\;& -{\mf T}^T\left[\begin{array}{c}
+\widehat{\tilde{\mf n}}_1 \\
+\widehat{\tilde{\mf m}}_1 \\ \vdots \\
+\widehat{\tilde{\mf n}}_N \\
+\widehat{\tilde{\mf m}}_N
+\end{array}\right] \delta{\tf\omega}_r \cr =\; &
+-{\mf T}^T \tilde{\mf F}_{nm} \delta\tilde{\tf\omega}_r =
+-{\mf T}^T \tilde{\mf F}_{nm} \tilde{\mf G} {\mf T}\delta{\mf v} =
+{\mf k}_{GR} \delta{\mf v}
+}\label{eqSC:610}
+\end{equation}
+%
+with
+%
+\begin{eqnarray}
+{\mf k}_{GR} = -{\mf T}^T \tilde{\mf F}_{nm} \tilde{\mf G} {\mf T} &\text{and}&
+\tilde{\mf k}_{GR} = -\tilde{\mf F}_{nm}\tilde{\mf G} \label{eqSC:612} \\[3mm]
+%
+\tilde{\mf f} = \left[\begin{array}{c}
+\tilde{\mf n}_1 \\
+\tilde{\mf m}_1 \\ \vdots \\
+\tilde{\mf n}_N \\
+\tilde{\mf m}_N
+\end{array}\right] &\text{and}&
+\tilde{\mf F}_{nm} = \left[ \begin{array}{c}
+\widehat{\tilde{\mf n}}_1 \\
+\widehat{\tilde{\mf m}}_1 \\ \vdots \\
+\widehat{\tilde{\mf n}}_N \\
+\widehat{\tilde{\mf m}}_N
+\end{array}\right] \label{eqSC:614} \\[3mm]
+%
+\widehat{\delta\tilde{\tf\omega}_r}
+\tilde{\mf n}_a = -\widehat{\tilde{\mf n}}_a \delta\tilde{\tf\omega}
+&\text{and}&
+\delta\tilde{\tf \omega}_r =
+\frac{\partial\tilde{\tf\omega}_r}{\partial\tilde{\mf v}}
+\delta\tilde{\mf v} = \tilde{\mf G}\delta\tilde{\mf v}
+\label{eqSC:RigRotGrad}
+\end{eqnarray}
+%
+where $\delta\tilde{\tf\omega}_r$ is the instantaneous rigid rotation axis.
+
+The expression~\eqref{eqSC:612} is developed next.
+While $\tilde{\mf F}_{nm}$ is quite simple, the $\tilde{\mf G}$ matrix must be
+expanded, and that is the focus of the following section.
+
+\remark{Geometric stiffness, or stress stiffening, is often associated with
+increased transverse stiffness for structures with an in-plane stress state,
+such as trampolines, tensioned cables, etc.}
+\remark{The geometric stiffness term of \eqnref{eqSC:612} is a rank 3 matrix,
+which only adds stiffness contributions to the three rigid body rotations
+of the superelement.
+It is important to note that the geometric stiffness matrix developed here does
+not add stiffness to internal deformations of the superelement.}
+\remark{For a pre-tensioned cable with a transverse load at the middle,
+the geometric stiffness will not give added stiffness against midpoint
+deflection if the cable is modeled using a single superelement.
+In this case the deflection is internal to the superelement only, and no rigid
+body rotation takes place.
+However, if the cable is modeled using two superelements (one for each half of
+the cable), the midpoint deflection will give rigid body rotation for both,
+and a correct additional stiffness for the midpoint will be achieved.}
+
+\section{Rigid rotation gradient matrix}
+\label{s:Rigid rotation gradient matrix}
+
+The $\tilde{\mf G}$ matrix, defined in \eqnref{eqSC:RigRotGrad},
+relates the variation of an element's rigid body rotation (the rotation of the
+co-rotated element) to the variation of its DOFs, as
+%
+\begin{equation}
+\delta\tilde{\tf\omega}_r =
+\frac{\partial\tilde{\tf\omega}_r}{\partial\tilde{\mf v}} \delta\tilde{\mf v} =
+\tilde{\mf G}\delta\tilde{\mf v}
+\label{eqSC:RigRotGradII}
+\end{equation}
+%
+This gradient relationship is dependent on the positioning algorithm for the
+co-rotated coordinate system, as described in Section~\ref{sec:RefDef}.
+
+\subsection{Method 1: Best fit of max sized triangle}
+
+The rigid body rotation of a superelement is controlled by the motion of three
+reference points, $R1$, $R2$ and $R3$, as defined in
+Section~\ref{sec:RefDefMeth1}.
+These reference points define the superelement's co-rotated coordinate system,
+see Figure~\ref{figSC:62}.
+This coordinate system has its origin at point $R1$; the $x$-axis is $R1-R2$;
+and the $z$-axis is perpendicular to the $R1-R2-R3$ plane.
+
+\begin{figure}[t]
+\center{
+\setlength{\unitlength}{1mm}
+\begin{picture}(94,43)
+\thinlines
+% Global coordinate system
+\put( 7,10){\vector(-1,-2){3.5}}\put(1.5, 0){${\mf I}_1$}
+\put( 7,10){\vector( 1, 0){ 10}}\put( 19, 9){${\mf I}_2$}
+\put( 7,10){\vector( 0, 1){ 10}}\put(  7,21){${\mf I}_3$}
+% C0 element and coordinate system
+%\thinlines
+%\put( 30,50){\vector(-2,-1){  9}}\put( 18,45){${\mf i}_1^0$}
+%\put( 30,50){\vector( 3,-4){  6}}\put( 36,43){${\mf i}_2^0$}
+%\put( 30,50){\vector( 1, 4){2.5}}\put( 32,61){${\mf i}_3^0$}
+%\thicklines
+%\put(  7,45){\circle*{1.5}}\put(  1,44){$R2$}
+%\put( 41,62){\circle*{1.5}}\put( 43,62){$R1$}
+%\put( 39,37){\circle*{1.5}}\put( 37,32){$R3$}
+%\qbezier( 7,45)(24,53.5)(41,62)
+%\qbezier(41,62)(40,49.5)(39,37)
+%\qbezier(39,37)(23,41)(7,45)
+% Cn element and coordinate system
+\thicklines
+\put( 50,25){\circle*{1.5}}\put( 38,23){$R2$}
+\put( 86,34){\circle*{1.5}}\put( 89,38){$R1$}
+\put( 82,15){\circle*{1.5}}\put( 81,8){$R3$}
+\qbezier[30](50,25)(68,29.5)(86,34)
+\qbezier[30](86,34)(84,24.5)(82,15)
+\qbezier[30](82,15)(66,20)(50,25)
+\thicklines
+\put(86,42){\circle*{1.5}}\put(86,42){\vector(1,-2){3}}\put( 83,39){${\mf e}_1$}
+\put(42,19){\circle*{1.5}}\put(42,19){\vector(1, 2){3}}\put( 45,19){${\mf e}_2$}
+\put(45,25){\circle*{1.5}}
+\put(89,36){\circle*{1.5}}
+\put(83,13){\circle*{1.5}}
+\qbezier(45,25)(67,30.5)(89,36)
+\qbezier(89,36)(86,24.5)(83,13)
+\qbezier(83,13)(64,19)(45,25)
+\thinlines
+%\put(50,50){$C_0$ : initial or reference}
+%\put(35,14){$C_n$ : deformed}
+%\put(45, 8){$C_{0n}$ : ``shadow''}
+%\graphpaper[2](0,0)(100,80)
+\end{picture}
+}
+\caption{The superelement co-rotated coordinate system;
+${\tf e}_i$ is the eccentricity vector from an external control node
+to the reference point $Ri$.}
+\label{figSC:62}
+\end{figure}
+
+The $\tilde{\mf G}$-matrix is established for the triangular element formed by
+the reference points, and then transformed to the superelement's external nodes.
+The external nodes that control the motion of reference points are also called
+{\it control nodes}, as described in Section~\ref{sec:RefDefMeth1}.
+
+\subsubsection{${\mf G}$ in the triangle coordinate system}
+
+The ${\mf G}$-matrix for a triangular element in the coordinate system of the
+triangle (denoted by $\hat{\mf G}$), takes a particularly simple form.
+Due to this, the relationship
+%
+\begin{equation}
+\delta\hat{\tf \omega}_r =
+\frac{\partial\hat{\tf\omega}_r}{\partial\hat{\mf v}}\delta\hat{\mf v} =
+\hat{\mf G}\delta\hat{\mf v}
+\label{eqSC:RigRotGradTriSys}
+\end{equation}
+%
+is first developed in this coordinate system, and then transformed to the
+superelement coordinate system.
+
+Since a variation of the rotational DOFs in ${\mf v}$ has no effect on the
+rotation of the triangular element, the rotational DOFs are not taken into
+account.
+Hence, the $\delta{\mf v}$ vector has nine DOFs, which are ordered node by node.
+
+While maintaining the triangle coordinate system, $\hat{\mf G}$ can be split
+into contributions from each node as follows:
+%
+\begin{eqnarray}
+\hat{\mf G} &=& \left[\begin{array}{ccc}
+\hat{\mf G}_1 & \hat{\mf G}_2 & \hat{\mf G}_3
+\end{array}\right] \label{eqSC:618} \\
+%
+\hat{\mf G}_1 &=& \frac{1}{2A} \left[\begin{array}{ccc}
+0 & 0 & x_{32} \\
+0 & 0 & y_{32} \\
+0 & -\frac{2A}{x_{21}} & 0
+\end{array}\right] \nonumber \\
+%
+\hat{\mf G}_2 &=& \frac{1}{2A} \left[\begin{array}{ccc}
+0 & 0 & x_{13} \\
+0 & 0 & y_{13} \\
+0 & \frac{2A}{x_{21}} & 0
+\end{array}\right] \nonumber \\
+%
+\hat{\mf G}_3 &=& \frac{1}{2A} \left[\begin{array}{ccc}
+0 & 0 & x_{21} \\
+0 & 0 & y_{21} \\
+0 & 0 & 0
+\end{array}\right] \nonumber
+\end{eqnarray}
+%
+where $x$ and $y$ are coordinates for reference element nodes
+($R1$, $R2$, and $R3$) in the triangle coordinate system.
+
+In the superelement coordinate system, $\tilde{\mf G}_i$ can now be obtained
+from the triangle coordinate system, $\hat{\mf G}_i$:
+%
+\begin{equation}
+\tilde{\mf G}_i = {\mf R}_{TS}\hat{\mf G}_i {\mf R}_{TS}^T
+\label{eqSC:619}
+\end{equation}
+%
+To establish the $\tilde{\mf G}$ matrix for the superelement $i$,
+a relationship must exist between superelement external DOFs,
+$\tilde{\mf v}_{sup}$, and the DOFs for the reference element,
+$\tilde{\mf v}_{ref}$, see Figure~\ref{figSC:62}.
+
+As mentioned above, the DOFs in \textit{one} external node must be able to
+control the translations of the reference points completely.
+The reference point is therefore rigidly connected to the external node.
+In other words, both translational \textit{and} rotational DOFs of the external
+nodes control the translation of the reference points.
+Since the rotational DOFs control the movement of the co-rotated element,
+the eccentricity vectors (rigid arms) should be as short as possible to avoid
+the introduction of false rotations of the co-rotated element.
+The best description is achieved when the reference points and the control nodes
+are coincidental.
+
+It is important to choose external nodes whose motion represents the co-rotated
+motion of the element, because the rotational geometric stiffness is sensitive
+to this factor.
+
+The vector $\tilde{\mf v}_{sup}$ has dimensions $6\times n$, where $n$ is the
+number of external nodes; $\tilde{\mf v}_{ref}$ has dimensions $9\times1$.
+Both vectors are ordered node by node, and are related through
+%
+\begin{equation}
+\tilde{\mf v}_{ref} = \tilde{\mf M} \tilde{\mf v}_{sup}
+\label{eqSC:620}
+\end{equation}
+
+The matrix $\tilde{\mf M}$ depends upon which external nodes move the three
+reference nodes.
+For example, if external node 2 moves $R1$, external node 1 moves $R2$, and
+external node 4 moves $R3$ for a 4-node superelement, $\tilde{\mf M}$ becomes
+%
+\begin{equation}
+\tilde{\mf M} = \left[\begin{array}{cccc}
+0 & \tilde{\mf m}_1 & 0 & 0 \\
+\tilde{\mf m}_2 & 0 & 0 & 0 \\
+0 & 0 & 0 & \tilde{\mf m}_3
+\end{array}\right]
+\label{eqSC:621}
+\end{equation}
+%
+when
+%
+\begin{equation}
+\tilde{\mf m}_i =
+\left[\begin{array}{cc} {\mf I} & -\widehat{\mf e}_i \end{array}\right] =
+\left[\begin{array}{cccccc}
+1 & 0 & 0 &  0      &  e_{iz} & -e_{iy} \\
+0 & 1 & 0 & -e_{iz} &  0      & e_{ix}  \\
+0 & 0 & 1 &  e_{iy} & -e_{ix} & 0
+\end{array}\right]
+\label{eqSC:622}
+\end{equation}
+%
+where ${\mf e}_i$ is the position of reference point $i$ relative to node $i$.
+In this example, the $\tilde{\mf G}_{sup}$ matrix for the superelement becomes
+%
+\begin{equation}
+\eqalign{
+\tilde{\mf G}_{sup} = \tilde{\mf G}_{ref} \tilde{\mf M} =\;&
+\left[\begin{array}{ccc}
+\tilde{\mf G}_1 & \tilde{\mf G}_2 & \tilde{\mf G}_3
+\end{array}\right]\left[\begin{array}{cccc}
+0 & \tilde{\mf m}_1 & 0 & 0 \\
+\tilde{\mf m}_2 & 0 & 0 & 0 \\
+0 & 0 & 0 & \tilde{\mf m}_3
+\end{array}\right] \cr =\;&
+\left[\begin{array}{*{20}c}
+\tilde{\mf G}_2\tilde{\mf m}_2 & \tilde{\mf G}_1 \tilde{\mf m}_1 &
+0 & \tilde{\mf G}_3 \tilde{\mf m}_3
+\end{array}\right]
+}\label{eqSC:623}
+\end{equation}
+%
+where $\tilde{\mf G}_{ref}$ is the $\tilde{\mf G}$ matrix for the reference
+element, obtained by combining \eqsref{eqSC:618}{eqSC:619}.
+
+\subsection{Method 2: Mass based weighted average}
+
+The mass based weighted average scheme for positioning the co-rotated coordinate
+system resulted in a nonlinear equation system to be solve with respect to
+increments in translation and rotation for the co-rotated coordinate system.
+From \eqnref{eq:refSysMeth2} we have
+%
+\begin{equation}
+\delta{\mf v}_\textit{CG} =
+\left[\sum_{i=1}^n{\mf k}^i_{21}{\mf E}_i\right]^{-1}
+\sum_{i=1}^n{\mf k}^i_{21}\,\delta{\mf v}_i
+\end{equation}
+%
+which can be written as
+%
+\begin{equation}
+\left[\begin{array}{c}
+\delta{\mf u}_\textit{r} \\ \delta{\tf \omega}_r
+\end{array}\right] = \left[\begin{array}{ccccc}
+\begin{array}{l} {\mf G}_{t_1} \\ {\mf G}_1 \end{array} &\hdots&
+\begin{array}{l} {\mf G}_{t_i} \\ {\mf G}_i \end{array} &\hdots&
+\begin{array}{l} {\mf G}_{t_n} \\ {\mf G}_n \end{array}
+\end{array}\right]
+\left[\begin{array}{c}
+\delta{\mf v}_1 \\ \vdots \\ \delta{\mf v}_i \\ \vdots \\ \delta{\mf v}_n
+\end{array}\right]
+\end{equation}
+%
+where
+%
+\begin{equation}
+\left[\begin{array}{c} {\mf G}_{t_i} \\ {\mf G}_{i}\end{array}\right] =
+\left[\sum_{i=1}^n{\mf k}^i_{21}{\mf E}_i\right]^{-1} {\mf k}^i_{21}
+\end{equation}
+%
+The rotational part of this equation defines the rotational gradient matrix
+for this shadow element positioning method.
+
+\section{Substituting into system matrices}
+\label{s:Substituting into system matrices}
+
+The force vector and the mass- and stiffness matrices of the superelement are
+now denoted $\tilde{\mf f}$, $\tilde{\mf m}$, and $\tilde{\mf k}$, respectively
+(refer to \eqnref{eqCMS:ReducedModelEq}).
+These superelement matrices are transformed to the directions for the DOFs at
+system level through
+%
+\begin{eqnarray}
+{\mf f} &=& {\mf T}_{Si}^T \tilde{\mf f} \\
+{\mf m} &=& {\mf T}_{Si}^T \tilde{\mf m} {\mf T}_{Si} \label{eqSC:510} \\
+{\mf k} &=& {\mf T}_{Si}^T \tilde{\mf k} {\mf T}_{Si} \label{eqSC:511}
+\end{eqnarray}
+%
+The local superelement matrices $\tilde{\mf f}$, $\tilde{\mf m}$,
+and $\tilde{\mf k}$ may be stored in the computer; at each new position of the
+mechanism, these matrices are subjected to the geometric transformation given by
+\eqsref{eqSC:510}{eqSC:511}, respectively.
+The transformed superelement matrices are the added into the system matrices:
+%
+\begin{eqnarray}
+{\mf f} &=& \sum_i {\mf A}_i^T {\mf f}_i \\
+{\mf M} &=& \sum_i {\mf A}_i^T {\mf m}_i {\mf A}_i \label{eqSC:512} \\
+{\mf K} &=& \sum_i {\mf A}_i^T {\mf k}_i {\mf A}_i \label{eqSC:513}
+\end{eqnarray}
+%
+where ${\mf A}_i$ are incidence matrices that represent the superelement
+topology at system level.
+The index $i$ spans all superelements.
+In a computer program, the summation is performed more efficiently
+and no matrix multiplication is actually required.
+
+} % End in-house edition only

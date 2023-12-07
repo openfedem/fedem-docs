@@ -1,0 +1,51 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_properties_nacelle"></a>
+Nacelle</h1>
+
+<p>The Nacelle object is a sub-assembly used to represent the nacelle in a wind turbine model.</p>
+
+<p><img src="../../../img/prp/nacelle-1.png"></p>
+
+<p>The figure above illustrates the Nacelle properties,
+which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Mass</td><td>Displays the total mass of the rotor.</td></tr>
+<tr><td>Center of Gravity</td><td>Displays the location of the rotor's
+center of gravity, in either Global coordinates or in Local coordinates
+with respect to the origin of the rotor assembly.</td></tr>
+</table></p>
+
+<p>The Nacelle sub-assembly typically contains many sub-objects in its model tree list.
+It may contain one or two <a href="shaft.htm">Shaft</a> assemblies, depending on whether
+it has a direct driveline or a geared one. In the latter case, the Nacelle sub-assembly
+also has a <a href="gearbox.htm">Gearbox</a> assembly among its sub-objects.
+It also have one <a href="generator.htm">Generator</a> assembly.
+In addition, it normally contains a Nacelle <a href="../part.htm">Part</a>,
+one or two Bearing <a href="../revolute-joint.htm">Revolute Joint</a>s
+and some <a href="../triad.htm">Triad</a>s.</p>
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_mainui_topology-view"></a>ID and Topology panel</h1>
+
+<p>When an object in the model is selected, the ID and Topology panel displays
+information related to the object as described below. If multiple items are
+selected, only the item selected last is displayed.</p>
+
+<p><img src="../../img/topology1.png" width="273" height="199"></p>
+
+<p><ol>
+<li><i>Item Type</i> – the type of the selected object
+	(for example, Revolute joint, Gear, or Spring).
+<li><i>ID Number</i> – a unique integer that distinguishes
+	one item of the same type from another.
+<li><i>Topology View</i> – a list that displays the mechanism objects
+	related or connected to the selected item.
+</ol></p>
+
+<p>ID numbers are assigned automatically to new objects in increasing numerical order.
+If you delete an object, such as a Ball joint with ID 3, this number is <i>not</i>
+reused although it now is free, when/if a new Ball joint is created later in the same model.</p>
+
+<h2>Topology view and browsing</h2>
+
+<p>Most mechanism components are related to other objects; for example,
+joints consists of triads that are connected to parts, and sensors are
+measuring variables from other mechanism components.</p>
+
+<p>These relations are shown by the Topology view in a hierarchical fashion,
+indicating their topological relationships. This list can then be used to
+investigate these related objects, and to browse through the mechanism model
+through the topological connections. This can be done by using the browsing
+features offered by the Topology View described below.
+
+<p>Temporary highlight: The items in the topology view will be highlighted in
+the Modeler when you select an item keeping the mouse button pressed. This is
+useful to see exactly which objects in the 3D view that corresponds to the
+listed item.</p>
+
+<p>Right clicking an item in the list will show a tiny pop-up menu that allows
+you to either Zoom to or Select the item.</p>
+
+<p>Zoom To: This command zooms to the item, making it easy to locate it in a complex model.</p>
+
+<p>Select: This command will select the right clicked object from the topology
+view, and thus jump to it showing the properties of that item instead.
+Double clicking an item in the Topology view will also select it.</p>
+
+<p>Select All: This command will select all objects from the topology view,
+but showing the properties of the last object only. The effect of this command
+is the same as doing a multi-selection from the Objects list view of Model Manager.</p>
+
+</body>
+</html>

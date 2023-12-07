@@ -1,0 +1,57 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_mainui_object-tree"></a>Model Manager</h1>
+
+<p>The Model Manager panel contains lists of all objects and result views that make up your model.
+This includes mechanism and control system objects, along with animations and graphs.
+In each list, the objects are grouped by type and sorted by identification numbers or names.
+Right-click menus can access several commands that can be applied on the selected objects.</p>
+
+<p>You select objects by clicking them. You can also hold down the shift key while
+clicking to select multiple objects. The properties of the objects are shown in the
+<a href="object-properties.htm">Property Editor</a> panel when they are selected.</p>
+
+<p><table border="1" bgcolor="#ffffe0"><tr><td>
+<b>Important:</b> Be careful when modifying the object properties when multiple items are selected.
+FEDEM will then assign the displayed property values to all selected items.
+</td></tr></table></p>
+
+<h2>Objects</h2>
+<p>The Objects tab displays a list of all modeling objects in your model.
+Selecting an item from this list highlights its graphic representation in the Graphics Modeler
+(or Control System Editor) and displays its properties in the Property Editor panel.</p>
+
+<h2>Results</h2>
+<p>The Results tab displays a list of the result views you have created.
+The available result view types are Graphs which contains Curves
+(individual sets of plotted data), and Animations.</p>
+
+<p>Selecting a Graph from this list will cause the window plotting it to
+pop up, if loaded. Selecting a Curve will highlight it (the curve is rendered red)
+and raise the Graph view in which it resides to the front as well.</p>
+
+<p>See the chapter on "Postprocessing Results" in the User's Guide,
+for more information about graphed and animated results.</p>
+
+</body>
+</html>

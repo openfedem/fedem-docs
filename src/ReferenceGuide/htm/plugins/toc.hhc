@@ -1,0 +1,22 @@
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Plug-Ins Reference">
+		<param name="ImageNumber" value="1">
+		</OBJECT>
+	<UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Plug-In Architecture">
+		<param name="Local" value="htm\plugins\plugin-architecture.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="User-Defined Functions">
+		<param name="Local" value="htm\plugins\userdef-functions.htm">
+		</OBJECT>
+	</UL>

@@ -1,0 +1,228 @@
+% SPDX-FileCopyrightText: 2023 SAP SE
+%
+% SPDX-License-Identifier: Apache-2.0
+%
+% This file is part of FEDEM - https://openfedem.org
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FEDEM Theory Guide.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Generic part element}
+\label{sec:GenericPart}
+
+A generic part consists of a rigid spider attached to
+a Center of Gravity (CG) node.
+Each spider leg spans the distance from the CG node to
+one of the other element nodes.
+At the end of each leg there is a linear spring (equivalent to the BUSH element
+described in Section~\ref{s:BUSH}) with some stiffness $k_t$ against translation
+in all directions, and stiffness $k_r$ against rotation in all three directions.
+For two co-located nodes ($i$ and $j$) the overall stiffness
+of one such spring element is then given by
+%
+\begin{equation}
+\label{eq:leg stiffness}
+\left[\begin{array}{l}
+{\mf f}_i \\ {\mf m}_i \\ {\mf f}_j \\ {\mf m}_j
+\end{array}\right] =
+\left[\begin{array}{rrrr}
+ k_t {\mf I} &      {\mf 0} & -k_t {\mf I} &      {\mf 0} \\
+     {\mf 0} &  k_r {\mf I} &      {\mf 0} & -k_r {\mf I} \\
+-k_t {\mf I} &      {\mf 0} &  k_t {\mf I} &      {\mf 0} \\
+     {\mf 0} & -k_r {\mf I} &      {\mf 0} &  k_r {\mf I}
+\end{array}\right]
+\left[\begin{array}{l}
+{\mf v}_i \\ {\tf \theta}_i \\ {\mf v}_j \\ {\tf \theta}_j
+\end{array}\right]
+\end{equation}
+
+With node $j$ being rigidly attached to the CG node,
+one can establish the virtual displacement relation
+%
+\begin{equation}
+\left[\begin{array}{c}
+{\mf v}_j \\ {\tf \theta}_j
+\end{array}\right] =
+\left[\begin{array}{rr}
+{\mf 1} & -\widehat{{\mf e}} \\
+{\mf 0} & {\mf 1}
+\end{array}\right]
+\left[\begin{array}{c}
+{\mf v}_\textit{CG} \\ {\tf \theta}_\textit{CG}
+\end{array}\right]
+\quad\text{where}\quad {\mf e} =
+\left[\begin{array}{c}
+x_j - x_\textit{CG} \\
+y_j - y_\textit{CG} \\
+z_j - z_\textit{CG}
+\end{array}\right]
+\end{equation}
+
+Using the kinematic relationship above in a virtual work expression, one
+can establish the stiffness matrix for the spider leg between element node $i$
+and the CG node as
+%
+\begin{equation}
+\label{eq:spider stiffness}
+\left[\begin{array}{l}
+{\mf f}_i \\ {\mf m}_i \\ {\mf f}_\textit{CG} \\ {\mf m}_\text{CG}
+\end{array}\right] =
+\left[\begin{array}{cccc}
+ {\mf k}_t & {\mf 0}   & -{\mf k}_t &  {\mf k}_t \hat{{\mf e}} \\
+ {\mf 0}   & {\mf k}_r &  {\mf 0}   & -{\mf k}_r \\
+-{\mf k}_t & {\mf 0}   &  {\mf k}_t & -{\mf k}_t \hat{{\mf e}} \\
+ \hat{{\mf e}}^T {\mf k}_t & -{\mf k}_r &
+-\hat{{\mf e}}^T {\mf k}_t &
+ ({\mf k}_r + \hat{{\mf e}}^T{\mf k}_T \hat{{\mf e}})
+\end{array}\right]
+\left[\begin{array}{l}
+{\mf v}_i \\ {\tf \theta}_i \\ {\mf v}_\textit{CG} \\ {\tf \theta}_\text{CG}
+\end{array}\right]
+\end{equation}
+%
+where ${\mf k}_t = k_t{\mf I}$ and ${\mf k}_r = k_r{\mf I}$.
+
+The full stiffness matrix for the generic part is then formed by assembling the
+nodal contributions from all such spider legs.
+Rewriting \eqnref{eq:spider stiffness} with the more compact notation
+%
+\begin{equation}
+\left[\begin{array}{c}
+{\mf f}^i_1 \\ {\mf f}^i_2
+\end{array}\right] =
+\left[\begin{array}{cc}
+ {\mf k}^i_{11} &  {\mf k}^i_{12} \\
+ {\mf k}^i_{21} &  {\mf k}^i_{22}
+\end{array}\right]
+\left[\begin{array}{c}
+{\mf v}^i_1 \\ {\mf v}^i_2
+\end{array}\right]
+\end{equation}
+%
+the assembly of \eqnref{eq:spider stiffness} for all nodes from $1$ to $n$
+(with $n$ being the CG node) gives the following generic part stiffness matrix
+%
+\begin{equation}
+\label{eq:generic part stiffness matrix}
+\left[\begin{array}{c}
+{\mf f}^1_1 \\ \vdots \\ \;\;\;{\mf f}^{n-1}_1 \\
+\sum\limits_{j=1}^{n-1} {\mf f}^j_2
+\end{array}\right] =
+\left[\begin{array}{cccc}
+{\mf k}^1_{11} & \hdots & {\mf 0}           & {\mf k}^1_{12} \\
+\vdots         & \ddots &                   & \vdots         \\
+{\mf 0}        &        & {\mf k}^{n-1}_{11} & \;\;\;{\mf k}^{n-1}_{12} \\
+{\mf k}^1_{21} & \hdots & {\mf k}^{n-1}_{21} &
+\sum\limits_{j=1}^{n-1} {\mf k}^j_{22}
+\end{array}\right]
+\left[\begin{array}{l}
+{\mf v}^1_1 \\ \;\vdots \\ {\mf v}^{n-1}_1 \!\!\\[2mm] {\mf v}^n_2 \\[2mm]
+\end{array}\right]
+\end{equation}
+
+The mass properties of the generic part element are assumed concentrated at the
+CG node, both with respect to translation and rotation.
+This gives the mass matrix defined in the relationship
+%
+\begin{equation}
+\label{eq:generic part mass matrix}
+\left[\begin{array}{l}
+{\mf f}^1_1 \\ \;\vdots \\ {\mf f}^{n-1}_1 \!\!\\ {\mf f}^n_2
+\end{array}\right] =
+\left[\begin{array}{cccc}
+{\mf 0} & \hdots & {\mf 0} & {\mf 0} \\
+\vdots  & \ddots &         & \vdots  \\
+{\mf 0} &        & {\mf 0} & {\mf 0} \\
+{\mf 0} & \hdots & {\mf 0} & {\mf m}^n_{22}
+\end{array}\right]
+\left[\begin{array}{l}
+\ddot{\mf v}^1_1 \\ \;\vdots \\ \ddot{\mf v}^{n-1}_1 \!\!\\ \ddot{\mf v}^n_2
+\end{array}\right]
+\end{equation}
+%
+where
+%
+\begin{equation}
+\label{eq:m22}
+{\mf m}^n_{22} =
+\left[\begin{array}{cccccc}
+m & 0 & 0 & 0 & 0 & 0 \\
+0 & m & 0 & 0 & 0 & 0 \\
+0 & 0 & m & 0 & 0 & 0 \\
+0 & 0 & 0 & I_{xx} & I_{xy} & I_{xz} \\
+0 & 0 & 0 & I_{xy} & I_{yy} & I_{yz} \\
+0 & 0 & 0 & I_{xz} & I_{yz} & I_{zz}
+\end{array}\right]
+\end{equation}
+
+When using the generic part element with the element matrices defined by
+\eqsref{eq:generic part stiffness matrix}{eq:generic part mass matrix}
+in a dynamics simulation, one might get artificial oscillations in the CG node
+DOFs, depending on the actual magnitude of the characteristic mass and
+stiffness being used.
+This problem might be avoided by eliminating the CG node DOFs through static
+condensation of
+\eqsref{eq:generic part stiffness matrix}{eq:generic part mass matrix},
+before the time integration is started.
+This is similar to what is being done for the internal DOFs of the finite
+element parts in the model reduction process,
+see Sections~\ref{subsec:Static modes} and~\ref{subsec:Reduced system}.
+
+Assuming that all ${\mf f}^j_2$ in \eqnref{eq:generic part stiffness matrix}
+are always zero (since no distributed loads are associated with a generic part),
+the last line of \eqnref{eq:generic part stiffness matrix} yields
+%
+\begin{equation}
+\label{eq:generic part B-matrix}
+{\mf v}^n_2 = {\mf B}
+\left[\begin{array}{l}
+{\mf v}^1_1 \\ \;\vdots \\ {\mf v}^{n-1}_1
+\end{array}\right] \quad\text{where}\quad
+{\mf B} =
+\left[ \sum\limits_{j=1}^{n-1} {\mf k}^j_{22} \right]^{-1}
+\left[\begin{array}{cccc}
+{\mf k}^1_{21} & \hdots & {\mf k}^{n-1}_{21}
+\end{array}\right]
+\end{equation}
+%
+Combining \eqnref{eq:generic part B-matrix} and its associated second-derivative
+with the first $n-1$ lines of
+\eqsref{eq:generic part stiffness matrix}{eq:generic part mass matrix},
+respectively, while pre-multiplying with ${\mf B}^T$ produces the following
+element matrices for the generic part
+%
+\begin{eqnarray}
+{\mf k} &=&
+\left[\begin{array}{cccc}
+{\mf k}^1_{21} & \hdots & {\mf k}^{n-1}_{21}
+\end{array}\right]^T {\mf B} +
+\left[\begin{array}{ccc}
+{\mf k}^1_{11} & \hdots & {\mf 0} \\
+\vdots         & \ddots & \vdots  \\
+{\mf 0}        & \hdots & {\mf k}^{n-1}_{11}
+\end{array}\right] \\
+{\mf m} &=& {\mf B}^Ti {\mf m}_{22}^n {\mf B}
+\end{eqnarray}
+
+The stiffness coefficients $k_t$ and $k_r$ that is used in
+\eqnref{eq:leg stiffness} may be specified by the user for each part
+(see the \FedemUG, {\em Section~4.1.5 ``Link properties''}).
+However, it is also possible to let the coefficients be automatically computed,
+in such a way that the generic part behaves like an ``almost'' rigid element.
+
+The automatic ``rigid'' stiffness is computed from the mass properties of the
+part and a given target eigenfrequency:
+%
+\begin{eqnarray}
+k_t &=& \left(2\pi f_{\rm rig}\right)^2 \,m \\
+k_r &=& \left(2\pi f_{\rm rig}\right)^2 \,\frac{1}{3}\sum_{i,j = x,y,z} I_{ij}
+\end{eqnarray}
+%
+where $m$ and $I_{ij}$ are components of the mass matrix~\eqref{eq:m22},
+and $f_{\rm rig}$ is the desired target eigenfrequency of the part (in [Hz]).
+This target value may be set by the user through the command-line option
+{\tt -targetFrequencyRigid} for the Dynamics Solver.
+The default value is 10000 Hz.

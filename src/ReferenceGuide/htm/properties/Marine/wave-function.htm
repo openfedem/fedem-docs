@@ -1,0 +1,120 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_properties_wave-unction"></a>Wave Function</h1>
+
+<p>Sea wave functions represent the kinematic properties of sea waves.
+In additon to describing the elevation of the sea surface at a given point and time,
+they also represent the velocity and acceleration of the water particles
+from the sea surface down to the sea bed, which are needed in order to
+calculate hydrodynamic loads acting on submerged structures.</p>
+
+<p>The use of sea wave functions is explained in the chapter on "Marine Modeling"
+in the FEDEM User's Guide.</p>
+
+<p>The property view of the wave function is similar to the property view
+of the General functions, except that the <i>Argument</i> frame is absent.
+The wave functions are always functions of spatial location and time.
+The selection of <i>Function Type</i> is also limited to the following three types:</p>
+
+<br><h2>Sine (regular waves)</h2>
+<p><img src="../../../img/prp/prp-function-24.png"></p>
+
+<p>The figure above illustrates the Sine wave properties.
+The parameters are as follows:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Frequency</td><td>Wave frequency in [Hz]</td></tr>
+<tr><td>Delay</td><td>Phase delay as a fraction of the wave period</td></tr>
+<tr><td>Amplitude</td><td>Amplitude of the waves</td></tr>
+<tr><td>Mean value</td><td>Not used for wave functions</td></tr>
+<tr><td>End</td><td>Not used for wave functions</td></tr>
+</td></tr>
+</table></p>
+
+<br><h2>JONSWAP sea wave spectrum (irregular sea state)</h2>
+<p><img src="../../../img/prp/wave-function-1.png"></p>
+
+<p>The figure above illustrates the JONSWAP sea wave spectrum properties.
+The parameters are as follows:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Spectral peakedness</td><td>Spectral peakedness of the wave components</td></tr>
+<tr><td>Use DNV recommendation</td><td>Calculate the spectral peakedness parameter based on the recommendations below</td></tr>
+<tr><td>Wave components</td><td>Number of wave components to use in the spectrum</td></tr>
+<tr><td>Wave directions</td><td>Number of wave directions if wave spreading is desired (1 means unidirectional waves)</td></tr>
+<tr><td>Spreading exp.</td><td>Spreading exponent defining the sharpness of the wave spreading</td></tr>
+<tr><td>Random seed</td><td>Non-negative integer value used as seed in the internal randum number generator</td></tr>
+<tr><td>Hs</td><td>Significant wave height</td></tr>
+<tr><td>Tp</td><td>Peak period of the wave spectrum</td></tr>
+<tr><td>Auto calculate period cut-off values</td><td>Automatically calculate period cut-off values</td></tr>
+<tr><td>Tlow</td><td>Lower period cut-off value</td></tr>
+<tr><td>Thigh</td><td>Higher period cut-off value</td></tr>
+</td></tr>
+</table></p>
+
+<p>The DNV recommended value for the spectral peakedness is calculated as follows (DNV-RP-C205, October 2010):</p>
+<p><img src="../../../img/prp/prp-dnv-recommended-gamma.png" width="343" height="125"></p>
+
+<p>The Auto-calculate on period cut-off toggle will apply a cut-off
+giving an energy loss of no more than 0.25% at each end of the spectrum.</p>
+
+<br><h2>User defined wave spectrum (irregular sea state)</h2>
+<p><img src="../../../img/prp/wave-function-2.png"></p>
+
+<p>The figure above illustrates the User-defined wave spectrum properties.
+The parameters are as follows:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>File/Reference</td><td>Specifies the file or file reference containing the wave spectrum data.</td></tr>
+<tr><td>Random seed</td><td>Non-negative integer value used as seed in the internal randum number generator</td></tr>
+<tr><td>Hs</td><td>Significant wave height, calculated from the provided wave spectrum data</td></tr>
+<tr><td>Tz</td><td>Mean wave period, calculated from the provided wave spectrum data</td></tr>
+</td></tr>
+</table></p>
+
+<p>User-defined wave spectrum functions are similar to the JONSWAP sea wave spectrum functions,
+except from that the Amplitude, Frequency and Phase delay parameters (and optionally also the wave numbers k),
+are read from the specified ASCII file instead of calculating them from user-defined input parameters.</p>
+
+<p>The first line of the ASCII file must contain the string "#ncol (n)"
+where (n) is the number of white-space separated columns in the file in the subsequent lines (either 2, 3 or 4).
+The columns contains numerical values which are interpreted as follows:
+
+<ol>
+<li>Amplitude [lenght unit]</li>
+<li>Frequency [Hz]</li>
+<li>Phase delay in fraction of the period [0-1]</li>
+<li>Wave number (k) [1/length unit]</li>
+</ol>
+
+<p>If the file consists of either two or three columns, the wave numbers are calculated automatically based on the gravitation constant,
+the angular frequency, and the water depth in case for finite depth formulation.
+If the file consists of two columns only, the phase delay of each wave component are assigned using the internal pseudo-random generator.</p>
+
+<p>The total number of wave components summed up equals the number of lines in the file.</p>
+
+</body>
+</html>

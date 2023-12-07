@@ -1,0 +1,62 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_dialogbox_model-preferences"></a>Model Preferences</h1>
+
+<p>The Model Preferences dialog box is used to adjust some global parameters and settings regarding the model.</p>
+
+<p><img src="../../img/dlg-model-preferences.png"></p>
+
+<p><ol>
+<li><i>Model description</i> - This field lets you add notes to your model file.
+<li><i>Units</i> - The consistent unit set to use.
+See the User's Guide, "Model database units" in "Mechanism Modeling".
+<li><i>Modeling tolerance</i> - The maximum allowed distance between the FE-node and
+its attached Triad. See the User's Guide, "Modeling tolerance" in "Mechanism Modeling".
+<li><i>Gravitation</i> - The gravity vector direction and magnitude.
+See the User's Guide, "Gravitation" in "Mechanism Modeling".
+<li><i>Initial translational velocity</i> - The initial translational velocity of all triads
+in the model. See the User's Guide, "Initial translational velocity" in "Mechanism Modeling".
+<li><i>FE model repository</i> - Switch between external and internal model repositories.
+You may also <i>Change</i> the external FE model repository.
+See the User's Guide, "Setting the FE model repository" in "Mechanism Elements".
+<li><i>Overwrite existing reduced FE data</i> - If enabled, a re-reduction of an FE part
+(due to changes in reduction options or changed FE model) will overwrite any existing
+reduction data for that part, instead of creating a new parallel sub-folder for
+the new reduction which is the default behavior.
+<li><i>File for external function evaluation</i> - If the toggle <i>Use external function file</i> is enabled,
+a file may be specified from which all <a href="../properties/function.htm#external-function">External functions</a>
+will get their value from, instead of expecting them from a calling program.
+</ol></p>
+
+<p>Changes to the <i>Model description</i> notes will be saved also when closing
+the Model Preferences dialog box, either by pressing the <i>Close</i> button or
+using the (<b>&times;</b>)-button in the window frame.
+Therefore, you may edit these notes at any time, also when you have results.</p>
+
+<p>The <i>File for external function evaluation</i> is used only when the solver
+is run locally from the GUI itself. When the model is exported to a Digital Twin
+app for execution in the cloud, the <i>Use external function file</i> toggle is
+switched off.</p>
+
+</body>
+</html>
