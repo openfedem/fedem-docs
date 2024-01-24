@@ -28,7 +28,7 @@ if "%1" == "-install" (
   if not "%2" == "" ( set install_dir=%2 ) else (
     if exist %gui_dir% (
       set /p VERSION=<%gui_dir%\cfg\VERSION
-      set install_dir=%USERPROFILE%\Fedem-install\%VERSION%\bin\Doc\
+      set install_dir=%USERPROFILE%\Fedem-install\!VERSION!\bin\Doc\
     ) else set install_dir=%~dp0docs\
   )
   if not exist !install_dir! (
