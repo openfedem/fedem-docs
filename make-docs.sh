@@ -94,7 +94,7 @@ cwd=$(pwd)
 
 if [ "$BUILD_THEORY" = true ] ; then
     cd $cwd/src/TheoryGuide
-    echo "Generate the Fedem Theory Guide (pdf^)"
+    echo "Generate the Fedem Theory Guide (pdf)"
     pdflatex  -interaction=nonstopmode theory_main.tex > pdflatex.log
     echo "2nd pass"
     pdflatex  -interaction=nonstopmode theory_main.tex >> pdflatex.log
@@ -108,7 +108,7 @@ fi
 
 if [ "$BUILD_USER" = true ] ; then
     cd $cwd/src/UsersGuide
-    echo "Generate the Fedem User Guide (pdf^)"
+    echo "Generate the Fedem User Guide (pdf)"
     pdflatex  -interaction=nonstopmode user_main.tex > pdflatex.log
     echo "2nd pass"
     pdflatex  -interaction=nonstopmode user_main.tex >> pdflatex.log
