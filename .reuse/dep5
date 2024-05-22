@@ -1,7 +1,7 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: fedem-docs
-Upstream-Contact: ospo@sap.com
-Source: https://github.com/SAP/fedem-docs
+Upstream-Contact: kmo@openfedem.org
+Source: https://github.com/openfedem/fedem-docs
 
 Files: src/*
 Copyright: 2023 SAP SE or an SAP affiliate company and fedem-docs contributors
