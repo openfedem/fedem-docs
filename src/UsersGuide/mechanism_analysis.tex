@@ -1913,10 +1913,14 @@ To activate recovery during simulation, use the appropriate toggles in the
 \protect\hyperlink{advanced-tab}{\sl Advanced tab} of the Property Editor panel
 for the Part in question (shown at right, see also
 \refSection{part-properties}{Part properties}). You may enable one
-or both of these toggles to activate such recovery during simulation for
-an FE Part, and can also enable them for several parts in a multi-part
-model. Enabling strain rosette recovery will, of course, have no effect
-unless strain rosette objects have been defined on that FE part.
+or both of these toggles to activate such recovery during for an FE Part,
+and can also enable them for several parts in a multi-part model.
+
+Enabling strain rosette recovery during dynamics simulation will, of course,
+have no effect unless strain rosette objects have been defined on that FE part.
+If any of the strain rosette objects on the selected FE part are used as
+Argument in a Function (see \refSection{functions}{Functions}), this toggle
+will be automatically enabled for that part when the Dynamics Solver is started.
 
 \Caution{Doing stress recovery during the dynamics simulation is a costly
   operation, so for models with large FE parts, this will increase the total
