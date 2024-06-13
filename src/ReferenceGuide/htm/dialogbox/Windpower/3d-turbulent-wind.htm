@@ -9,8 +9,12 @@
 
 <html>
 <head>
-<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
-<script language="javascript" src="/script/syncurl.js"></script>
+  <link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+  <script language="javascript" src="/script/syncurl.js"></script>
+  <object id=turbsim type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <param name="Command" value="ShortCut">
+    <param name="Item1" value=",https://www.nrel.gov/wind/nwtc/turbsim.html,">
+  </object>
 </head>
 <body>
 
@@ -25,7 +29,7 @@
 <p>The FEDEM TurbWind tool is used to generate turbulent wind files for the
 <a href="aerodynamic-setup.htm">Air Environment</a> dialog box in FEDEM Windpower.
 It is basically a front end for the TurbSim simulator (v1.06)
-from <a href="https://nwtc.nrel.gov/TurbSim">NREL</a>.</p>
+by NREL (<a href="javascript:turbsim.Click()">nrel.gov</a>).</p>
 
 <p><img src="../../../img/dlg-turbwind1.png" width="447" height="606"></p>
 

@@ -9,8 +9,24 @@
 
 <html>
 <head>
-<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
-<script language="javascript" src="/script/syncurl.js"></script>
+  <link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+  <script language="javascript" src="/script/syncurl.js"></script>
+  <object id=openfedem type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <param name="Command" value="ShortCut">
+    <param name="Item1" value=",https://openfedem.org/,">
+  </object>
+  <object id=changelog1 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <param name="Command" value="ShortCut">
+    <param name="Item1" value=",https://github.com/openfedem/fedem-gui/blob/main/CHANGELOG.md,">
+  </object>
+  <object id=changelog2 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <param name="Command" value="ShortCut">
+    <param name="Item1" value=",https://github.com/openfedem/fedem-solvers/blob/main/CHANGELOG.md,">
+  </object>
+  <object id=nrel type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <param name="Command" value="ShortCut">
+    <param name="Item1" value=",https://wind.nrel.gov/,">
+  </object>
 </head>
 <body>
 
@@ -25,10 +41,10 @@ What's New</h1>
 
 <h2>New features with release 8.0</h2>
 
-<p>The FEDEM software is now open source (<a href="https://openfedem.org/">openfedem.org</a>).
-See the <a href="https://github.com/openfedem/fedem-gui/blob/main/CHANGELOG.md">fedem-gui/CHANGELOG</a>
-and <a href="https://github.com/openfedem/fedem-solvers/blob/main/CHANGELOG.md">fedem-solvers/CHANGELOG</a>
-files for a summary of changes in release 8.0 and beyond. The list here is no longer maintained.</p>
+<p>The FEDEM software is now open source (<a href="javascript:openfedem.Click()">openfedem.org</a>).
+See the <a href="javascript:changelog1.Click()">fedem-gui/CHANGELOG</a>
+and <a href="javascript:changelog2.Click()">fedem-solvers/CHANGELOG</a> pages on github
+for a summary of changes in release 8.0 and beyond. The list here is no longer maintained.</p>
 
 <h2>New features with release 7.6</h2>
 
@@ -374,7 +390,7 @@ files for a summary of changes in release 8.0 and beyond. The list here is no lo
 		The Blade definition tool specifies a wind turbine blade.
 		Both aerodynamic and structural properties are specified.
 		The aerodynamic properties are used by the integrated <i>AeroDyn</i> module
-		from NREL (<a href="http://wind.nrel.gov">wind.nrel.gov</a>),
+		from NREL (<a href="javascript:nrel.Click()">wind.nrel.gov</a>),
 		to calculate forces on the blades of the wind turbine.
 		The calculated forces are then applied as loads on the structural model.
 

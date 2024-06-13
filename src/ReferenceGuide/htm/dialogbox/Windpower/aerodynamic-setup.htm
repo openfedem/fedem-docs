@@ -9,8 +9,20 @@
 
 <html>
 <head>
-<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
-<script language="javascript" src="/script/syncurl.js"></script>
+  <link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+  <script language="javascript" src="/script/syncurl.js"></script>
+  <object id=aerodyn type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <param name="Command" value="ShortCut">
+    <param name="Item1" value=",https://www.nrel.gov/wind/nwtc/aerodyn.html,">
+  </object>
+  <object id=userguide type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <param name="Command" value="ShortCut">
+    <param name="Item1" value=",https://www.nrel.gov/wind/nwtc/assets/text/aerodyn.pdf,">
+  </object>
+  <object id=theoryguide type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <param name="Command" value="ShortCut">
+    <param name="Item1" value=",https://www.nrel.gov/wind/nwtc/assets/pdfs/ad-theory.pdf,">
+  </object>
 </head>
 <body>
 
@@ -22,9 +34,10 @@
 
 <h1><a name="_dialogbox_aerodynamic-setup"></a>Aerodynamic Setup</h1>
 
-<p>The Aerodynamic Setup dialog box is used to define the air environment for
-the wind turbine, and to set up some control parameters for the aerodynamic load
-calculation in the <a href="http://wind.nrel.gov/designcodes/simulators/aerodyn">AeroDyn</a> module.
+<p>The Aerodynamic Setup dialog box is used to define the air environment
+for the wind turbine, and to set up some control parameters for the
+aerodynamic load calculation in the AeroDyn module
+(<a href="javascript:aerodyn.Click()">nrel.gov/wind/nwtc/aerodyn.html</a>).
 A separate input file to AeroDyn is generated based on the contents of this dialog.</p>
 
 <p><img src="../../../img/dlg-aerodynamic-setup.png" width="268" height="377"></p>
@@ -48,9 +61,8 @@ with skewed wake and tip loss corrections.
 The direct calculation method of GDW is considerably faster than the iterative
 method of the BEM option, which assumes that the wake is always in equilibrium
 with the forces on a blade element. See Appendix E of the
-<a href="http://wind.nrel.gov/designcodes/simulators/aerodyn/AeroDyn.pdf">
-AeroDyn User's Guide</a> for more information on the dynamic inflow method
-employed with the GDW option.
+<a href="javascript:userguide.Click()">AeroDyn User's Guide</a>
+for more information on the dynamic inflow method employed with the GDW option.
 
 <li><i>Induction-factor model</i> -
 This option controls the wake or induced velocity calculation.
@@ -105,15 +117,13 @@ to be used in the aerodynamic load calculation.
 using the <i>Wind speed</i> and <i>Wind direction</i> fields.
 The wind direction value is the angle (in degrees) between the rotor plane
 normal (with zero shaft tilt) and the wind direction, see Section 7.1 in the
-<a href="http://wind.nrel.gov/designcodes/simulators/aerodyn/AeroDyn.pdf">
-AeroDyn User's Guide</a>.
+<a href="javascript:userguide.Click()">AeroDyn User's Guide</a>.
 <li><i>Wind file</i> - When the <i>Constant wind</i> toggle is disabled,
 you may use the <i>Browse...</i> button to select a separate input file
 describing the wind field.
 This can either be hub-height wind data file, or a full-field turbulent wind
 data file, described in Chapter 7 and 8, respectively, in the
-<a href="http://wind.nrel.gov/designcodes/simulators/aerodyn/AeroDyn.pdf">
-AeroDyn User's Guide</a>.
+<a href="javascript:userguide.Click()">AeroDyn User's Guide</a>.
 <li><i>Create turbulent wind..</i> - Click this button to launch the
 <a href="3d-turbulent-wind.htm">FEDEM TurbWind</a> tool
 to create a full-field turbulent wind data file for the current model.
@@ -124,8 +134,7 @@ This part of the dialog is used to set up the tower influence on the wind field.
 <ul>
 <li><i>Use potential flow model</i> - Enables the use of a tower influence model
 based on potential flow solution around a cylinder, as described in the
-<a href="http://wind.nrel.gov/designcodes/simulators/aerodyn/AD_Theory.pdf">
-AeroDyn Theory Manual</a>.
+<a href="javascript:theoryguide.Click()">AeroDyn Theory Manual</a>.
 This model provides the influence of the tower on the local velocity field at
 all points around the tower, including increases in wind speed around the sides
 and the cross-stream velocity component in the tower-near flow field.

@@ -9,8 +9,12 @@
 
 <html>
 <head>
-<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
-<script language="javascript" src="/script/syncurl.js"></script>
+  <link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+  <script language="javascript" src="/script/syncurl.js"></script>
+  <object id=fmistd type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <param name="Command" value="ShortCut">
+    <param name="Item1" value=",https://fmi-standard.org,">
+  </object>
 </head>
 <body>
 
@@ -74,7 +78,7 @@ three app types which have the respective activation toggle enabled.
 The exported zip-file will contain all files related to the current model,
 in addition to some support files for executing the model in the cloud.
 The FMU will in addition contain shared object libraries interfacing the dynamics solver
-based on the <a href="https://fmi-standard.org">Functional Mock-up Interface</a>,
+based on the Functional Mock-up Interface (<a href="javascript:fmistd.Click()">fmi-standard.org</a>),
 such that it can be executed on both Windows and Linux systems.</p>
 
 </body>

@@ -9,8 +9,12 @@
 
 <html>
 <head>
-<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
-<script language="javascript" src="/script/syncurl.js"></script>
+  <link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+  <script language="javascript" src="/script/syncurl.js"></script>
+  <object id=aerodyn type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <param name="Command" value="ShortCut">
+    <param name="Item1" value=",https://www.nrel.gov/wind/nwtc/aerodyn.html,">
+  </object>
 </head>
 <body>
 
@@ -31,7 +35,7 @@ section of the blade where the different aerodynamic properties are specified.</
 
 <p>FEDEM WindPower uses the same airfoil file format as AeroDyn.
 The Airfoil dialog box is thus simply an editor for such files.
-See the <a href="https://nwtc.nrel.gov/AeroDyn13">AeroDyn documentation</a>
+See the AeroDyn documentation (<a href="javascript:aerodyn.Click()">nrel.gov</a>)
 for information on this file format.</p>
 
 <p>A set of sample Airfoils (provided by NREL) is included with the FEDEM Windpower
