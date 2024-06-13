@@ -28,7 +28,7 @@ Part or a Generic Part.</p>
 
 <p>The mass-, stiffness- and dynamic properties of an FE Part are derived
 from its finite element (FE) model, which is composed of a set of nodal points,
-elements, material- and physical property data. The FE model must be constructed
+elements, material- and geometric property data. The FE model must be constructed
 in an external FE modeler and then imported into FEDEM.</p>
 
 <p>A Generic Part is a simplified flexible body. It can be used when you
@@ -88,8 +88,8 @@ entry will state the file name FEDEM will use when you do save it.</td></tr>
 <tr><td>Imported file</td><td>Indicates the name and location of the originally
 imported FE model file. The unit conversion that was applied during the import,
 if any, is also displayed next to the file name.</td></tr>
-<tr><td>Change (in the Finite Element Model frame)</td><td>
-This button allows you to replace the FE model of the Part with a new one.
+<tr><td>Change...</td><td>This button inside the <i>Finite Element Model</i>
+frame allows you to replace the FE model of the Part with a new one.
 The button triggers a file dialog in which the new FE model can be chosen.
 Note that all mechanism entities attached to the Part, that do not not have
 corresponding nodal points in the new FE model, will be detached when you
@@ -101,7 +101,7 @@ folder in the part database containing the reduced FE matrices. Otherwise, the
 label will read <i>Needs reduction</i>.
 <tr><td>Visualization</td><td>Specifies path to a geometry file (e.g., VRML)
 to be used for visualization of Generic Parts.
-Use the <i>Change</i> button in this frame to browse for a file.
+Use the <i>Change...</i> button within this frame to browse for a file.
 If a valid FE model file already has been specified, FEDEM will use that model
 for visualization until a separate visualization file name is entered.</td></tr>
 <tr><td>Structural Damping</td><td>Allows you to change the values of the mass-
@@ -152,11 +152,12 @@ The fields here have similar interpretation as in the
 <tr><td>FE Node</td><td>ID number of the FE node which is closest to the picked
 location in the Modeler.
 If the part is selected from the Object Browser, a value -1 is shown.</td></tr>
-<tr><td>Reference</td><td>Toggles display of Global vs. Local
+<tr><td>Reference</td><td>Toggles display of <i>Global</i> vs. <i>Local</i>
 (with respect to the Part origin) coordinates.</td></tr>
 <tr><td>X, Y and Z</td><td>Global or local coordinates of the picked FE node.
 </td></tr>
 </table></p>
+
 
 <h2><a name="Reduction-Options"></a>Reduction Options tab</h2>
 
@@ -201,9 +202,9 @@ Triads that will result in a big <b>B</b>-matrix.</td></tr>
 See <a href="#Part">Part tab</a>.</td></tr>
 </table></p>
 
-<p>Switching to single precision storage of the B-matrix should normally have
-no influence on the dynamics simulation results. However, if the FE model is
-poorly conditioned (e.g., there is a large span in its stiffness properties)
+<p>Switching to single precision storage of the <b>B</b>-matrix should normally
+have no influence on the dynamics simulation results. However, if the FE model
+is poorly conditioned (e.g., there is a large span in its stiffness properties)
 there might be minor loss of accuracy in the recovery results due to truncation
 of the <b>B</b>-matrix elements stored on file. For FE Parts that are reduced
 with component modes, the single/double precision storage option also applies
@@ -247,13 +248,16 @@ for all elements of this FE Part during the dynamics simulation.
 <tr><td>Perform strain rosette recovery during dynamics simulation</td><td>
 Enables recovery of stresses and strains in the strain rosette elements
 defined on this FE Part during the dynamics simulation.
+If any of the strain rosette elements on the selected part are used as Argument
+in a <a href="function.htm">Function</a>, this toggle will be automatically
+enabled for that part when the Dynamics Solver is started.
 </td></tr>
 </table></p>
 
 <p>Caution: Performing stress recovery during the dynamics simulation
 is a costly operation. So for models with large FE Parts, this will increase
 the total simulation time considerably. Therefore, use this feature only if
-the simulation time of the Dynamics solver is not essential.</p>
+the simulation time of the Dynamics Solver is not essential.</p>
 
 
 <h2><a name="Mass"></a>Mass tab</h2>
