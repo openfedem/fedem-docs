@@ -7,6 +7,7 @@
 --->
 
 [![REUSE status](https://api.reuse.software/badge/github.com/openfedem/fedem-docs)](https://api.reuse.software/info/github.com/openfedem/fedem-docs)
+[![Build documentation](https://github.com/openfedem/fedem-docs/actions/workflows/build-docs.yml/badge.svg)](https://github.com/openfedem/fedem-docs/actions/workflows/build-docs.yml)
 
 # FEDEM end user documention
 
@@ -14,21 +15,21 @@
 
 ## About this project
 
-This project contains all end user documentation for FEDEM.
+This project contains all end-user documentation for FEDEM.
 It consists of the following:
 
-- LaTeX source files for the [Theory guide](src/TheoryGuide/)
-- LaTeX source files for the [User's guide](src/UsersGuide/)
+- LaTeX source files for the [Theory Guide](src/TheoryGuide/)
+- LaTeX source files for the [User's Guide](src/UsersGuide/)
 - HTML source and image files as well as build script for the [Reference Guide](src/ReferenceGuide/)
 
 ## Requirements and Setup
 
 To compile the PDF-version of the Theory and User's Guides,
 you need to have a [LaTeX](https://www.latex-project.org/) installation on your local computer.
-On Windows, for instance, the [MiKTex](https://miktex.org/) package can be used.
-Most Linux distributions can install a LaTeX compiler through their package management system.
+On Windows, for instance, the [MiKTeX](https://miktex.org/) package can be used.
+Most Linux distributions can install a LaTeX compiler through their respective package management system.
 
-To compile the CHM-file containing the Reference guide (on Windows only), you need to intall the
+To compile the CHM-file containing the Reference Guide (on Windows only), you need to intall the
 [Microsoft HTML Help Workshop](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/htmlhelp/microsoft-html-help-downloads) tool.
 
 On Windows, you can then build the three documents by executing the bat-file
@@ -45,6 +46,11 @@ or specify the desired installation folder as command-line argument:
     make-docs.bat -install <doc_dir>
 
 where `<doc_dir>` needs to be an existing directory.
+
+The tree documents will be built automatically by the github action
+[Build documentation](https://github.com/openfedem/fedem-docs/actions/workflows/build-docs.yml)
+whenever a new tag is pushed, and the resulting files are publised on the
+[Releases](https://github.com/openfedem/fedem-docs/releases) page.
 
 ## Contributing
 
