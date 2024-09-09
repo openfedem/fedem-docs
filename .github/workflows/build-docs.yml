@@ -1,0 +1,56 @@
+# SPDX-FileCopyrightText: 2023 SAP SE
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+# This file is part of FEDEM - https://openfedem.org
+
+name: Build documentation
+
+on:
+  push:
+    tags:
+      - fedem-*
+
+  workflow_dispatch:
+    branches:
+      - main
+
+jobs:
+  build-docs:
+    name: Build the docs
+
+    runs-on: windows-latest
+
+    steps:
+      - name: Install HTML Help Workshop
+        run: choco install html-help-workshop
+
+      - name: Install MiKTeX
+        run: choco install miktex
+
+      - name: Check out source repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.ACCESS_PAT }}
+
+      - name: Checkout the latest release tag
+        run: |
+          $last_tag = git tag | Select -Last 1
+          git config --global advice.detachedHead false
+          git checkout $last_tag
+          echo "MY_TAG=$last_tag" | Out-File -FilePath $env:GITHUB_ENV -Append
+          mkdir docs
+
+      - name: Compile chm and pdf documents
+        shell: cmd
+        run: make-docs.bat -install
+
+      - name: Create release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ env.MY_TAG }}
+          name: "${{ env.MY_TAG }} docs"
+          token: ${{ secrets.ACCESS_PAT }}
+          body: "End-user documentation for Fedem R8.0"
+          artifacts: "docs/Fedem.chm,docs/FedemTheoryGuide.pdf,docs/FedemUsersGuide.pdf"
