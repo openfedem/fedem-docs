@@ -105,6 +105,12 @@
   \put(5,5){\circle*{10}}
   \put(1,3){\color{white}\tt\footnotesize#1}
  \end{picture}}
+% Use this for single-digit bullet inlined in the text
+\def\TextBullet#1{
+ \begin{picture}(7,7)
+  \put(3,3){\circle*{10}}
+  \put(0,0){\color{white}\tt#1}
+ \end{picture}}
 
 % Define environment bulletlist which uses bullets on the item numbers
 %---------------------------------------------------------------------
