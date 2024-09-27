@@ -1552,7 +1552,7 @@ Available logical operators:
   $v_0$ -- pulse center abscissa value (position)
 \end{minipage}
 
-\subsubsection{Sine}
+\SubSubSection{Sine}{sine}
 
 \noindent
 \begin{minipage}{0.45\textwidth}
@@ -2093,8 +2093,8 @@ total weight of all the components of the assembly. Another common
 property is the {\sl Visualize 3D} toggle. This turns on and off the
 3D-visualization of all beams contained in the sub-assembly.
 
-%See the chapters on wind power and marine modeling for a closer look at
-%the Property Editor panels of the sub-assemblies used in such structures.
+See the chapters on wind power and marine modeling for a closer look at
+the Property Editor panels of the sub-assemblies used in such structures.
 
 \SubSection{Importing sub-assemblies}{importing-sub-assemblies}
 
@@ -2144,17 +2144,20 @@ then the user ID of the sub-assembly containing the first sub-assembly,
 and so on.
 
 \begin{wrapfigure}{r}{0.3\textwidth}
-  \includegraphics[width=0.25\textwidth]{Figures/4-hierarchy}
+  \vskip-1.1\baselineskip
+  \includegraphics[width=0.3\textwidth]{Figures/4-hierarchy}
 \end{wrapfigure}
 
-In the image to the right, the selected triad has user ID 4 in the "Blade 2"
-sub-assembly. This blade has user ID 2 in the "Rotor" sub-assembly,
+In the image to the right, the selected triad \newline
+has user ID 4 in the "Blade 2" sub-assembly.
+This blade has user ID 2 in the "Rotor" sub-assembly,
 which again has user ID 3 in the "Turbine" sub-assembly, which has user ID 1.
 The total composite ID for this triad is then [4,2,3,1].
 
-The composite user ID is used in the Model manager, {\sl Topology} view and
-{\sl Output List} view, and also in the direct output from the dynamics solver
-in the \File{fedem\_solver.res} file.
+The composite user ID is used in the Model \newline manager,
+{\sl Topology} view and {\sl Output List} view, \newline
+and also in the direct output from the Dynamics \newline
+solver in the \File{fedem\_solver.res} file.
 
 \clearpage
 \Caution{The composite user ID is not used in pull-down menus when a reference
