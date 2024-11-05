@@ -245,19 +245,17 @@ In the following sections, the Fedem GUI is described in detail.
 Starting with an empty model file,
 the main window of the Fedem GUI appears, as shown below.
 
-\begin{figure}[H]
-  \begin{picture}(360,260)
-    \put(-80,169){\includegraphics[width=0.2\textwidth]{Figures/2-Guide}}
-    \put(15,0){\includegraphics[width=0.85\textwidth]{Figures/2-MainUI}}
-    \put(-8,222){\Bullet{1}\huge\{}
-    \put(55,205){\Bullet{2}}
-    \put(-88,215){\Bullet{3}}
-    \put(100,205){\Bullet{4}}
-    \put(55,53){\Bullet{5}}
-    \put(120,55){\Bullet{6}}
-    \put(40,1){\Bullet{7}}
-  \end{picture}
-\end{figure}
+\begin{picture}(360,280)
+  \put(-80,180){\includegraphics[width=0.2\textwidth]{Figures/2-Guide}}
+  \put(15,0){\includegraphics[width=0.9\textwidth]{Figures/2-MainUI}}
+  \put(-9,234){\Bullet{1}\Huge\{}
+  \put(40,200){\Bullet{2}}
+  \put(-89,227){\Bullet{3}}
+  \put(100,217){\Bullet{4}}
+  \put(55,55){\Bullet{5}}
+  \put(120,60){\Bullet{6}}
+  \put(40,1){\Bullet{7}}
+\end{picture}
 
 \begin{bulletlist}
 \item{\sl Menus and tool bars} --
@@ -350,13 +348,14 @@ top) marks the beginning of a tool bar):
 
 \SubSubSection{Manipulating tool bars}{manipulating-tool-bars}
 
-\begin{wrapfigure}{r}{0.25\textwidth}
+\begin{wrapfigure}[7]{r}{0.25\textwidth} \vskip-4mm
   \includegraphics[width=0.25\textwidth]{Figures/1st_Joint_Pulldown}
 \end{wrapfigure}
 
-Only some of the commands accessible from the tool bars are displayed. You will
-see that there are arrows ($\blacktriangledown$) beside some of the icons.
-To access other commands, click and hold down the $\blacktriangledown$ button.
+Only some of the commands accessible from the tool \newline bars are displayed.
+You will see that there are triangles \newline ($\blacktriangledown$)
+beside some of the icons. To access the other \newline commands,
+click and hold down the $\blacktriangledown$ button.
 A menu of additional, related commands is displayed (example at right).
 Selecting a command from the menu initiates the command and replaces the
 button’s function with that of the new command. You can select another
@@ -379,11 +378,11 @@ Fedem provides several ways to manage tool bars:
 
 \SubSection{Model Manager}{model-manager}
 
-\begin{wrapfigure}{r}{0.35\textwidth}
+\begin{wrapfigure}[16]{r}{0.35\textwidth} \vskip-5mm
   \includegraphics[width=0.35\textwidth]{Figures/2-ModelManager}
 \end{wrapfigure}
 
-The Model Manager Panel contains lists of all the objects and result views
+The Model Manager panel contains lists of all the objects and result views
 that make up your model. This includes mechanism, modeling, and control
 system objects, along with animations and graphs. In each list,
 objects are grouped by type and sorted by identification numbers or names.
@@ -398,10 +397,14 @@ commands that can be applied to the selected objects.
 \SubSubSection{Selecting items}{selecting-items}
 
 In the Model Manager panel, you can select items in several ways:
+
 \begin{itemize}
 \item Highlight a single item.
-\item Hold down the Shift key and click multiple items.
-\item Hold down the Ctrl key and click multiple items
+\item Hold down the \textbf{Shift} key and \newline click multiple items.
+\end{itemize}
+
+\begin{itemize}
+\item Hold down the \textbf{Ctrl} key and click multiple items
   (or a single item to select/deselect).
 \item Click and drag the mouse over multiple items.
 \end{itemize}
@@ -446,25 +449,30 @@ See \refChapter{postprocessing-results}{Postprocessing Results}
 for more information about graphed and animated results.
 
 
-\clearpage
 \SubSection{ID and Topology panel}{id-and-topology-panel}
 
-\begin{wrapfigure}{r}{0.4\textwidth}
+\begin{wrapfigure}[8]{r}{0.4\textwidth} \vskip-5mm
   \includegraphics[width=0.4\textwidth]{Figures/ID_Topology window}
   \begin{picture}(135,0)
     \put( 60,105){\Bullet{1}}
     \put(120,105){\Bullet{2}}
-    \put(-15, 60){\Bullet{3}}
+    \put(-15, 70){\Bullet{3}}
   \end{picture}
 \end{wrapfigure}
 
-When an object in the model is selected, the ID and Topology panel
-displays information related to the object as described below.
-If multiple items are selected, only the item selected last is displayed.
+When an object in the model is selected, \newline
+the ID and Topology panel (shown to the \newline right)
+displays information related to the \newline object, as described below.
+If multiple \newline items are selected, only the item selected \newline
+last is displayed.
 
 \begin{bulletlist}
 \item{\sl Item Type} --
   the type of the selected object (for example, Revolute joint, Gear, Spring).
+\end{bulletlist}
+
+\begin{bulletlist}
+  \setcounter{enumi}{1}
 \item{\sl ID Number} --
   a unique integer that distinguishes one item of the same type from another.
 \item{\sl Topology view} --
@@ -497,19 +505,21 @@ view when you select an item keeping the mouse button pressed.
 This is useful to see exactly which object in the 3D view that corresponds
 to the listed item.
 
-\begin{wrapfigure}{r}{0.25\textwidth}
-  \includegraphics[width=0.25\textwidth]{Figures/2-TopologyViewPopupMenu}
+\begin{wrapfigure}[4]{r}{0.24\textwidth} \vskip-5mm
+  \includegraphics[width=0.24\textwidth]{Figures/2-TopologyViewPopupMenu}
 \end{wrapfigure}
 
-Right clicking an item in the {\sl Topology} view will show a tiny pop-up
+Right clicking an item in the {\sl Topology} view will \newline show a tiny pop-up
 menu that allows you to either \textbf{Zoom To} or \textbf{Select} the
 item, or to do a \textbf{Select All}.
 
-\clearpage
 \begin{itemize}
 \item\textbf{Zoom To}:
-  This command zooms to the item making it easy to locate it in a complex model.
+  This command zooms to the item making it easier to locate it.
   See also \refSection{zoom-and-pan}{Zoom and Pan}.
+\end{itemize}
+
+\begin{itemize}
 \item\textbf{Select}:
   This command selects the right-clicked object from the {\sl Topology} view,
   and thus jump to it showing the properties of that item instead. See also
@@ -532,68 +542,91 @@ of mechanism items. The appearance of properties is different
 depending on the object selected. The image below is an example
 showing properties that are common to some of the Fedem modeling objects.
 
-\begin{figure}[H]
-  \begin{picture}(340,75)
-    \put( 20, 0){\includegraphics[width=0.9\textwidth]{Figures/2-PropertyPanel}}
-    \put( 19, 0){\line(-1,0){7}}
-    \put( 12, 0){\line(0,1){65}}
-    \put( 12,65){\line(1,0){7}}
-    \put( 50,65){\Bullet{1}}
-    \put(240,65){\Bullet{2}}
-    \put(307,56){\Bullet{3}}
-    \put(318,56){\Bullet{4}}
-    \put( -2,30){\Bullet{5}}
-  \end{picture}
-\end{figure}
+\noindent
+\begin{picture}(340,80)
+  \put( 20, 0){\includegraphics[width=0.9\textwidth]{Figures/2-PropertyPanel}}
+  \put( 19, 0){\line(-1,0){7}}
+  \put( 12, 0){\line(0,1){65}}
+  \put( 12,65){\line(1,0){7}}
+  \put( 50,65){\Bullet{1}}
+  \put(240,65){\Bullet{2}}
+  \put(307,56){\Bullet{3}}
+  \put(318,56){\Bullet{4}}
+  \put( -2,30){\Bullet{5}}
+\end{picture}
 
 \begin{bulletlist}
 \item{\sl Description} --
   an optional user-supplied name or identifying remarks.
 \item{\sl Tag} --
   an optional identifier which can be used to refer to the object from
-  python scripts using the fedempy interface.
+  python scripts using the {\tt fedempy} interface.
+  The tags do not need to be unique, e.g.,
+  you may assign identical tags to several objects for grouping them.
 \item\includegraphics[scale=0.5]{Figures/Icons/selectbackward}
   \includegraphics[scale=0.5]{Figures/Icons/selectforward} --
-  buttons for navigating back and forth through the latest selections
+  buttons for navigating back and forth through the latest selections.
 \item\includegraphics[scale=2.0]{Figures/Icons/help} --
-  help button that opens the Reference guide on the Property Editor guide
+  help button that opens the Reference Guide on the Property Editor panel
   content, depending on the type of the selected object.
 \item{\sl Properties} --
   editable attributes specific to the selected object.
 \end{bulletlist}
 
-\Note{The description field may contain any ASCII-character,
-  except for the “-character which is reserved for text string
-  delimiters in the model file.}
+\Caution{After editing a value in the Property Editor panel by typing,
+  you must press the \textbf{Enter} key to apply the change.}
 
 \Note{The description field is also used to activate beta features,
   see \refAppendix{beta-feature-documentation}{Beta feature documentation}.}
 
-\Caution{After editing a value in the Property Editor panel by typing,
-  you must press the Enter key to apply the change.}
+\Note{The description field may contain any ASCII-character,
+  except for the '“' character which is reserved for text string
+  delimiters in the model file.}
+
+\Note{The object tag may consist of alphanumeric characters only,
+i.e., letters, digits and the underscore '\_' character.
+If any other special characters are entered, they will be replaced
+by '\_' when the \textbf{Enter} key is pressed.}
+
+\subsubsection{Multi-selection}
+
+When you select multiple objects in the Model Manger panel
+(see \refSubSection{selecting-items}{Selecting items}{model-manager}),
+the Property Editor panel displays the properties of the last selected object.
+However, if you edit some of the property fields, that change will
+(with a few exceptions, including the Description field) apply to all selected
+objects of the same type as for which properties are displayed for.
+
+\Note{The Origin tab for Triads, Parts and Joints, as well as the
+Center of Gravity tab for Generic Parts, not update during multi-selection.
+This is mainly due to implementational reasons.}
 
 \subsubsection{Property menus}
 
-\begin{wrapfigure}{r}{0.4\textwidth}
+Many mechanism items have internal properties that can depend on the simulation
+time, measurement of a system variable or some internal variable in the item in
+question. Property menus are used to set up such properties
+
+\begin{wrapfigure}[2]{r}{0.4\textwidth} \vskip-2mm
   \includegraphics[width=0.4\textwidth]{Figures/2-PropertyValueMenu}
 \end{wrapfigure}
 
-Many mechanism items have internal properties that can depend on the
-simulation time, measurement of a system variable or some internal
-variable in the item in question. Property menus are used to
-set up such properties in a simple way. These menus consist of
-an option menu that in some cases are editable, and an \textbf{Edit} button.
-
-\begin{wrapfigure}{r}{0.4\textwidth}
-  \includegraphics[width=0.4\textwidth]{Figures/2-PropertyValueMenu-Open}
-\end{wrapfigure}
+\vskip-1mm\noindent in a simple way.
+These menus consist of an option menu that in some cases are editable,
+and an \textbf{Edit} button, as shown to the right.
 
 The menu contains references to other entities in your model
 that can be used as input for the property in question.
-A non-linear spring characteristic (e.g., a force-displacement curve)
-will be listed in the stiffness property menu of an Axial spring,
-Functions and Control outputs will be listed in the magnitude property menu
-of a load, etc. Press the menu button to access the list.
+A non-linear spring characteristic (e.g., a force-displacement curve) will be
+listed in the stiffness property menu
+
+\begin{wrapfigure}[4]{r}{0.4\textwidth} \vskip-2mm
+  \includegraphics[width=0.4\textwidth]{Figures/2-PropertyValueMenu-Open}
+\end{wrapfigure}
+
+\vskip-1mm\noindent of an Axial spring, Functions and Control outputs will be
+listed in the magnitude \newline property menu of a load, etc.
+Press the \newline menu button to access the list.
 
 \vskip\parskip
 \IconText{pencilbutton}{By pressing the \textbf{Edit} button
@@ -630,15 +663,14 @@ mechanism objects is via the Object Browser dialog box.
   {\sl Objects} list view of the Model Manager panel.
   The Fedem Object Browser dialog box is shown below.}
 
-\begin{figure}[H]
-  \begin{picture}(340,277)
-    \put(0,0){\includegraphics[width=\textwidth]{Figures/Dialogs/2-ObjectBrowser}}
-    \put(16,213){\Bullet{1}}
-    \put(47,213){\Bullet{2}}
-    \put(90,213){\Bullet{3}}
-    \put(205,220){\Bullet{4}}
-  \end{picture}
-\end{figure}
+\noindent
+\begin{picture}(340,285)
+  \put(0,0){\includegraphics[width=\textwidth]{Figures/Dialogs/2-ObjectBrowser}}
+  \put(16,213){\Bullet{1}}
+  \put(47,213){\Bullet{2}}
+  \put(90,213){\Bullet{3}}
+  \put(205,220){\Bullet{4}}
+\end{picture}
 
 \begin{bulletlist}
 \item{\sl BaseID} --
@@ -710,14 +742,13 @@ Select the Modeler view to view, create, or edit a mechanism model.
   The {\sl Modeler} view is then displayed as shown below.
   See also \refSection{modeler-view}{Modeler view}.}
 
-\begin{figure}[!h]
-  \center
+\begin{center}
   \begin{picture}(293,193)
     \put(0,0){\includegraphics[width=0.85\textwidth]{Figures/2-Modeler}}
     \put(100,100){\Bullet{1}}
     \put(30,30){\Bullet{2}}
   \end{picture}
-\end{figure}
+\end{center}
 
 \begin{bulletlist}
 \item{\sl Reference Plane} --
@@ -757,9 +788,9 @@ using drag-and-drop functionality. It also features grid and snapping tools
   See \refChapter{control-system-modeling}{Control System Modeling}
   for more information on the topic.}
 
-\begin{figure}[H]
-  \center\includegraphics[width=0.8\textwidth]{Figures/cs_example}
-\end{figure}
+\begin{center}
+  \includegraphics[width=0.8\textwidth]{Figures/cs_example}
+\end{center}
 
 \Note{The Control Editor view is empty until you create control elements.}
 
@@ -772,9 +803,9 @@ of selected simulation results and manipulate the Graph view.
   {\sl Results} list of the Model Manager panel, and select \textbf{Show Graph}.
   The Graph views are displayed in the Workspace area as shown below.}
 
-\begin{figure}[H]
-  \center\includegraphics[width=0.86\textwidth]{Figures/graphsCOLOR}
-\end{figure}
+\begin{center}
+  \includegraphics[width=0.86\textwidth]{Figures/graphsCOLOR}
+\end{center}
 
 
 \def\OutputList{\protect\hyperlink{output-list}{\sl Output List}~}
@@ -788,9 +819,9 @@ such as a log of commands and solver executions, and error messages.
 \IconText{outputList}{To open the Output List view,
   select \textbf{Show Output List} from the \textbf{Windows} menu or tool bar.}
 
-\begin{figure}[H]
-  \center\includegraphics[width=0.8\textwidth]{Figures/Output_List_window_COLOR}
-\end{figure}
+\begin{center}
+  \includegraphics[width=0.9\textwidth]{Figures/Output_List_window_COLOR}
+\end{center}
 
 The text in the Output List view is also written to a log file.
 The name of this log file is the same as the current model file name,
@@ -855,7 +886,7 @@ press and hold down the \textbf{Ctrl} key and then click the items you want
 to add to your selection.
 
 If you accidentally add the wrong object to the selection, simply
-release the Ctrl key and click an empty space within the Modeler view.
+release the \textbf{Ctrl} key and click an empty space within the Modeler view.
 The last selected item is deselected.
 
 \subsubsection{Selection history}
@@ -1480,28 +1511,34 @@ two command are available from the \textbf{Tools} menu.
 \IconText{distance}{Select \textbf{Measure distance...} to check the
   distance between two points. Then click on two points in the {\sl Modeler}
   view to output their global positions and the relative distance between them
-  in the \OutputList view.
-  You can repeat to click on two new points to check their relative
-  distance as many times you like. Press \textbf{Cancel} to quit the command.}
+  in the \OutputList view.}
 
-\begin{figure}[H]
-  \center\includegraphics[scale=0.8]{Figures/2-OutputListDistance}
-\end{figure}
+\begin{center}
+  \vskip\parskip
+  \includegraphics[scale=0.8]{Figures/2-OutputListDistance}
+\end{center}
 
+You can repeat to click on two new points to check their relative
+distance as many times you like. Press \textbf{Cancel} to quit the command.
+
+\vskip\parskip
 \IconText{angle}{Select \textbf{Measure angle...} to check the
   angle between two lines defined through three selected points.
   The end points of the two lines are selected first by clicking on two
   arbitrary locations in the {\sl Modeler} view, followed by the common start
-  point of the two lines.
-  The global positions of the three selected points, as well as the angle
-  (in radians) rotating the line though the third and first point into the line
-  through the third and second are then shown in the \OutputList view.
-  You can repeat to click on three  new points to measure more angles as many
-  times you like. Press \textbf{Cancel} to quit the command.}
+  point of the two lines.}
 
-\begin{figure}[H]
-  \center\includegraphics[scale=0.7]{Figures/2-OutputListAngle}
-\end{figure}
+The global positions of the three selected points, as well as the angle
+(in radians) rotating the line though the third and first point into the line
+through the third and second are then shown in the \OutputList view.
+
+\begin{center}
+  \vskip\parskip
+  \includegraphics[scale=0.7]{Figures/2-OutputListAngle}
+\end{center}
+
+You can repeat to click on three  new points to measure more angles as many
+times you like. Press \textbf{Cancel} to quit the command.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1520,11 +1557,10 @@ You can open a Fedem model file created in this version
     to make the Open model file dialog box appear (shown below).
   \item Locate the wanted Fedem model in the dialog box and click \text{Open}.
 \end{enumerate}}
-\vskip-5mm
 
-\begin{figure}[H]
-  \center\includegraphics[scale=0.62]{Figures/Dialogs/2-Open}
-\end{figure}
+\begin{center}
+  \includegraphics[scale=0.62]{Figures/Dialogs/2-Open}
+\end{center}
 
 The Open model file dialog box normally displays all files with the Fedem model
 file extension (\File{.fmm}). However, you may open a file with any extension by
@@ -1612,7 +1648,6 @@ To save the current model, do one of the following:
     choose \textbf{Save As...} in the \textbf{File} menu.
   \end{itemize}}
 
-\vskip-5mm
 \Note{The previous version of the model file will be renamed to
   \File{\Variable{filename}.bak} before saving the model to the same file,
   such that you can always go back to the previously saved version by renaming
@@ -1625,9 +1660,9 @@ in which you can choose the new file name. Here you can also choose
 to \textbf{Discard reduced FE models} by enabling the associated toggle
 (this toggle is present only when the model contains FE parts).
 
-\begin{figure}[H]
-  \center\includegraphics[scale=0.6]{Figures/Dialogs/2-SaveAsUpdated}
-\end{figure}
+\begin{center}
+  \includegraphics[scale=0.65]{Figures/Dialogs/2-SaveAsUpdated}
+\end{center}
 
 When saving a new model for the first time, you are prompted to give it a name
 different from the default name \Untitled, which was assigned when
@@ -1639,6 +1674,7 @@ Discard simulation results or \textbf{Create new modeling configuration}, see
 \protect\hyperlink{saving-a-model-copy-with-results}
                   {\sl"Saving a model copy with results"} below.
 
+\clearpage
 \Caution{If you do not save a new model still named \Untitled{}
   before you open another model or Exit Fedem,
   all solver results associated with this model will be deleted, if any.
@@ -1654,9 +1690,9 @@ you will have the options to either \textbf{Discard simulation results} or
 \textbf{Create new modeling configuration}, by activating the
 associated toggles:
 
-\begin{figure}[H]
-  \center\includegraphics[scale=0.6]{Figures/Dialogs/2-SaveAsUpdated}
-\end{figure}
+\begin{center}
+  \includegraphics[scale=0.65]{Figures/Dialogs/2-SaveAsUpdated}
+\end{center}
 
 If the latter toggle is activated, you can then specify the simulation
 time from which the response state will be used to create a
@@ -1665,7 +1701,7 @@ positions in the new model.
 
 \subsubsection{Indication on whether a Save is needed}
 
-\begin{wrapfigure}{r}{0.4\textwidth}
+\begin{wrapfigure}[5]{r}{0.4\textwidth} \vskip-4mm
   \includegraphics[width=0.4\textwidth]{Figures/2-TitleWithAsterisk}
 \end{wrapfigure}
 
@@ -1713,7 +1749,7 @@ to free up RAM.
   FE-Data Settings dialog box is used. To open this dialog box (shown below),
   select the \textbf{FE-Data Settings...} command in the \textbf{Tools} menu.}
 
-\begin{wrapfigure}{R}{0.5\textwidth}
+\begin{wrapfigure}[9]{r}{0.5\textwidth} \vskip-5mm
   \includegraphics[width=0.5\textwidth]{Figures/Dialogs/2-FE-DataSettings}
 \end {wrapfigure}
 
@@ -1861,30 +1897,25 @@ respectively.
 
 \SubSection{Exporting the 3D modeler view}{exporting-the-3d-modeler-view}
 
-\noindent
-\begin{minipage}{0.41\textwidth}
-  \setlength{\parskip}{1mm}
-  \raggedright
-  To export this view, make it active, then select \textbf{Export} and then
-  \textbf{Export View...} from the \textbf{File} menu.
+\begin{wrapfigure}[12]{r}{0.55\textwidth} \vskip-5mm
+  \includegraphics[width=0.55\textwidth]{Figures/2-ExportView}
+\end {wrapfigure}
 
-  When exporting the {\sl Modeler} view, you may choose between the following
-  image formats:
+To export this view, make it \newline
+active, then select \textbf{Export} and \newline
+then \textbf{Export View...} from the \newline \textbf{File} menu.
 
-  \begin{itemize}
-  \item\File{.bmp}
-  \item\File{.jpeg}
-  \item\File{.png}
-  \item\File{.rgb}
-  \item\File{.iv} \small(3D inventor snapshot)
-  \end{itemize}
-\end{minipage}% <--- the % is needed here to kill off spurious spacing
-\begin{minipage}{0.59\textwidth}
-  \raggedleft
-  \includegraphics[width=0.95\textwidth]{Figures/2-ExportView}
-\end{minipage}
+When exporting the {\sl Modeler} view, you may choose between the following
+image formats:
 
-\vskip5mm
+\begin{itemize}
+\item\File{.bmp}
+\item\File{.jpeg}
+\item\File{.png}
+\item\File{.rgb}
+\item\File{.iv} \small(3D inventor snapshot)
+\end{itemize}
+
 The different file formats have different quality.
 The format \File{.jpeg} is widely recognized.
 The compression reduces the quality somewhat, but the files are small.
@@ -1913,18 +1944,18 @@ Here you may choose between these image formats:
 
 \SubSection{Exporting animations}{exporting-animations-intro}
 
-\begin{wrapfigure}{R}{0.5\textwidth}
-  \includegraphics[width=0.5\textwidth]{Figures/2-ExportAnim-sec-2-8-2}
-\end {wrapfigure}
-
 Animations can be exported using the \File{.mpeg} (mpeg-1 or mpeg-2) and
 \File{.avi} (Windows only) formats. The exported animation may be viewed
 in any standard video player, e.g., Windows Media Player or Elecard MPEG
 Player (www.elecard.com).
 
-After loading the animation, select \textbf{Export} and then
-\textbf{Export Animation...} from the \textbf{File} menu to open a dialog box
-where you can select location, file name and format of your exported animation.
+\begin{wrapfigure}{r}{0.5\textwidth} \vskip-5mm
+  \includegraphics[width=0.5\textwidth]{Figures/2-ExportAnim-sec-2-8-2}
+\end {wrapfigure}
+
+After loading the animation, \newline select \textbf{Export} and then \newline
+\textbf{Export Animation...} from the \newline \textbf{File} menu
+to open a dialog box \newline where you can select location, file name and format of your exported animation.
 See \refSection{exporting-animations}{Exporting animations} for details.
 
 \clearpage
@@ -1939,9 +1970,9 @@ placed in the \File{plugins} folder, it will show up in the Plug-Ins dialog box
 in Fedem (see below), which is available from \textbf{Tools} menu.
 Here you can tick which plug-ins to use.
 
-\begin{figure}[!h]
-  \center\includegraphics[width=0.6\textwidth]{Figures/Dialogs/2-Plugins}
-\end{figure}
+\begin{center}
+  \includegraphics[width=0.6\textwidth]{Figures/Dialogs/2-Plugins}
+\end{center}
 
 Fedem currently provides plug-in interfaces of two kinds; user-defined functions
 and user-defined elements. However, only one plug-in of each kind can be
@@ -1987,18 +2018,15 @@ The method returns the number of user-defined functions in the library.
 
 \subsubsection{int ufGetFuncName (int id, int nchar, char* name)}
 
-\begin{minipage}{0.49\textwidth}
-  \raggedright
-  This method defines the {\sl name} of the function with the specified {\sl id}.
-  This is the function name as it appears in the {\sl Function type} menu
-  of the Function Property Editor panel (shown to the right,
-  see also \refSection{function-properties}{Function properties}).
-  The method returns the number of function arguments.
-\end{minipage}% <--- the % is needed here to kill off spurious spacing
-\begin{minipage}{0.51\textwidth}
-  \raggedleft
-  \includegraphics[trim=92 55 90 18,clip,width=0.85\textwidth]{Figures/2-FunctionType}
-\end{minipage}
+\begin{wrapfigure}[7]{r}{0.37\textwidth} \vskip-5mm
+  \includegraphics[trim=95 55 103 18,clip,width=0.37\textwidth]{Figures/2-FunctionType}
+\end{wrapfigure}
+
+This method defines the {\sl name} of the function with the specified {\sl id}.
+This is the function name as it appears in the {\sl Function type} menu
+of the Function Property Editor panel (shown to the right,
+see also \refSection{function-properties}{Function properties}).
+The method returns the number of function arguments.
 
 \subsubsection{int ufGetParName (int id, int ipar, int nchar, char* name)}
 
@@ -2008,9 +2036,10 @@ is shown in the parameter list of your function in the Function Property Editor
 panel (shown below). The method returns the total number of parameters for the
 specified function.
 
-\begin{figure}[!h]
-  \center\includegraphics[trim=185 96 20 0,clip,width=0.8\textwidth]{Figures/2-ArgumentsAndParameters}
-\end{figure}
+\begin{center}
+  \vskip\parskip
+  \includegraphics[trim=186 96 20 0,clip,width=0.9\textwidth]{Figures/2-ArgumentsAndParameters}
+\end{center}
 
 \SubSubSection{double ufGetValue (int baseId, int funcId, \\
   const double* par, const double* x, int\& err)}{ufgetvalue}
@@ -2056,7 +2085,7 @@ a template for building your own finite element plug-in implemented in C or C++.
 Build instructions and other explanations can be found as comments in the file.
 
 \clearpage
-\begin{wrapfigure}{r}{0.5\textwidth}
+\begin{wrapfigure}[9]{r}{0.5\textwidth}
   \includegraphics[trim=0 0 0 852,clip,width=0.5\textwidth]{Figures/2-MechanismMenu}
 \end{wrapfigure}
 
@@ -2234,22 +2263,18 @@ This can be utilized to create strings of two-noded user-defined elements.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \Section{Customizing Fedem using Addons}{customizing-fedem-using-addons}
 
-On the Windows platform (Windows 7 and later), Fedem offers the possibility to
-extend the modelling and post-processing environment through the use of Addons.
+On the Windows platform, Fedem offers the possibility to extend the modelling
+and post-processing environment through the use of Addons.
 
-\noindent
-\begin{minipage}{0.55\textwidth}
-  \raggedright
-  The Addons are separate executables that may be launched from the
-  \textbf{Addons} menu in Fedem (as shown to the right).
-  Each menu item here corresponds to an EXE file in the \File{Addons} subfolder
-  of the installation folder of the Fedem software. If that folder is empty or
-  does not exist, the \textbf{Addons} menu is absent.
-\end{minipage}% <--- the % is needed here to kill off spurious spacing
-\begin{minipage}{0.45\textwidth}
-  \raggedleft
-  \includegraphics[width=0.95\textwidth]{Figures/2-AddonsMenu}
-\end{minipage}
+\begin{wrapfigure}[10]{r}{0.45\textwidth} \vskip-3mm
+  \includegraphics[width=0.45\textwidth]{Figures/2-AddonsMenu}
+\end{wrapfigure}
+
+The Addons are separate executables that may be launched from the
+\textbf{Addons} menu in Fedem (as shown to the right).
+Each menu item here corresponds to an EXE file in the
+\File{Addons} subfolder of the installation folder of the Fedem software.
+If that folder is empty or does not exist, the \textbf{Addons} menu is absent.
 
 The Addons communicate with the main Fedem GUI over a COM API,
 which is available for advanced users such that they may program their own
