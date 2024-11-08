@@ -273,33 +273,33 @@ or as a {\sl Functional Mock-up Unit} (FMU).
 
 A Digital Twin app is a zip-file containing all files related to the
 current model, in addition to some support files for executing the model
-in the cloud using EPD Connected Products. The FMU is also a zip-file,
+in the cloud using {\sl EPD Connected Products}. The FMU is also a zip-file,
 which in addition contains shared object libraries interfacing the
 dynamics solver based on the Functional Mock-up Interface
-(see \href{https://fmi-standard.org/}{fmi-standard.org}).
+(see \href{https://fmi-standard.org/}{fmi-standard.org}),
+but not the solver itself.
 
-To open the {Model Export dialog box (shown below), select \textbf{Export}
+To open the Model Export dialog box (shown below), select \textbf{Export}
 $\rightarrow$ \textbf{Export Digital Twin...} from the \textbf{File} menu.
 
-\begin{figure}[!h]
-  \begin{picture}(243,194)
-    \put(1,0){\includegraphics[width=\textwidth]{\ReferenceImg/dlg-model-export}}
-    \put(-10, 58){\Bullet{1}}
-    \put(-10,118){\Bullet{1}}
-    \put(-10,180){\Bullet{1}}
-    \put(115, 45){\Bullet{2}}
-    \put( 25,167){\Bullet{2}}
-    \put( 25,105){\Bullet{2}}
-    \put( 65, 93){\Bullet{3}}
-    \put( 65,155){\Bullet{3}}
-    \put( 75,146){\Bullet{4}}
-    \put( 55,137){\Bullet{5}}
-    \put( 32,128){\Bullet{6}}
-    \put(20,76.1){\Bullet{7}\huge\{}
-    \put(200,179){\Bullet{8}}
-    \put(203,104){\Bullet{9}}
-  \end{picture}
-\end{figure}
+\noindent
+\begin{picture}(243,200)
+  \put(1,0){\includegraphics[width=\textwidth]{\ReferenceImg/dlg-model-export}}
+  \put(-10, 58){\Bullet{1}}
+  \put(-10,118){\Bullet{1}}
+  \put(-10,180){\Bullet{1}}
+  \put(115, 45){\Bullet{2}}
+  \put( 25,167){\Bullet{2}}
+  \put( 25,105){\Bullet{2}}
+  \put( 65, 93){\Bullet{3}}
+  \put( 65,155){\Bullet{3}}
+  \put( 75,146){\Bullet{4}}
+  \put( 55,137){\Bullet{5}}
+  \put( 32,128){\Bullet{6}}
+  \put(20,76.1){\Bullet{7}\huge\{}
+  \put(200,179){\Bullet{8}}
+  \put(203,104){\Bullet{9}}
+\end{picture}
 
 \begin{bulletlist}
 \item
@@ -379,9 +379,9 @@ in the order of logical task performance, i.e., the dynamics simulation
 (including model reduction, if needed) is performed first,
 then the stress recovery, mode shape recovery, and so on.
 
-\begin{figure}[!h]
-  \center\includegraphics[width=0.6\textwidth]{Figures/6-SolversToolbar}
-\end{figure}
+\begin{center}
+  \includegraphics[width=0.6\textwidth]{Figures/6-SolversToolbar}
+\end{center}
 
 The setup commands (\textbf{Dynamics Solver...}, \textbf{Stress Recovery
 Setup...}, etc., and \textbf{Additional Solver Options...}) enable management
@@ -490,8 +490,7 @@ of a certain size, and goes out-of core only when this buffer is not large
 enough. The performance of the equation solver depends on the size of this
 buffer and it may therefore be optimized by fine-tuning this size.
 
-\begin{wrapfigure}[5]{r}{0.45\textwidth}
-  \vspace{-4mm}
+\begin{wrapfigure}[5]{r}{0.45\textwidth} \vskip-4mm
   \includegraphics[trim=0 155 0 245,clip,width=0.45\textwidth]
                   {Figures/Dialogs/6-AdditionalSolverOptions}
 \end{wrapfigure}
@@ -666,10 +665,8 @@ is running (see also
 All such messages are also written to the res-file, but in the {\sl Output List}
 they are prefixed by the solver name and the process ID in brackets, e.g.
 
-\begin{figure}[!h]
-  \hskip-0.27\textwidth
-  \includegraphics[width=1.27\textwidth]{Figures/6-SolverMessages}
-\end{figure}
+\vskip2mm\noindent\hskip-0.26\textwidth
+\includegraphics[width=1.27\textwidth]{Figures/6-SolverMessages}
 
 The first message of a solver process is always {\tt Started.}
 and the last message is {\tt Finished.} followed by the consumed wall time.
@@ -2291,10 +2288,9 @@ The \File{rosette{\sl ID}.asc} file contains a heading and a data section.
 (See file cutout below.) The heading summarizes the strain rosette definition,
 the data section lists all measurements made.
 
-\begin{figure}[!h]
-  \center
+\begin{center}
   \includegraphics[width=0.9\textwidth]{Figures/6-StrainRosette-TextOutput}
-\end{figure}
+\end{center}
 
 \clearpage
 Note that this cutout is an edited version not showing the entire file contents.
@@ -2347,9 +2343,8 @@ The DAC and ASCII file output is not affected.
 It is possible to define strain rosettes in an ASCII input file, as
 shown in the example below, and read them into Fedem.
 
-\begin{figure}[!h]
-  \includegraphics[width=\textwidth]{Figures/6_StrainRosette_file_format}
-\end{figure}
+\noindent
+\includegraphics[width=\textwidth]{Figures/6_StrainRosette_file_format}
 
 Each line defines a strain rosette, where the following data must be given:
 %
@@ -2428,20 +2423,21 @@ the result file hierarchy
 
 \SubSection{Generating strain coat}{generating-strain-coat}
 
-\begin{wrapfigure}[17]{r}{0.35\textwidth}
-  \vspace{-5mm}
+\begin{wrapfigure}[17]{r}{0.35\textwidth} \vskip-5mm
   \includegraphics[width=0.35\textwidth]{Figures/6-GenerateStraincoat}
 \end{wrapfigure}
 
-Before you run the strain coat analysis, you must generate strain coat elements
-for the parts or element groups in question. This is done by right-clicking the
+Before you run the strain coat analysis, \newline you must generate
+strain coat elements for \newline the parts or element groups in question.
+This is done by right-clicking the
 parts or groups in the {\sl Objects} list of the Model Manager panel
 and selecting \textbf{Generate Strain Coat} from the menu.
 Again, multi-selection is possible.
 
-One strain coat element is created for each non-interior face of the finite
-elements in the current selection. If a strain coat element already exist for a
-given face, a new strain coat element is not created.
+One strain coat element is created for \newline each non-interior face of the
+finite elements \newline in the current selection.
+If a strain coat element already exist for a given face,
+a new strain coat element is not created.
 Therefore, repeating the \textbf{Generate Strain Coat} command for
 the same selection has no effect.
 
@@ -2894,11 +2890,10 @@ representing the model quantities subjected to variation, are the same as those
 found in the Fedem model file (\File{.fmm}).
 A sample event definition file is shown below.
 
-\begin{figure}[!h]
-  \includegraphics[width=\textwidth]{Figures/6-EventDefSample}
-\end{figure}
+\vskip1mm\noindent
+\fbox{\includegraphics[width=0.97\textwidth]{Figures/6-EventDefSample}}
 
-\noindent
+\vskip1mm\noindent
 All lines starting with non-letter characters are regarded as comments.
 
 \begin{itemize}
@@ -2946,10 +2941,11 @@ opened. It contains a tabular descriptions of the simulation events,
 with a single row for each event and the data fields to be modified as columns.
 The column headings resembles the event definitions file.
 
-\begin{figure}[!h]
-  \center
+\begin{center}
+  \vskip2mm
   \includegraphics[width=0.8\textwidth]{Figures/Dialogs/6-EventDef}
-\end{figure}
+  \vskip2mm
+\end{center}
 
 Use this dialog box to verify that your events have been correctly defined
 before the simulations are started, or to review the parameters for the
@@ -2971,8 +2967,7 @@ are modified according to the definition of the selected event.
 Subsequent solve commands and post-processing (graph plotting and
 animations) will then be associated with this event.
 
-\begin{wrapfigure}[6]{r}{0.5\textwidth}
-  \vspace{-4mm}
+\begin{wrapfigure}[6]{r}{0.5\textwidth} \vskip-4mm
   \includegraphics[width=0.5\textwidth]{Figures/6-SimulationEventProperty2}
 \end{wrapfigure}
 
