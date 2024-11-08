@@ -63,10 +63,10 @@ This editing environment also features grid and snap functionality
   button on the \textbf{Windows} menu or tool bar.
   The {\sl Control Editor} view is shown below with an example control system.
 }
-\begin{figure}[!h]
-  \center\vskip-2mm % Trim off some white space around this image
+
+\begin{center}
   \includegraphics[trim=0 10 0 17,clip,width=0.85\textwidth]{Figures/cs ricardo}
-\end{figure}
+\end{center}
 
 
 \SubSection{Control tool bars}{control-tool-bars}
@@ -81,14 +81,14 @@ control blocks that are used to build control modules.
 (See \refSection{control-blocks}{Control blocks} for descriptions of each
 control block).
 
-\begin{figure}[!h]
-  \center\includegraphics[width=0.85\textwidth]{Figures/Control Entities Toolbar}
-\end{figure}
+\begin{center}
+  \includegraphics[width=0.85\textwidth]{Figures/Control Entities Toolbar}
+\end{center}
 
 
 \subsubsection{Control Tools tool bar}
 
-\begin{wrapfigure}{r}{0.25\textwidth}
+\begin{wrapfigure}[2]{r}{0.25\textwidth} \vskip-5mm
   \includegraphics[width=0.25\textwidth]{Figures/Controls Toolbar}
 \end{wrapfigure}
 
@@ -100,7 +100,7 @@ for use of these commands.)
 
 \SubSection{Control system topology}{control-system-topology}
 
-\begin{wrapfigure}{r}{0.3\textwidth}
+\begin{wrapfigure}[4]{r}{0.3\textwidth} \vskip-5mm
   \includegraphics[width=0.3\textwidth]{Figures/5-Control-System-Topo}
 \end{wrapfigure}
 
@@ -116,7 +116,7 @@ corner of the Fedem main window.
 The input and output blocks are the connections through which the
 control system and the rest of the mechanism model interact.
 
-\subsubsection{Control Input}
+\subsection{Control Input}
 
 \IconTextFirst{input}{
   The input block is used to set up input values from the mechanism,
@@ -125,7 +125,7 @@ control system and the rest of the mechanism model interact.
   See \refSection{function-properties}{Function properties}. The output value
   of the Control Input is then connected to other control elements.}
 
-\subsubsection{Control Output}
+\subsection{Control Output}
 
 \IconTextFirst{output}{
   The output block is used to make a response variable from the control system
@@ -176,7 +176,7 @@ The binary input blocks used in Fedem have no editable parameters.
 Each block is described below.
 (See also the \FedemTGuide{Section 8.4.1, "Basic elements"}.)
 
-\medskip\IconText{comparator}{
+\bigskip\IconText{comparator}{
   \textbf{Comparator block} \\[1mm]
    The comparator block calculates and outputs the difference between the
    two input signals.}
@@ -366,9 +366,8 @@ To insert control system blocks, complete the following steps:
 \item
   Click the button that represents the block you want to insert.
 
-  \EnumTip{
-    You may have to hold down the arrow found next to a block of a similar
-    type to access the drop-down menu with other block selections.}
+\EnumTip{You may have to hold down the arrow found next to a block of a similar
+  type to access the drop-down menu with other block selections.}
 
 \item
   Move the cursor into the {\sl Control Editor} view.
@@ -397,40 +396,37 @@ Once a block is inserted in the {\sl Control Editor} view,
 you can select it and editing its properties in the Property Editor panel.
 For example, the equation and properties of a PID control block are shown below.
 
-\begin{figure}[!h]
-  \center\includegraphics[width=0.8\textwidth]{Figures/PID properties}
-\end{figure}
+\begin{center}
+  \includegraphics[width=0.85\textwidth]{Figures/PID properties}
+\end{center}
 
 \Caution{Changing a value in the Property Editor panel does not automatically
   apply the change. You must press the \textbf{Enter} key after editing each
   value to apply the change.}
 
 
+\clearpage
 \SubSection{Connecting blocks}{connecting-blocks}
 
-\noindent
-\begin{minipage}{0.55\textwidth}
-  \raggedright
-  Once you have placed blocks in the {\sl Control Editor} view, you must draw
-  connection lines between them to define the control module (shown at right).
-  To connect two control blocks in your control module, do the following steps:
-
-  \vskip1mm
-  \begin{bulletlist}
-    \setlength\itemsep{1mm}
-  \item Click and drag from the arrow (output) of one control block ---
-  \item ---to the circle (input) of another block and release the mouse button.
-  \end{bulletlist}
-\end{minipage}% <--- the % is needed here to kill off spurious spacing
-\hfill\begin{minipage}{0.4\textwidth}
+\begin{wrapfigure}[7]{r}{0.4\textwidth} \vskip-5mm
   \begin{picture}(140,80)
-    \put(0,0){\includegraphics[width=\textwidth]{Figures/5-Connecting-Block}}
+    \put(0,0){\includegraphics[width=0.4\textwidth]{Figures/5-Connecting-Block}}
     \put(35,20){\Bullet{1}}
     \put(81,50){\Bullet{2}}
   \end{picture}
-\end{minipage}
+\end{wrapfigure}
 
-\vskip\parskip
+Once you have placed blocks in the \newline {\sl Control Editor} view,
+you must draw \newline connection lines between them to define \newline
+the control module (shown at right).
+To connect two control blocks in your \newline
+control module, do the following steps:
+
+\begin{bulletlist}
+\item Click and drag from the arrow (output) of one control block---
+\item ---to the circle (input) of another block and release the mouse button.
+\end{bulletlist}
+
 A connection line is then drawn between the two blocks.
 You can adjust the path of the line by dragging and dropping the line.
 Click and drag either a corner or a line segment between the corners.
@@ -481,8 +477,8 @@ complete the following steps:
 \item
   Select the line or block in the {\sl Control Editor} view.
 
-  \EnumNote{You can select multiple blocks at the same time by selecting them
-    in the Model Manager {\rm Objects} list.}
+\EnumNote{You can select multiple blocks at the same time by selecting them
+  in the Model Manager {\rm Objects} list.}
 
 \item
   Click the \textbf{Delete} button on the \textbf{Standard} tool bar,
