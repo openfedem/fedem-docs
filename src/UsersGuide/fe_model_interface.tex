@@ -124,7 +124,7 @@ Nodes are expressed by the following syntax:
    $<0$ : an internal node with constraints, the value is
    \newline\mbox{}\hskip24pt a binary coding of the fixed DOFs \\
   \hline
-  \texttt{x y z} &  Real & Global nodal coordinates \\
+  \texttt{x y z} & Real & Global nodal coordinates \\
   \hline
 \end{tabular}
 
@@ -204,16 +204,18 @@ using the statements in the table below.
   \{\tt VDETAIL vid\} in addition to the property references listed.}
 
 \Note{The elements {\tt BUSH} and {\tt CMASS} may exist without any associated
-  properties ({\tt PBUSHCOEFF} and {\tt PMASS} , respectively)
+  properties ({\tt PBUSHCOEFF} and {\tt PMASS}, respectively)
   in the \File{.ftl} file.
-  Such elements are created automatically by Fedem during modeling, e.g.,
-  when a mechanism joint is attached to a slave FE node in a part (see
-  \refSection{attaching-and-detaching-elements}{Attaching and detaching elements}).
-  When the Fedem Reducer encounters such property-less elements, some
-  stiffness/mass properties are computed automatically for these elements
-  based on the assembled stiffness/mass matrix of the whole part, such that
-  the element can be regarded as nearly mass-less and rigid. Refer to the
-  \FedemTGuide{Appendix A, "Finite Element library"} for details on this computation.}
+  Such elements are created automatically by Fedem during modeling,
+  e.g., when a mechanism joint is attached to a dependent FE node in a part
+  (see \refSection{attaching-and-detaching-elements}
+                  {Attaching and detaching elements}).
+  When the Fedem Reducer encounters such property-less elements,
+  some stiffness/mass properties are computed automatically for these elements
+  based on the assembled stiffness/mass matrix of the whole part,
+  such that the element can be regarded as nearly mass-less and rigid.
+  Refer to the \FedemTGuide{Appendix A, "Finite Element library"}
+  for details on this computation.}
 
 Parameters for element statements are given in the table below.
 
@@ -293,9 +295,9 @@ have the following syntax:
   \hline
   {\tt $G$} & Real & Shear modulus (used by beam elements only) \\
   \hline
-  $\nu$     & Real &  Poisson’s ratio \\
+  $\nu$     & Real & Poisson’s ratio \\
   \hline
-  $\rho$    & Real &  Material density \\
+  $\rho$    & Real & Material density \\
   \hline
 \end{tabular}
 
@@ -563,7 +565,7 @@ have the following syntax:
   {\tt rid} & Integer & Rigid body property identifier \\
   \hline
   {\tt cm}  & Integer & Component numbers of the dependent DOFs in
-                        the part coordinate system at all slave nodes of
+                        the part coordinate system at all dependent nodes of
                         the rigid element \\
   \hline
 \end{tabular}
@@ -579,14 +581,21 @@ have the following syntax:
   \hline\hline
   {\tt wid} & Integer & Weighted averaged motion property identifier \\
   \hline
-  {\tt rc}  & Integer & Component numbers of the dependent DOFs at the slave
-                        node of the weighted average motion element. \\
+  {\tt rc}  & Integer & Component numbers of the dependent DOFs \newline
+                        at the reference node of the weighted average motion
+                        element\footnote{
+                        The {\tt rc} parameter can also have a negative value.
+                        This is used to flag that the weights {\tt wij} are to
+                        be interpreted as direct coefficients associated with
+                        each DOF of the independent node, like for MPC entries
+                        int Nastran bulk data files.}. \\
   \hline
-  {\tt xi}  & Integer & Row index into the weighting matrix for local
-                        DOF $i$ at the slave node \\
+  {\tt xi}  & Integer & Row index into the weighting matrix for local DOF $i$
+                        of the reference (dependent) node \\
   \hline
-  {\tt wij} & Real & Weight factor at master node $j$ for the element,
-                     for all slave DOFs whose row index equals $i$ \\
+  {\tt wij} & Real & Weight factor (or scaling coefficient if ${\tt rc}<0$)
+                     for independent node $j$ for the element,
+                     for all dependent DOFs whose row index equals $i$ \\
   \hline
 \end{tabular}
 
@@ -643,7 +652,7 @@ FACELOAD\{sid p$_1$ ... p$_n$ e$_1$ f$_1$ ... e$_n$ f$_n$ [\{PORIENT oid\}]\}}
 \end{tabular}
 
 
-\SubSection{Strain Coat Elements}{strain-coat-lements}
+\SubSection{Strain Coat Elements}{strain-coat-elements}
 
 Four strain coat element types are supported, where the type names
 reflect the number of element nodes. The \File{.ftl} syntax is as follows:
@@ -853,6 +862,7 @@ directly imported as parts into Fedem using the Import Part command
   {\tt ASET1}  & Same as ASET \\\hline
   {\tt SPC}    & See below \\\hline
   {\tt SPC1}   & See below \\\hline
+  {\tt MPC}    & See below \\\hline
 \end{tabular}
 
 \Note{For the {\tt PBARL}/{\tt BPEAML} entries,
@@ -870,17 +880,25 @@ directly imported as parts into Fedem using the Import Part command
   editing the \File{.ftl} file created in the \File{link\_DB} directory when
   the model is saved.}
 
-\Note{If the Poisson's ratio in the MAT1 bulk entry is not given or is outside
-  the valid range {\rm[0, 0.5\textgreater}, but the shear modulus is given,
-  the Poisson's ratio will be derived from the Young's modulus and the
-  shear modulus, through the expression $\nu=E/2G-1$, if that yields a
-  value within the valid range.}
+\Note{If the Poisson's ratio in the {\tt MAT1} bulk entry is not given
+  or is outside the valid range {\rm[0, 0.5\textgreater},
+  but the shear modulus is given, then the Poisson's ratio will be derived
+  from the Young's modulus and the shear modulus,
+  through the expression $\nu=E/2G-1$,
+  if that yields a value within the valid range.}
 
 \Note{The {\tt SPC} (and {\tt SPC1}) bulk entry is used to specify fixed DOFs in
   FE nodes and is an alternative to specify the node as external and constrain
-  it on the system level. Non-zero prescribed values are h owever treated as
+  it on the system level. Non-zero prescribed values are however treated as
   zero in Fedem (always fixed).}
 
+\Note{The {\tt MPC} bulk entries (multi-point-constraints) will be converted
+  into {\tt WAVGM} elements when the Nastran file is imported, typically one
+  such element will represent all MPCs referring to the same dependent node.
+  The {\tt PWAVGM} property associated with the {\tt WAVGM} element will then
+  contain the coefficients of the linear constraint equation directly instead
+  of nodal weighting factors of an {\tt RBE3} element.
+  This is flagged by a negative dependent DOFs flag ({\tt rc}).}
 \clearpage
 
 
@@ -896,7 +914,7 @@ below.
   \rowcolor[HTML]{EFEFEF} SESAM keyword  &  Comments  \\
   \hline\hline
   {\tt BELFIX}   & \\\hline
-  {\tt BLDEP}    & \\\hline
+  {\tt BLDEP}    & Converted to WAVGM elements \\\hline
   {\tt BNBCD }   & Only the {\sl Fixed}(1) and {\sl Free}(0) status codes are \\
                  & considered in Fedem. Other values are ignored. \\\hline
   {\tt BNMASS}   & \\\hline
