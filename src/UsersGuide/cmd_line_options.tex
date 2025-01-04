@@ -991,8 +991,6 @@ Sections in this appendix address the following topics:
   \hline
   \texttt{-linkfile} &    Name of FE data file &  \\
   \hline
-  \texttt{-littleEndian} &    Use Little Endian formatting of DAC files  & \texttt{- (false)\tnote{1}}   \\
-  \hline
   \texttt{-loga1} &    Parameter log(a1) of the S-N curve  & \texttt{15.117}   \\
   \hline
   \texttt{-loga2} &    Parameter log(a2) of the S-N curve  & \texttt{17.146}   \\
@@ -1009,12 +1007,9 @@ Sections in this appendix address the following topics:
   \hline
   {\tt-rosfile} & Name of strain rosette input file & \\
   \hline
+  {\tt -samfile} & Name of SAM data file & \\
+  \hline
 \end{tabular}
-  \begin{tablenotes}
-    \item[1] { This is the default value on UNIX platforms. On Windows, the default is + (true).
-    Thus, the default formatting of the DAC files will be suitable for the platform the
-    recovery is run on.}
-  \end{tablenotes}
 \end{threeparttable}
 
 % second page strain rosette recovery options
@@ -1025,8 +1020,6 @@ Sections in this appendix address the following topics:
   \rowcolor[HTML]{EFEFEF}
   \rule{0pt}{15pt}Cmd-line option & Description & Default  \\
   \hline\hline
-  \texttt{-samfile} &    Name of SAM data file &  \\
-  \hline
   \texttt{-statm} &    Start time  & \texttt{0}   \\
   \hline
   \texttt{-stotm} &    Stop time  & \texttt{1}   \\

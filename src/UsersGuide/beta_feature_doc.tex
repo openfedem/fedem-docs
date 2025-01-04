@@ -399,22 +399,26 @@ factor. The same command can also be applied on FE and Generic Parts.
   Browser dialog box, see \refSection{object-browser}{Object Browser}.}
 
 
-\SubSection{Time-dependent stiffness scaling}
+\SubSection{Time-dependent stiffness and mass scaling}
            {time-dependent-stiffness-scaling}
 
-The stiffness matrix of a Beam element can be adjusted using a time- or
-state-dependent scale function through the description field command:
+The stiffness- and mass matrix of a Beam element can be adjusted using
+time- or state-dependent scale functions through the following
+description field commands:
 
 \LinkFormatText{\#StiffScaleEngine \Variable{id}}
+
+\LinkFormatText{\#MassScaleEngine \Variable{id}}
 
 \noindent
 The {\tt\Variable{id}} is the base ID of the desired scaling function.
 
-The same command can also be applied on Generic Parts. However, it is not
-recommended to use it on FE Parts if you also are going to perform stress
-recovery on that part. This is because the displacement recovery operator,
-calculated during the FE Part reduction, does not account for the stiffness
-scaling factor such that the calculation of internal deformation and stresses
+The same commands can also be applied on FE- and Generic Parts.
+However, it is not recommended to use stiffness scaling on FE Parts
+if you also are going to perform stress recovery on that part.
+This is because the displacement recovery operator, calculated during
+the FE Part reduction, does not account for the stiffness scaling factor
+such that the calculation of internal deformation and stresses then
 will be incorrect.
 
 
