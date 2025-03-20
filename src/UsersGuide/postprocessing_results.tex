@@ -52,29 +52,29 @@ You can perform these tasks using the {\sl Results} list of the Model Manager
 panel and the commands available in the \textbf{Result} menu.
 Results are displayed in the Workspace area.
 
-\medskip\noindent
-\begin{minipage}{0.64\textwidth}
-  \raggedright
-  \subsubsection{Manager Results list}
+\medskip
+\subsubsection{Manager Results list}
 
-  The {\sl Results} list of the Model Manager panel (shown at right)
-  displays the list of user-defined result views in the model.
-  In addition to the commands available in the
-  \protect\hyperlink{result-menu}{\sl Result menu} (see below), many shortcut
-  commands can be used to manage results in the {\sl Results} list.
-  The shortcut menu, which is accessed by right-clicking in the Model Manager
-  panel, displays commands relevant for the selected object only.
+\def\fwidth{0.28\textwidth}
+\begin{wrapfigure}[13]{r}{\fwidth}
+  \vspace{-15mm}
+  \includegraphics[width=\fwidth]{Figures/7-RightClickMenuInResultsList}
+\end{wrapfigure}
 
-  \vskip\baselineskip
-  Each curve object in the Model Manager {\sl Result} list has an icon next to
-  the curve name, representing its legend. The curve color and symbol can be
-  changed in the {\sl Appearance} tab (see \refSection{appearance}{Appearance}).
-\end{minipage}%
-\hfill\begin{minipage}{0.28\textwidth}
-  \includegraphics[width=\textwidth]{Figures/7-RightClickMenuInResultsList}
-\end{minipage}
+The {\sl Results} list of the Model Manager panel (shown at right)
+displays the list of user-defined result views in the model.
+In addition to the commands available in the
+\protect\hyperlink{result-menu}{\sl Result menu} (see below), many shortcut
+commands can be used to manage results in the {\sl Results} list.
+The shortcut menu, which is accessed by right-clicking in the Model Manager
+panel, displays commands relevant for the selected object only.
 
-\medskip\noindent
+Each curve object in the Model Manager \newline {\sl Results} list
+has an icon next to the curve name, \newline representing its legend.
+The curve color and symbol \newline can be changed in the {\sl Appearance} tab
+\newline(see \refSection{appearance}{Appearance}).
+
+\bigskip\noindent
 \begin{minipage}{0.5\textwidth}
   \raggedright
   \SubSubSection{Result menu}{result-menu}
@@ -83,6 +83,7 @@ Results are displayed in the Workspace area.
   result views, and managing the result files in your model.
   Use of these commands is explained in the following sections.
 
+  \bigskip
   \subsubsection{Workspace area}
 
   The Workspace area is used to display the graphs and animations you create.
@@ -151,7 +152,7 @@ for the graph and specify descriptions and properties for the curves.
 
 There are two ways to create these items, either by using the \textbf{New Graph}
 and \textbf{New Curve} commands, or by dragging result variables from the RDB
-selector dialog box into the {\sl Result} list of the Model Manager panel,
+selector dialog box into the {\sl Results} list of the Model Manager panel,
 as described below.
 
 \SubSubSection{Graph}{graph}
@@ -188,37 +189,37 @@ An object named ``New Curve'' is then listed under the current graph in the
 \SubSubSection{Creating curves and graphs by drag and drop}
               {creating-curves-and-graphs-by-drag-and-drop}
 
-\noindent
-\begin{minipage}{0.58\textwidth}
-  \raggedright
-  When you need to create several curves and graphs containing results from the
-  results database, or want to inspect several result values without the need to
-  create persisting graphs for all of them, it is convenient to use the drag and
-  drop method to create and sort curves and graphs.
+\def\fwidth{0.4\textwidth}
+\begin{wrapfigure}[26]{r}{\fwidth}
+  \vspace{-5mm}
+  \includegraphics[width=\fwidth]{Figures/Dialogs/7-RDB-Selector-DragAndDrop}
+\end{wrapfigure}
 
-  \vskip\baselineskip
-  To create curves or graphs by drag and drop, right-click in the {\sl Result}
-  list of the Model Manager panel and select \textbf{Result selector...}
-  The RDB selector dialog box then pops up (shown to the right).
+When you need to create several curves and \newline graphs for plotting results
+from the results \newline database, or want to inspect several result values
+without the need to create persisting graphs for all of them,
+it is convenient to use the drag and drop method.
 
-  \vskip\baselineskip
-  Select the result you want to plot, and drag it from the RDB selector dialog
-  box and onto the {\sl Result} list of the Model Manager panel. If you drop it
-  on an existing graph, it will be created as a curve in that graph, otherwise
-  a new graph will be created with the selected results as a new curve.
+To create curves or graphs by drag and drop, right-click in the {\sl Results}
+list of the Model Manager panel and select \textbf{Result selector...}
+The RDB selector dialog box then pops up (shown to the right).
 
-  \vskip\baselineskip
-  If the graph receiving the new curve is visible,
-  the new data is automatically loaded and displayed.
+Select the result item you want to plot, and drag it from the RDB selector
+dialog box and onto the {\sl Results} list of the Model Manager panel. If you
+drop it on an existing graph, it will be created as a curve in that graph,
+otherwise a new graph will be created with the selected result as a new curve.
 
-  \vskip\baselineskip
-  For more detailed information about the RDB selector dialog box, see
-  \refSubSection{selecting-rdb-results}{Selecting RDB results}
-                {curve-properties}.
-\end{minipage}
-\hfill\begin{minipage}{0.4\textwidth}
-  \includegraphics[width=\textwidth]{Figures/Dialogs/7-RDB-Selector-DragAndDrop}
-\end{minipage}
+If the graph receiving the new curve \newline is visible,
+the new data is automatically \newline loaded and displayed.
+
+For more detailed information about the RDB selector dialog box, see
+\refSubSection{selecting-rdb-results}{Selecting RDB results}{curve-properties}.
+
+You may also copy or move existing curve objects in the {\sl Results} list
+using drag and drop. To copy a curve, simply click on it and drag it onto the
+Graph where you want the copy to appear (it may also be the same graph).
+To move a curve from one graph to another, press the \textbf{Shift} key before
+dropping it.
 
 \subsubsection{Repeat a curve definition for all objects}
 
@@ -229,7 +230,7 @@ in the model, or to look at the acceleration levels all over the model.
 \IconText{repeatCurve}{
   This can be achieved in a convenient way using the command labeled
   \textbf{Repeat curve for all objects}. This command is available in the
-  right-click menu of the {\sl Result} list of the Model Manager panel,
+  right-click menu of the {\sl Results} list of the Model Manager panel,
   when right-clicking a curve. This command repeats the curve definition
   of the curve selected, and uses it on all the objects of the same type
   in the model. It also automatically assigns a color to the curves
@@ -241,9 +242,10 @@ Normally, it is only the object used for the $Y$-axis value in the curve
 definition that is cycled, but if the curve being repeated uses the same object
 both for the $X$-, and $Y$-axis they are cycled together.
 
-\begin{wrapfigure}[9]{r}{0.3\textwidth}
+\def\fwidth{0.3\textwidth}
+\begin{wrapfigure}[9]{r}{\fwidth}
   \vspace{-5mm}
-  \center\includegraphics[width=0.3\textwidth]{Figures/Dialogs/7-RepeatCurveForRange}
+  \includegraphics[width=\fwidth]{Figures/Dialogs/7-RepeatCurveForRange}
 \end{wrapfigure}
 
 It is also possible to repeat a curve definition for not every object of the
@@ -494,36 +496,35 @@ below. The other five tabs are discussed in the subsequent sections.
 
 \SubSubSection{Selecting RDB results}{selecting-rdb-results}
 
-\begin{minipage}{0.64\textwidth}
-  \raggedright
-  To select the results to plot as $x$- and $y$-axis values for a curve,
-  complete the following steps:
+\def\fwidth{0.35\textwidth}
+\begin{wrapfigure}[15]{r}{\fwidth}
+  \vspace{-5mm}
+  \includegraphics[width=\fwidth]{Figures/Dialogs/7-RDB-Selector}
+\end{wrapfigure}
 
-  \medskip
-  \begin{enumerate}
-    \setlength\itemsep{1mm}
-  \item
-    In the Model Manager {\sl Results} list, select the curve you want to edit.
-    Its properties are displayed in the Property Editor panel.
-  \item
-    In the Property Editor panel, click the \textbf{Edit...} button for the
-    {\sl X-Axis}, or right-click on a curve in the Model Manager {\sl Results}
-    list and select \textbf{Edit X Axis...} or \textbf{Edit Y Axis...}.
-    The RDB selector dialog box (shown at right) is then opened.
-  \item
-    Select a mechanism element from the {\sl Existing Results} list or in the
-    {\sl Modeler} view.
-    \vskip1mm
-    \MiniGenericNote{note}{NOTE}{-30mm}{1.72}{0.17}{0.5}{
-      If the mechanism analysis have been performed, variables for the
-      selected element are listed in the {\rm Existing Results} list.
-      If you have not yet performed an analysis, variables are listed in the
-      {\rm Possible Results} list.}
-  \end{enumerate}
-\end{minipage}%
-\hfill\begin{minipage}{0.35\textwidth}
-  \includegraphics[width=\textwidth]{Figures/Dialogs/7-RDB-Selector}
-\end{minipage}
+To select the results to plot as $x$- and $y$-axis values for a curve,
+complete the following steps:
+
+\begin{enumerate}
+\item
+  In the Model Manager {\sl Results} list, select the curve you want to edit.
+  Its properties are displayed in the Property Editor panel.
+\item
+  In the Property Editor panel, click the \newline
+  \textbf{Edit...} button for the {\sl X-Axis}, or right-\newline
+  click on a curve in the  Model Manager \newline {\sl Results} list
+  and select \textbf{Edit X Axis...} or \textbf{Edit Y Axis...}.
+  The RDB selector dialog box (shown at right) is then opened.
+\item
+  Select a mechanism element from the \newline {\sl Existing Results} list
+  or in the \newline {\sl Modeler} view.
+
+\MiniGenericNote{note}{NOTE}{-30mm}{1.1}{0.17}{0.5}{
+  If the mechanism analysis have been performed, variables for the
+  selected element are listed in the {\rm Existing Results} list.
+  If you have not yet performed an analysis, variables are listed in the
+  {\rm Possible Results} list.}
+\end{enumerate}
 
 \begin{enumerate}
 \item[4.]
@@ -1437,10 +1438,9 @@ for details on how the Subassembly model file field is used.
 \Section{Animations}{animations}
 
 Fedem animations are used to visualize the motion or the structural results of
-your model in an intuitive and life-like fashion. Fedem is able to
-utilize part motion, part deformation and
-part color contours to visualize
-your results and help you understand them.
+your model in an intuitive and life-like fashion.
+Fedem is able to utilize part motion, part deformation and
+part color contours to visualize your results and help you understand them.
 
 \begin{center}
   \includegraphics[width=0.9\textwidth]{Figures/AnimationStresstractorRearLinkage}
