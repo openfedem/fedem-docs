@@ -20,25 +20,26 @@
 </td></tr></table>
 </h5>
 
-<h1><a name="_properties_prismatic-joint"></a>Prismatic Joint</h1>
+<h1><a name="prismatic-joint"></a>Prismatic Joint</h1>
 
 <p><img src="../../img/prp/prp-prismatic-joint-2.png"></p>
 
-<p>The Prismatic joint object is used to represent a Prismatic joint in a FEDEM model.
+<p>The Prismatic joint object is used to represent a Prismatic joint in a FEDEM model.</p>
 
 <p>A Prismatic joint consists of a slave triad sliding along a straight path
 defined by two or more master triads. The local coordinate system of the joint
-is defined with its z-axis directed along the slide path. The x- and y-axes
-are defined from the coordinate systems of the master triads.
-</p>
+is defined with its Z-axis directed along the slide path. The X- and Y-axes
+are then defined from the coordinate systems of the master triads.</p>
 
 <p>The Prismatic joint has three unconstrained DOFs, but only a single DOF
 (the slider variable, i.e., the distance from the first master to the slave
-triad in the direction of the local z-axis) with property settings that allows
+triad in the direction of the local Z-axis) with property settings that allows
 you to control the translational displacement of the slave triad.
-Rotation is constrained about the z-axis, but not in the other two directions
-(the slave triad can rotate about the local x- and y-axes independently of the
-masters triads).Two prismatic joints can be combined to make a stiff
+Rotation is constrained about the Z-axis, but not in the other two directions
+(the slave triad can rotate about the local X- and Y-axes independently of the
+masters triads).</p>
+
+<p>Two prismatic joints can be combined to make a stiff
 translating connection, by attaching the master triads for the two joints to
 the same FE nodes (in the same order) and attaching the two slave triads to
 the same FE part but on different nodes.</p>

@@ -20,18 +20,24 @@
 </td></tr></table>
 </h5>
 
-<h1><a name="_properties_cylindric-joint"></a>Cylindric Joint</h1>
+<h1><a name="cylindric-joint"></a>Cylindric Joint</h1>
 
-<p>The Cylindric joint object is used to represent a Cylindric joint in a FEDEM model.
-A Cylindric joint has four unconstrained DOFs that allow both translational
-displacement along the local z-axis, and rotation about the local z-axis.
+<p>The Cylindric joint object is used to represent a Cylindric joint in a FEDEM model.</p>
+
+<p>A Cylindric joint consists of a slave triad sliding along a straight path
+defined by two or more master triads. The local coordinate system of the joint
+is defined with its Z-axis directed along the slide path. The X- and Y-axes
+are then defined from the coordinate systems of the master triads.</p>
+
+<p>The Cylindric joint has four unconstrained DOFs that allow for translational
+displacement along the local Z-axis, and rotation about all three axes.
+It has two joint DOFs with property settings. They allow you to control the
+translational displacement of the slave triad relative to the first master triad
+along the local Z-axis (the slider variable), and the
+angle of rotation of the slave triad about the local Z-axis, respectively.
+The rotation angle is measured between the X-axis of the first master triad and
+the X-axis of the slave triad.
 It does not constrain motion in the other two rotational directions.</p>
-
-<p>The Cylindric joint has two joint DOFs. They are the translational distance
-along the local z-axis from the first master to the slave (the slider variable)
-and the angle of rotation of the slave about the local z-axis.
-The rotation angle is measured between the x-axis of the first master triad and
-the x-axis of the slave triad.</p>
 
 <p>See the section on "Joints" in the "Mechanism Elements" chapter in the
 FEDEM User's Guide, for more information on Cylindric joints.</p>

@@ -15,8 +15,8 @@
 As with real mechanisms, you may connect one part or beam to another using
 {\sl joints}. A joint introduces motion and/or spring constraints between the
 two parts it is acting between. These constraints are applied on the
-{\sl joint DOFs}, also called {\sl Joint Variables}. Each Fedem joint uses
-at least two triads to connect the joint to parts.
+{\sl joint DOFs}, also called {\sl Joint Variables}.
+Each Fedem joint uses at least two triads to connect the joint to parts.
 One or more of the joint's triads are labeled {\sl master} while one triad
 is labeled {\sl slave}, with the constrained DOFs of the slave triad following
 the movement of the master(s).
@@ -78,13 +78,12 @@ Property Editor panel (see
 \refSection{springs-and-dampers}{Springs and Dampers}
 for more information about the spring and damper behavior.)
 
-The integrated springs and dampers are listed in the {\sl Topology}
-view of the joint as separate items; they are however not listed in the
-{\sl Objects} list of the Model Manager. You can access the full
-Property Editor panel for the joint springs and dampers by
-double-clicking on the entry in the {\sl Topology} view, but the normal
-way of editing their properties is through the DOF tabs in the Joint
-Property Editor panel (see
+The integrated springs and dampers are listed in the {\sl Topology} view of the
+joint as separate items; they are however not listed in the {\sl Objects} list
+of the Model Manager. You can access the full Property Editor panel for the
+joint springs and dampers by double-clicking on the entry in the {\sl Topology}
+view, but the normal way of editing their properties is through the DOF tabs
+in the Joint Property Editor panel (see
 \protect\hyperlink{joint-variable-properties}{\sl"Joint variable properties"}
 below).
 
@@ -101,8 +100,8 @@ along with other editable joint properties.
 There is an {\sl Origin} tab for the point-to-point joint types
 (Rigid, Revolute, Ball and Free joints) and an {\sl Advanced} tab with further
 properties for Ball and Free joints.
-Finally, all joint types (except for Rigid joints) have a {\sl Results}
-tab for output specification.
+Finally, all joint types (except for Rigid joints) have a {\sl Results} tab
+for output specification.
 
 Since the number of joint variables depends on the joint type, you may see from
 zero (Rigid joint) to six (Free joint) sets of joint variables listed in the
@@ -207,8 +206,8 @@ joint variable. The displayed options depend on the {\sl Constraint Type}.
     automatically in Fedem from the initial velocities of the joint DOFs and
     the master triad(s), based on the constraint equations representing the
     joint. However, it is also possible to specify the slave triad
-    velocities explicitly and leave the joint DOF velocities zero. Fedem
-    will then derived the initial joint DOF velocities by inverting the
+    velocities explicitly and leave the joint DOF velocities zero.
+    Fedem will then derived the initial joint DOF velocities by inverting the
     constraint equations of the joint. If non-zero initial velocities are
     specified in both the joint DOFs and slave triad DOFs, only the joint
     DOF values are used.}
@@ -216,16 +215,16 @@ joint variable. The displayed options depend on the {\sl Constraint Type}.
   {\sl Length/Angle in model} - This field shows the initial value of
   this joint variable as modeled. The value defines the initial
   configuration of this joint variable in the dynamics simulation. For
-  rotational DOFs the value can be edited to set a different initial rotation. The 3D view
-  will then update instantly, showing the new rotation in the joint
+  rotational DOFs the value can be edited to set a different initial rotation.
+  The 3D view will then update instantly, showing the new rotation in the joint
   symbol.
 \item
   {\sl Apply in frequency domain} -- If a {\sl Function} is specified
   in the {\sl Load magnitude} field, this toggle will enable the load
-  to be applied in the frequency domain instead of the time domain, if
-  the {\sl Frequency response analysis} toggle is enabled in the
-  Dynamics Solver Setup dialog box, see
-  \refSection{dynamics-solver-basic-mode}{Dynamics Solver (Basic Mode)}.
+  to be applied in the frequency domain instead of the time domain,
+  if the {\sl Frequency response analysis} toggle is enabled in the
+  Dynamics Solver Setup dialog box,
+  see \refSection{dynamics-solver-basic-mode}{Dynamics Solver (Basic Mode)}.
 \end{bulletlist}
 
 \subsubsection{\sl\textbf{Fixed}}
@@ -637,15 +636,12 @@ as shown to the right.
 \subsubsection{Free joint}
 
 \IconTextFirst{freeJoint}{
-  The free joint has six joint variables. The free joint can thus be used to
-  introduce any type of mechanism motion constraint by setting the
-  constraint type of each joint variable to fit your needs.The
-  free joint has six joint variables. The free joint can thus be used to
-  introduce any type of mechanism motion constraint by setting the
-  constraint type of each joint variable to fit your needs.}
+  The free joint has six joint variables.
+  It can be used to introduce any type of mechanism motion constraint
+  by setting the constraint type of each joint variable to fit your needs.}
 
-\begin{wrapfigure}[5]{r}{0.4\textwidth}
-  \begin{picture}(140,100)
+\begin{wrapfigure}[4]{r}{0.4\textwidth}
+  \begin{picture}(140,85)
     \put(0,0){\includegraphics[width=0.4\textwidth]{Figures/4-FreeJointSymbol}}
     \put(22,15){\Bullet{1}}
     \put(40,45){\Bullet{2}}
@@ -658,11 +654,15 @@ as shown to the right.
 
 \begin{bulletlist}
 \item
-  The coordinate system in the lower left (straight arrows) represents
-  the master triad.
+  The coordinate system in the lower \newline left (straight arrows) represents
+  \newline the master triad.
 \item
   The rounded arrows together with the line between the two coordinate
   systems represent the joint itself.
+\end{bulletlist}
+
+\begin{bulletlist}
+  \setcounter{enumi}{2}
 \item
   The coordinate system in the upper right with double arrows represents
   the slave triad.
@@ -688,10 +688,10 @@ and the \FedemTGuide{Section 6.5, "Joint Friction"}.)
 
 The point-to-point joint types have three parts that either can be moved
 independently, or as a whole. To turn on and off this behavior a group
-of options are available on the joints {\sl Origin} tab. The two
-toggles (shown below) control whether the slave and/or the master triad
-will move along with the joint symbol if the joint itself is moved. (See
-also \refSection{origin-property}{Origin property} and
+of options are available on the joints {\sl Origin} tab.
+The two toggles (shown below) control whether the slave and/or the master triad
+will move along with the joint symbol if the joint itself is moved.
+(See also \refSection{origin-property}{Origin property} and
 \refSection{align-cs-and-rotations}{Align CS and rotations}.)
 
 \begin{figure}[!h]
@@ -701,8 +701,8 @@ also \refSection{origin-property}{Origin property} and
 
 The sensitivity of the {\sl Position} and {\sl Orientation} fields in
 the {\sl Origin} tab of the joint and its triads will reflect the
-movability of the selected object, and may change when changing these
-options. E.g., triads attached to FE nodes can not be moved, an thus if
+movability of the selected object, and may change when changing these options.
+E.g., triads attached to FE nodes can not be moved, an thus if
 the triad is set to follow the joint, the joint can not be moved either.
 
 \Note{These settings do not apply when you are using the \textbf{Smart Move}
@@ -722,13 +722,13 @@ of the rotational joint variables is zero.
 
 \subsubsection{Swapping Master and Slave triads}
 
-After a point-to-point joint has been attached, there might be
-situations where it is desirable to swap the master and slave triads in
-the joint. This is needed, for instance if the slave triad of one joint
-also needs to be the slave in another joint. This is not possible in
-general. However, by swapping the master/slave definition of the first
-joint, such that its slave triad becomes the master instead, we can next
-use the same triad as a slave in another joint.
+After a point-to-point joint has been attached, there might be situations where
+it is desirable to swap the master and slave triads in the joint.
+This is needed, for instance if the slave triad of one joint
+also needs to be the slave in another joint. This is not possible in general.
+However, by swapping the master/slave definition of the first joint,
+such that its slave triad becomes the master instead,
+we can next use the same triad as a slave in another joint.
 
 \clearpage
 \begin{wrapfigure}{r}{0.5\textwidth}
@@ -736,12 +736,12 @@ use the same triad as a slave in another joint.
   \includegraphics[width=0.4\textwidth]{Figures/4-swapMasterSlave}
 \end{wrapfigure}
 
-To swap master and slave triad in a joint, click the \textbf{Swap Master
-and Slave Triad} button located below the ID and Topology panel (shown
-at right). You will then notice that the ID's of the Slave and Master
-triads in the {\sl Topology} view are swapped as well. It is not
-possible to swap triads in joints that are not fully attached, and (of
-course) not for joints where the master is attached to ground.
+To swap master and slave triad in a joint, click the \textbf{Swap Master and
+Slave Triad} button located below the ID and Topology panel (shown at right).
+You will then notice that the ID's of the Slave and Master triads in
+the {\sl Topology} view are swapped as well.
+It is not possible to swap triads in joints that are not fully attached,
+and (of course) not for joints where the master is attached to ground.
 
 
 \SubSection{Point-to-path joints}{point-to-path-joints}
@@ -752,9 +752,9 @@ course) not for joints where the master is attached to ground.
   \includegraphics[width=0.3\textwidth]{Figures/2nd_Joint_Pulldown_Window}
 \end{wrapfigure}
 
-Point-to-path joints are more complex than
-point-to-point joints as they require more than one master triad for
-each slave. The motion is defined by at least two master triads in a
+Point-to-path joints are more complex than point-to-point joints
+as they require more than one master triad for each slave.
+The motion is defined by at least two master triads in a
 straight or curved path. Point-to-path joints are found on the
 {\sl Mechanism Creation} tool bar (shown at right).
 
@@ -816,10 +816,9 @@ shown to the right.
 A prismatic joint is created by selecting the position of the first and
 last master triad. The slider path is then defined as the straight line
 between the two triads. However, the slider path may be redefined by
-adding more master triads along that line. This improves load
-distribution during the simulation as the forces from the slave triad
-are distributed to the two masters closest to the current position of
-the slave.
+adding more master triads along that line. This improves the load distribution
+during the simulation as the forces from the slave triad are distributed
+to the two masters closest to the current position of the slave.
 
 \begin{wrapfigure}[4]{r}{0.35\textwidth}
   \vspace{-8mm}
@@ -866,8 +865,8 @@ variable) and the angle of rotation of the slave about the local $Z$-axis.
 The rotation angle is measured between the $X$-axis of the first master triad
 and the $X$-axis of the slave triad.
 
-\begin{wrapfigure}[8]{r}{0.5\textwidth}
-  \vspace{-3mm}
+\begin{wrapfigure}[4]{r}{0.5\textwidth}
+  \vspace{-8mm}
   \begin{picture}(170,85)
     \put(0,0){\includegraphics[width=0.5\textwidth]{Figures/cylindricalJointSymbol}}
     \put(1,52){\Bullet{1}}
@@ -886,6 +885,10 @@ as shown to the right.
   First master triad
 \item
   The slider path (represented by the line from the first master to the last)
+\end{bulletlist}
+
+\begin{bulletlist}
+  \setcounter{enumi}{2}
 \item
   Rotational joint variable (represented by the angle of the $X$-axis)
 \item
@@ -899,11 +902,11 @@ as shown to the right.
   \includegraphics[width=0.48\textwidth]{Figures/screw_connection}
 \end{wrapfigure}
 
-You can constrain the two joint variables of a cylindric joint in a
-screw-like connection by defining a ratio of translational to
-rotational motion, called the {\sl screw ratio}. This ratio determines
-how fast the slave rotates as it translates along the joint. To
-constrain the translational and rotational DOFs of a cylindric joint,
+You can constrain the two joint variables of a cylindric joint in a screw-like
+connection by defining a ratio of translational to rotational motion,
+called the {\sl screw ratio}. This ratio determines
+how fast the slave rotates as it translates along the joint.
+To constrain the translational and rotational DOFs of a cylindric joint,
 enable the {\sl Screw Connection} option in the Property Editor panel
 and assign a value to the {\sl Screw Ratio}.
 See the \FedemTGuide{Section 6.4.3, "Screw joint"}
@@ -913,25 +916,43 @@ for more information about the screw ratio.
   masters in the same way as for prismatic joints
   (see \protect\hyperlink{prismatic-joint}{\sl"Prismatic joint"} above).}
 
-\Tip{A zero screw ratio makes the cylindric joint equivalent to
-  a prismatic joint.}
+\Tip{A cylindric joint with a zero screw ratio is equivalent to a prismatic.}
+
+\vspace{-3mm}\subsubsection{\sl\textbf{Switching to Prismatic Joint}}
+
+\begin{wrapfigure}[4]{r}{0.34\textwidth}
+  \vspace{-20mm}
+  \begin{picture}(170,85)
+    \put(0,0){\includegraphics[trim=255 10 2 15,clip,width=0.34\textwidth]{\ReferenceImg/prp/cylindric-joint-1}}
+  \end{picture}
+\end{wrapfigure}
+
+You can easily convert a Cylindric joint to a
+\protect\hyperlink{prismatic-joint}{\sl Prismatic joint} by using the
+\textbf{Convert to Prismatic joint} button in {\sl Summary} tab of the
+Cylindric joint Property Editor panel (shown to the right).
+The {\sl Tz} properties will then be transferred to the Prismatic joint,
+whereas the {\sl Rz} properties of course will be lost.
+
+Similaraly, a Prismatic joint will have a
+\textbf{Convert to Cylindric joint} button in its {\sl Summary} tab,
+which will add an (initially {\sl Free}) {\sl Rz} DOF.
 
 
 \subsubsection{Cam joint}
 
 \IconTextFirst{camJoint}{
-  A cam joint has six unconstrained DOFs that allow the slave triad
-  (called the {\sl follower}) to move over a curved surface
-  (called the {\sl cam surface}).
+  A cam joint has six unconstrained DOFs that allow the slave triad (a.k.a.
+  the {\sl follower}) to move over a curved surface (the {\sl cam surface}).
   The cam surface is defined by a curve consisting of three-point circular arcs.
   Each arc is defined by the location of three master triads,
-  also called {\sl cam triads}. A cam joint must consist of one slave/follower
-  triad and at least three master/cam triads.
+  also called the {\sl cam triads}.
+  A cam joint must consist of one follower triad and at least three cam triads.
   See also the \FedemTGuide{Section 6.3.3, "Cam joint"}.}
 
-It is recommended to use at least one arc segment per quarter of a
-circle to make the solution more stable. This means you will need at
-least 8 master triads for a complete circle.
+It is recommended to use at least one arc segment per quarter of a circle
+to make the solution more stable.
+This means you will need at least eight master/cam triads for a complete circle.
 
 \Tip{You can use the same cam triads in several different cam joints, making it
   possible to constrain several follower triads to the same cam surface.}
@@ -971,21 +992,18 @@ To create a cam joint, complete the following steps:
 \item
   Click the cam joint icon.
 \item
-  Select a position for a new follower triad, or select an existing
-  triad.
+  Select a position for a new follower triad, or select an existing triad.
 \item
-  Confirm by pressing Done. If an existing triad was selected, this
-  triad will become the follower triad, otherwise a new triad is
-  created.
+  Confirm by pressing Done. If an existing triad was selected,
+  this triad will become the follower triad, otherwise a new triad is created.
 \item
   Select a position for the first master, or select an existing triad.
   You can also select an existing cam curve.
 \item
-  Confirm by pressing Done. If an existing triad was selected, this
-  triad will become the first cam triad, otherwise a new triad is
-  created. If an existing cam curve was selected, the new cam joint is
-  complete, and the selected cam surface will be used by the new
-  follower triad.
+  Confirm by pressing Done. If an existing triad was selected,
+  this triad will become the first cam triad, otherwise a new triad is created.
+  If an existing cam curve was selected, the new cam joint is complete,
+  and the selected cam surface will be used by the new follower triad.
 \item
   Repeat steps 4 and 5 until a sufficient number of masters has been
   added. As you add triads, they will be oriented automatically to have
@@ -997,9 +1015,9 @@ To create a cam joint, complete the following steps:
   To close the cam loop, add the first master triad as the last one.
 \item
   Fedem tries to set sensible directions on the master triads created,
-  but should any of the directions be inconvenient, rotate them using
-  one of the tools to move mechanism elements. See
-  \refSection{moving-mechanism-elements}{Moving mechanism elements}.
+  but should any of the directions be inconvenient,
+  rotate them using one of the tools to move mechanism elements.
+  See \refSection{moving-mechanism-elements}{Moving mechanism elements}.
 \end{enumerate}
 \vskip\parskip
 \begin{minipage}{0.6\textwidth}
@@ -1030,12 +1048,11 @@ axes depends thus on the location of the contact point along the cam curve.
 
 Cam joints display all the six DOFs as joint variables in the Property
 Editor panel, but have some restrictions on the {\sl Constraint Type}
-setting that is unique for cam joints. The only legal settings are
-{\sl Free} and {\sl Spring-Damper}. The {\sl Fixed} and
-{\sl Prescribed} settings are not available because the cam joint uses
-a different formulation than the other joints.
+setting that is unique for cam joints.
+The only legal settings are {\sl Free} and {\sl Spring-Damper}.
+The {\sl Fixed} and {\sl Prescribed} settings are not available because
+the cam joint uses a different formulation than the other joints.
 
-\clearpage
 The three main joint variables, defined in the $X$-, $Y$- and $Z$-directions
 of the cam joint's local coordinate system, are:
 
@@ -1044,11 +1061,11 @@ of the cam joint's local coordinate system, are:
   The distance from the contact point to the follower in the
   direction normal to the cam surface (the ``thickness'' direction).
 
-\EnumTip{If no stiffness is assigned to the $X$-translation DOF, the whole cam
-  joint will be completely ignored by the Dynamics Solver. This might be
-  used as a simple tool to toggle a cam joint on and off during testing
-  and modeling of complex models. The solver issues a warning when the
-  $X$-translation spring is missing.}
+\EnumTip{If no stiffness is assigned to the $X$-translation DOF,
+  the whole cam joint will be completely ignored by the Dynamics Solver.
+  This might be used as a simple tool to toggle a cam joint
+  on and off during testing and modeling of complex models.
+  The solver issues a warning when the $X$-translation spring is missing.}
 
 \item{\sl Y-position} : The distance from the contact point to the follower
   in the direction tangential to the cam surface and normal to the cam curve
@@ -1064,10 +1081,10 @@ a stabilization tool in some cases.
 
 \Warning{The rotational DOFs in a Cam joint are not suited for representing
   large rotations. However, this affects the solution only when
-  some of these DOFs are Spring-Damper constrained. Therefore,
-  when Spring-Damper constraining the rotational DOFs, you must ensure
-  that the added stiffness is high enough to keep the rotations small,
-  typically $R_x < 0.3$, $R_y < 0.6$ and $R_z < 3.0$ radians.
+  some of these DOFs are Spring-Damper constrained.
+  Therefore, when Spring-Damper constraining the rotational DOFs,
+  you must ensure that the added stiffness is high enough to keep the rotations
+  small, typically $R_x < 0.3$, $R_y < 0.6$ and $R_z < 3.0$ radians.
   If not, the solution will probably diverge.}
 
 The initial values of the cam joint variables are interpreted differently
@@ -1105,9 +1122,10 @@ The friction state depends on the slider variable only.
   \includegraphics[width=0.4\textwidth]{Figures/4-JointPropCamFields}
 \end{wrapfigure}
 
-The thickness and width parameters shown in the Property Editor panel define a
-rectangular domain in the $XY$-plane of the local coordinate system, and is used
-to determine whether it is necessary to test if the follower is in contact or not.
+The thickness and width parameters shown in the Property Editor panel
+define a rectangular domain in the $XY$-plane of the local coordinate system,
+and is used to determine whether it is necessary to test if the follower
+is in contact or not.
 The springs and dampers associated with joint variables are activated only when
 the follower is located within the distance {\sl Thickness}/2 from the cam curve
 in the local $X$-direction and within the distance {\sl Width}/2 in the local
@@ -1121,16 +1139,16 @@ overlapping contact domains.
   to the cam joint variables to model contact behavior, it is often necessary to
   assign some associated damping to reduce fictitious oscillations due to sudden
   activation and deactivation of contact spring forces.
-  A constant damping coefficient is
-  then sufficient as long as the follower is within the contact domain
-  throughout the simulation. However, if the follower enters the contact
-  domain once or several times during the simulation, numerical
-  instabilities may occur due to the sudden activation of the joint
-  variable dampers, because they are active only when the follower is
-  within the contact domain. To avoid this, it might be necessary to scale
-  the damping coefficient with a function (see \refSection{damper-properties}
-  {Damper properties}), that varies gradually from zero as the follower enters
-  the contact domain, to one as the contact stiffness is activated.}
+  A constant damping coefficient is then sufficient as long as the follower
+  is within the contact domain throughout the simulation.
+  However, if the follower enters the contact domain once or several times
+  during the simulation, numerical instabilities may occur due to the sudden
+  activation of the joint variable dampers, because they are active
+  only when the follower is within the contact domain.
+  To avoid this, it might be necessary to scale the damping coefficient
+  with a function (see \refSection{damper-properties}{Damper properties}),
+  that varies gradually from zero as the follower enters the contact domain,
+  to one as the contact stiffness is activated.}
 
 \subsubsection{\sl\textbf{Radial contact springs}}
 
@@ -1153,9 +1171,8 @@ This can be used to simulate contact in pipes, etc.
 
 \subsubsection{\sl\textbf{Cam with spherical or cylindrical follower}}
 
-Quite often the follower in a cam joint has some sort of spherical or
-cylindrical shape. This is not fully supported by Fedem, but this
-section describes how you can do it.
+Often the follower in a cam joint should have a spherical or cylindrical
+shape. Below, we describe how such behaviour can be modelled.
 
 The radius of the sphere or cylinder must be entered as an
 {\sl Initial stress free length} for the spring in the $X$-translation DOF
@@ -1165,9 +1182,9 @@ The {\sl Thickness} of the cam must also be set to a value greater than
 the roller radius in this case.
 
 This will work as expected as long as the follower never is in contact
-with the cam curve at more than one location simultaneously. This means
-that the follower can not pass the inside of a v-shaped cam curve, or
-curve segments that have a radius equal to, or less than the roller radius.
+with the cam curve at more than one location simultaneously.
+This means that the follower can not pass the inside of a v-shaped cam curve,
+or curve segments that have a radius equal to, or less than the roller radius.
 By trying to do so, the numerical simulation will normally fail to converge
 when two simultaneous contact locations would be expected.
 
