@@ -588,18 +588,18 @@ i.e., letters, digits and the underscore '\_' character.
 If any other special characters are entered, they will be replaced
 by '\_' when the \textbf{Enter} key is pressed.}
 
-\subsubsection{Multi-selection}
+\subsubsection{Editing multi-selected objects}
 
 When you select multiple objects in the Model Manger panel
 (see \refSubSection{selecting-items}{Selecting items}{model-manager}),
 the Property Editor panel displays the properties of the last selected object.
-However, if you edit some of the property fields, that change will
+However, if you then edit some of the property fields, that change will
 (with a few exceptions, including the Description field) apply to all selected
-objects of the same type as for which properties are displayed for.
-
-\Note{The Origin tab for Triads, Parts and Joints, as well as the
-Center of Gravity tab for Generic Parts, not update during multi-selection.
-This is mainly due to implementational reasons.}
+objects of the same type as for which the properties are displayed for.
+This can be very useful. For instance, if you want to change the orientation of
+a bulk of Triads before they are selected as the master triads of a new
+Prismatic or Cylindric joint, this is easily accomplished through multi-
+selecting those triads and editing the fields defining their orientation.
 
 \subsubsection{Property menus}
 
@@ -2239,8 +2239,8 @@ Beams and Generic Parts:
 
 \begin{enumerate}
 \item Create Triads where you want to locate the nodes of the elements.
-\item Select the Triads representing the nodes of the element(s), using the
-  multi-select features of Fedem (see
+\item Select the Triads representing the nodes of the element(s),
+  using the multi-select features of Fedem (see
   \refSection{model-manager}{Model Manager} and \refSection{select}{Select}).
 \item Select the appropriate item from the \textbf{User-defined Elements}
   sub-meny of the \textbf{Mechanism} menu, that represent the type of element

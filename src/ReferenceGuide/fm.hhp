@@ -10,7 +10,7 @@ Error log file=fm_.log
 Full-text search=Yes
 Index file=fm.hhk
 Language=0x409 English (United States)
-Title=FEDEM 8.0 Help Reference
+Title=FEDEM 8.1 Help Reference
 
 [WINDOWS]
 MainWindow=,"fm_.hhc","fm.hhk","htm/introduction/default.htm","htm/introduction/default.htm",,,,,0x63520,,0x386c,,,,,,,,0
