@@ -52,5 +52,5 @@ jobs:
           tag: ${{ env.MY_TAG }}
           name: "${{ env.MY_TAG }} docs"
           token: ${{ secrets.ACCESS_PAT }}
-          body: "End-user documentation for Fedem R8.0"
+          body: "End-user documentation for Fedem R8.1"
           artifacts: "docs/Fedem.chm,docs/FedemTheoryGuide.pdf,docs/FedemUsersGuide.pdf"
