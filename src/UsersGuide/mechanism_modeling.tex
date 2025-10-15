@@ -210,19 +210,19 @@ See \refSection{align-cs-and-rotations}{Align CS and rotations}.
 \SubSection{Interactive Odometer and 3D Point Marker}{interactive-odometer}
 
 \noindent
-\begin{minipage}{0.77\textwidth}
+\begin{minipage}{0.65\textwidth}
   \raggedright
   Many Fedem commands require you to select a point in your model.
   To help you locate specific points, Fedem provides the Interactive Odometer
   and the 3D Point Marker (shown at right).
   These are displayed in the {\sl Modeler} view each time you select a point.
   The odometer shows the coordinates of the selected point, and the
-  marker shows the location of the point in the {\sl Modeler} view.
+  marker displays the actual location of the point.
 \end{minipage}% <--- the % is needed here to kill off spurious spacing
-\hfill\begin{minipage}{0.2\textwidth}
+\hfill\begin{minipage}{0.3\textwidth}
   \center
   \includegraphics[width=\textwidth]{Figures/3-odometer} \\[2mm]
-  \includegraphics[width=0.25\textwidth]{Figures/3d_point_marker}
+  \includegraphics[width=0.2\textwidth]{Figures/3d_point_marker}
 \end{minipage}
 
 When using the \textbf{Smart Move} command to move or rotate parts and other
@@ -231,10 +231,6 @@ mechanism elements (see \refSection{moving-mechanism-elements}
 selected point or enter a new 3D point using global or local coordinates.
 The local coordinate system used is the coordinate system of the item you
 selected when the point was picked.
-
-\Tip{You can use the Interactive Odometer with the \textbf{Smart Move} command
-  to place a mechanism element (part, joint, triad, etc.) at any point in space.
-  The object can then be used as a reference when moving other objects.}
 
 To edit a point or enter a new point using the Interactive Odometer,
 complete the following steps:
@@ -256,6 +252,22 @@ complete the following steps:
   When you are satisfied with the new location, press \textbf{Done} to confirm
   the selected point.
 \end{enumerate}
+
+\Tip{You can use the Interactive Odometer with the \textbf{Smart Move} command
+  to place a mechanism element (part, joint, triad, etc.) at any point in space.
+  The object can then be used as a reference when moving other objects.}
+
+\begin{wrapfigure}[6]{r}{0.3\textwidth}
+  \vskip-4mm
+  \includegraphics[width=0.3\textwidth]{Figures/3-odometer-withnode}
+\end{wrapfigure}
+
+Sometimes when asked to select a FE node in the model,
+also a {\sl FE node} field appears in the odometer, as shown to the right.
+It shows the ID of the actual node matching the
+location indicated by the 3D marker, and allows you choose another node by
+typing a new number. The coordinate fields and the {\em Reference} menu
+will be non-editable in this case.
 
 
 \SubSection{Stickers}{stickers}
@@ -351,6 +363,7 @@ You can delete stickers individually or all in a single operation.
 \Warning{ There is no undo option after deleting all stickers.
   To replace them in your model, you must recreate each of them individually.}
 
+\clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \Section{Creating mechanism elements}{creating-mechanism-elements}
@@ -376,7 +389,6 @@ Then you sometimes need to orient the element properly,
 and then you finally have to attach it. See
 \refSection{moving-mechanism-elements}{Moving mechanism elements} and
 \refSection{attaching-and-detaching-elements}{Attaching and detaching elements}.
-
 The only exceptions to this are the parts and beams which are created
 completely differently. Please have a look at
 \refSection{creating-parts-by-file-import}{Creating parts by file import},
@@ -406,7 +418,7 @@ complete the following steps:
   object's orientation (see \refSection{stickers}{Stickers} and
   \refSection{moving-mechanism-elements}{Moving mechanism elements}).
 \item
-  As the last operation you need to attach the object to a part or a
+  Finally, you need to attach the object to a part or a
   beam using the \textbf{Attach} command. See
   \refSection{attaching-and-detaching-elements}
              {Attaching and detaching elements}.

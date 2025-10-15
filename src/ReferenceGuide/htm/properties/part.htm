@@ -252,6 +252,12 @@ If any of the strain rosette elements on the selected part are used as Argument
 in a <a href="function.htm">Function</a>, this toggle will be automatically
 enabled for that part when the Dynamics Solver is started.
 </td></tr>
+<tr><td>Skip stress recovery for this part</td><td>
+This toggle can be used to skip the FE part when running stress recovery
+as a post-process over the entire model.
+It has no effect when solving stress recovery on a selection
+of parts or on individual element groups.
+</td></tr>
 </table></p>
 
 <p>Caution: Performing stress recovery during the dynamics simulation

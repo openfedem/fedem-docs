@@ -13,8 +13,8 @@
 \Section{Parts}{parts}
 
 As described in \refChapter{introduction-to-fedem}{Introduction to Fedem},
-{\sl parts} are the basic components of Fedem models. You can connect parts
-with various types of joints to create a movable mechanism.
+{\sl parts} are the basic components of Fedem models.
+You can connect parts to eachother with joints to create a movable mechanism.
 Each part is either an {\sl FE Part} represented by a standard FE model,
 or a {\sl Generic Part} represented by a simplified model forming a semi-rigid
 connection between other mechanism entities.
@@ -102,15 +102,12 @@ geometry attached, to give better visualization of the part.
 Shown below is a Generic Part with two triads and a Revolute Joint connected
 to it.
 
-\begin{figure}[H]
-  \center
-  \begin{picture}(265,95)
-    \put(0,0){\includegraphics[width=0.8\textwidth]{Figures/generic-part}}
-    \put(172,75){\Bullet{1}}
-    \put(135,65){\Bullet{2}}
-    \put(80,35){\Bullet{3}}
-  \end{picture}
-\end{figure}
+\begin{picture}(265,95)
+  \put(0,0){\includegraphics[width=0.8\textwidth]{Figures/generic-part}}
+  \put(172,75){\Bullet{1}}
+  \put(135,65){\Bullet{2}}
+  \put(80,35){\Bullet{3}}
+\end{picture}
 
 \begin{bulletlist}
 \item{\sl Part coordinate system} --
@@ -136,13 +133,12 @@ section where the properties will be independent of the element orientation.
 However, for all non-circular cross sections some visualization of element
 orientations is required to verify that the properties are correctly defined.
 A full rendering of the actual cross section will provide such verification,
-but this may result in a too big visualization model for FE Parts containing
-a lot of beam elements. Instead,
-Fedem provides a simplified visualization of the beam element orientation.
+but this may result in a very large visualization model for FE Parts containing
+a lot of beam elements, which will be touch to manipulate in an efficient way.
+Therefore, Fedem instead provides a simplified visualization
+of the beam element orientation.
 
-\begin{figure}[H]
-  \includegraphics[width=\textwidth]{Figures/4-FEBeamOrient}
-\end{figure}
+\noindent\includegraphics[width=\textwidth]{Figures/4-FEBeamOrient}
 
 The image above shows a simple FE part consisting of 5 beam elements and with
 element orientation visualization activated.
@@ -167,11 +163,11 @@ a white line connecting the eccentric beam end with the associated FE node.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \SubSection{Creating parts by file import}{creating-parts-by-file-import}
 
-Parts can be created by importing FE model files or by importing CAD
-geometry as VRML files. The available file formats are listed in
+Parts can be created by importing FE model files or by importing CAD geometry
+such as VRML files. The available file formats are listed in
 \refSection{storing-models-and-results}{Storing models and results}.
 Importing FE models will create an FE Part, while importing a VRML file
-will create a Generic Part. In either case, complete the following steps,
+will create a Generic Part. In either case, complete the following steps
 to import a part:
 
 \vskip\parskip
@@ -182,10 +178,7 @@ to import a part:
     Click the \textbf{Load Part} button on the \textbf{Mechanism Creation} tool
     bar (or select from the \textbf{File} menu). The dialog box shown below
     then opens.
-    \begin{figure}[H]
-      \center
-      \includegraphics[width=0.8\textwidth]{Figures/Dialogs/4-LoadPart}
-    \end{figure}
+    \vskip3mm\includegraphics[width=0.83\textwidth]{Figures/Dialogs/4-LoadPart}
   \end{itemize}}
 
 \begin{itemize}
@@ -241,7 +234,7 @@ to import a part:
 \end{itemize}
 
 \begin{wrapfigure}{r}{0.3\textwidth}
-  \includegraphics[width=0.3\textwidth]{Figures/4-ElementGroups}
+  \vskip-4mm\includegraphics[width=0.3\textwidth]{Figures/4-ElementGroups}
 \end{wrapfigure}
 
 When an FE model is imported, it is converted to the internal Fedem format.
@@ -286,7 +279,6 @@ part from triads positioned at the hard points as follows:
     Optionally add more triads to the part by attaching them.
   \end{enumerate}}
 
-\vskip-4mm
 \Tip{You can at any time during modeling attach or detach
   new triads to the Generic Part.
   See \refSection{attaching-and-detaching-elements}
@@ -371,35 +363,32 @@ the part. The actual options that are displayed depend on whether the
 part is a Generic Part, an FE Part or if it is used for visualization
 only. Below, three versions of this panel are displayed.
 
-\begin{figure}[H]
-  \begin{picture}(343,93)
-    \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/part-1}}
-    \put(-8,64){\Bullet{1}}
-    \put(-8,47){\Bullet{2}}
-    \put(117,69){\Bullet{3}}
-    \put(317,67){\Bullet{4}}
-    \put(67,32){\Bullet{5}}
-    \put(267,32){\Bullet{6}}
-  \end{picture}
-\end{figure}
+\noindent\vskip1mm
+\begin{picture}(343,93)
+  \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/part-1}}
+  \put(-8,64){\Bullet{1}}
+  \put(-8,47){\Bullet{2}}
+  \put(117,69){\Bullet{3}}
+  \put(317,67){\Bullet{4}}
+  \put(67,32){\Bullet{5}}
+  \put(267,32){\Bullet{6}}
+\end{picture}
 
-\begin{figure}[H]
-  \begin{picture}(343,93)
-    \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/part-2}}
-    \put(-8,64){\Bullet{1}}
-    \put(67,32){\Bullet{5}}
-    \put(267,32){\Bullet{6}}
-    \put(117,69){\Bullet{7}}
-  \end{picture}
-\end{figure}
+\clearpage\noindent
+\begin{picture}(343,93)
+  \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/part-2}}
+  \put(-8,64){\Bullet{1}}
+  \put(67,32){\Bullet{5}}
+  \put(267,32){\Bullet{6}}
+  \put(117,69){\Bullet{7}}
+\end{picture}
 
-\begin{figure}[H]
-  \begin{picture}(343,93)
-    \put(0,0){\includegraphics[width=\textwidth]{Figures/4-LinkPropPartTabVizOnly}}
-    \put(-8,47){\Bullet{2}}
-    \put(117,69){\Bullet{3}}
-  \end{picture}
-\end{figure}
+\noindent
+\begin{picture}(343,93)
+  \put(0,0){\includegraphics[width=\textwidth]{Figures/4-LinkPropPartTabVizOnly}}
+  \put(-8,47){\Bullet{2}}
+  \put(117,69){\Bullet{3}}
+\end{picture}
 
 \begin{bulletlist}
   \setlength\itemsep{1em}
@@ -411,7 +400,7 @@ only. Below, three versions of this panel are displayed.
 \EnumNote{When switching between FE Part and Generic Part, Fedem tries
   to use the supplied FE data and visualization data in a sensible way.
   If your part is defined as an FE Part and you switch to Generic Part,
-  the FE model is retained in memory and used as visualization
+  the FE model is retained in memory and will be used for visualization
   unless a VRML model file is specified.
   Fedem will not drop the FE data from memory until you
   actively enter or change the VRML model file name.
@@ -424,10 +413,10 @@ only. Below, three versions of this panel are displayed.
   The part will then be ignored by the solvers and actually serve as an
   extension of the {\sl Reference plane}
   (see \refSection{reference-plane}{Reference Plane}).
-  The part and all triads attached to it will thus be {\sl grounded}.
+  All triads attached to the part will thus be {\sl grounded}.
 
 \EnumNote{You can toggle a part as Visualization only at any time during
-  modeling, but it is disallowed if the part has slave triads attached.}
+  modeling, but this is disallowed if the part has slave triads attached.}
 
 \item{\sl Finite Element Model} (FE Parts only) --
   This group of options concerns the FE model used.
@@ -499,9 +488,7 @@ The {\sl Origin} tab is used to display and edit the position and
 orientation of the part. See \refSection{origin-property}{Origin property}
 for a description of the data fields in this tab.
 
-\begin{figure}[H]
-  \includegraphics[width=\textwidth]{\ReferenceImg/prp/part-3}
-\end{figure}
+\noindent\includegraphics[width=\textwidth]{\ReferenceImg/prp/part-3}
 
 
 \clearpage
@@ -510,33 +497,30 @@ for a description of the data fields in this tab.
 The {\sl FE Node} tab is used to display information on FE nodes in
 parts. If you click with the left mouse button anywhere on an FE part in
 {\sl Modeler} view, the 3D Point Marker
-\includegraphics[scale=0.7]{Figures/3d_point_marker}
+\includegraphics[trim=0 2.5 0 0,clip,scale=0.7]{Figures/3d_point_marker}
 will snap to the closest node and the node number and coordinates are
 displayed in the Property Editor panel.
 
-\begin{figure}[H]
-  \includegraphics[width=\textwidth]{\ReferenceImg/prp/part-10}
-\end{figure}
+\noindent\includegraphics[width=\textwidth]{\ReferenceImg/prp/part-10}
 
 
 \SubSubSection{Reduction Options tab}{reduction-options-tab}
 
 The settings on the {\sl Reduction Options} tab affect how the part is reduced.
 
-\begin{figure}[H]
-  \begin{picture}(343,93)
-    \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/part-4}}
-    \put(-10,71){\Bullet{1}}
-    \put(-10,58){\Bullet{2}}
-    \put(-10,45){\Bullet{3}}
-    \put(-10,33){\Bullet{4}}
-    \put(-10,21){\Bullet{5}}
-    \put(-10,8){\Bullet{6}}
-    \put(265,70){\Bullet{7}}
-    \put(275,37){\Bullet{8}}
-    \put(320,70){\Bullet{9}}
-  \end{picture}
-\end{figure}
+\noindent
+\begin{picture}(343,93)
+  \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/part-4}}
+  \put(-10,71){\Bullet{1}}
+  \put(-10,58){\Bullet{2}}
+  \put(-10,45){\Bullet{3}}
+  \put(-10,33){\Bullet{4}}
+  \put(-10,21){\Bullet{5}}
+  \put(-10,8){\Bullet{6}}
+  \put(265,70){\Bullet{7}}
+  \put(275,37){\Bullet{8}}
+  \put(320,70){\Bullet{9}}
+\end{picture}
 
 \begin{bulletlist}
 \item
@@ -615,14 +599,13 @@ defined in the FE data file. The associated reduced consistent load
 vectors are computed by the Reducer and stored in the FE model
 repository together with the reduced stiffness and mass matrices.
 
-\begin{figure}[H]
-  \begin{picture}(343,93)
-    \put(0,0){\includegraphics[width=\textwidth]{Figures/4-LinkPropRedLoads}}
-    \put(10,35){\Bullet{1}}
-    \put(40,35){\Bullet{2}}
-    \put(100,35){\Bullet{3}}
-  \end{picture}
-\end{figure}
+\noindent
+\begin{picture}(343,93)
+  \put(0,0){\includegraphics[width=\textwidth]{Figures/4-LinkPropRedLoads}}
+  \put(10,35){\Bullet{1}}
+  \put(40,35){\Bullet{2}}
+  \put(100,35){\Bullet{3}}
+\end{picture}
 
 \begin{bulletlist}
 \item{\sl Load Case } --
@@ -654,12 +637,11 @@ Generic Part. You can also enter the orientation of the principal axis of
 inertia to be used as the reference for the inertias entered on the
 \refSection{mass-tab}{Mass tab}.
 
-\begin{figure}[H]
-  \begin{picture}(343,85)
-    \put(0,-5){\includegraphics[width=\textwidth]{\ReferenceImg/prp/part-8}}
-    \put(105,20){\Bullet{1}}
-  \end{picture}
-\end{figure}
+\noindent
+\begin{picture}(343,95)
+  \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/part-8}}
+  \put(105,25){\Bullet{1}}
+\end{picture}
 
 \begin{bulletlist}
 \item
@@ -676,18 +658,17 @@ The settings on this tab concern the mass and inertia properties of a
 Generic Part, and is used to establish the part's mass matrix
 (see the \FedemTGuide{Section A.16, "Generic Part element"}).
 
-\begin{figure}[H]
-  \begin{picture}(343,90)
-    \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/part-6}}
-    \put(170,57){\Bullet{1}}
-    \put(210,43){\Bullet{2}}
-    \put(85,68){\Bullet{4}}
-    \put(85,58){\Bullet{5}}
-    \put(85,48){\Bullet{6}}
-    \put(57,10){\Bullet{3}}
-    \put(42,31){\Bullet{7}}
-  \end{picture}
-\end{figure}
+\noindent
+\begin{picture}(343,95)
+  \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/part-6}}
+  \put(170,57){\Bullet{1}}
+  \put(210,43){\Bullet{2}}
+  \put(85,68){\Bullet{4}}
+  \put(85,58){\Bullet{5}}
+  \put(85,48){\Bullet{6}}
+  \put(57,10){\Bullet{3}}
+  \put(42,31){\Bullet{7}}
+\end{picture}
 
 \begin{bulletlist}
 \item{\sl Mass} --
@@ -733,13 +714,12 @@ Generic Part, and is used to establish the part's mass matrix
 
 The stiffness properties of a Generic Part can be controlled on this tab.
 
-\begin{figure}[H]
-  \begin{picture}(343,90)
-    \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/part-7}}
-    \put(30,70){\Bullet{1}}
-    \put(145,69){\Bullet{2}}
-  \end{picture}
-\end{figure}
+\noindent
+\begin{picture}(343,95)
+  \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/part-7}}
+  \put(30,70){\Bullet{1}}
+  \put(145,69){\Bullet{2}}
+\end{picture}
 
 \begin{bulletlist}
 \item{\sl Type} --
@@ -766,12 +746,11 @@ from the manually specified stiffness values.
 
 This tab concerns the calculation of hydrodynamic forces on a part.
 
-\begin{figure}[H]
-  \begin{picture}(343,93)
-    \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/part-9}}
-    \put(-12,68){\Bullet{1}}
-  \end{picture}
-\end{figure}
+\noindent
+\begin{picture}(343,75)
+  \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/part-9}}
+  \put(-10,47){\Bullet{1}}
+\end{picture}
 
 \begin{bulletlist}
 \item{\sl Perform buoyancy calculation} --
@@ -789,14 +768,14 @@ This tab concerns the calculation of hydrodynamic forces on a part.
 This tab contains drop-down menus and toggles for selection of some advanced
 settings that will apply during the dynamics simulation for the selected part.
 
-\begin{figure}[H]
-  \begin{picture}(343,93)
-    \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/part-5}}
-    \put(140,57){\Bullet{1}}
-    \put(140,35){\Bullet{2}}
-    \put(-10,15){\Bullet{3}}
-  \end{picture}
-\end{figure}
+\noindent
+\begin{picture}(343,75)
+  \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/part-5}}
+  \put(160,44){\Bullet{1}}
+  \put(130,30){\Bullet{2}}
+  \put(-10,13){\Bullet{3}}
+  \put(220,18){\Bullet{4}}
+\end{picture}
 
 \begin{bulletlist}
 \item The options for the {\sl co-rotated reference coordinate system} are:
@@ -834,6 +813,12 @@ settings that will apply during the dynamics simulation for the selected part.
   during the dynamics simulation, see
   \refSection{stress-and-strain-recovery-during-time-integration}
              {Stress and strain recovery during time integration}.
+
+\item This toggle can be used to skip the FE part
+  when running stress recovery as a post-process over the entire model
+  (see \refSection{starting-the-analysis-1}{Starting the analysis}).
+  The toggle has no effect when solving stress recovery on a selection
+  of parts or on individual element groups.
 \end{bulletlist}
 
 
@@ -841,7 +826,7 @@ settings that will apply during the dynamics simulation for the selected part.
 
 A FE model repository is a directory structure containing all the files
 related to one or more FE parts. This includes the FE model files,
-reducer input option files, the reduced matrix and load files, the
+reducer option files, the reduced matrix and load files, the
 displacement recovery matrix files, and log-files with text-based output
 from the model reduction processes.
 
@@ -875,15 +860,12 @@ The FE model repository can be set in the Model Preferences dialog box (see
 Select \textbf{Model Preferences...} from the \textbf{Edit} menu to open it.
 Below is a portion of that dialog box shown.
 
-\begin{figure}[H]
-  \center
-  \begin{picture}(258,50)
-    \put(0,0){\includegraphics[trim=0 135 0 271,clip,width=0.75\textwidth]{\ReferenceImg/dlg-model-preferences}}
-    \put(130,28){\Bullet{1}}
-    \put(230,29){\Bullet{3}}
-    \put(230,9){\Bullet{2}}
-  \end{picture}
-\end{figure}
+\begin{picture}(258,70)
+  \put(10,5){\includegraphics[trim=0 135 0 271,clip,width=0.7\textwidth]{\ReferenceImg/dlg-model-preferences}}
+  \put(130,31){\Bullet{1}}
+  \put(235,31){\Bullet{3}}
+  \put(235,13){\Bullet{2}}
+\end{picture}
 
 \begin{bulletlist}
 \item Path to the current FE model repository, unless {\tt(internal)}.
