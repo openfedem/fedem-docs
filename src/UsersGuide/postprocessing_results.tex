@@ -1206,7 +1206,7 @@ for more about the export capabilities in Fedem.
 In addition to viewing the evolution of a result quantity at a fixed point in
 the model as a function of time (or any other fixed simulation quantity),
 as described above, it is often desirable to view the variation of a quantity
-along a one-dimensional structure, such as a beamstring, at a given time.
+along a one-dimensional structure, such as a beam string, at a given time.
 For this purpose, we offer the possibility to create {\sl Beam diagram} graphs.
 
 
@@ -1230,8 +1230,10 @@ For this purpose, we offer the possibility to create {\sl Beam diagram} graphs.
 
 The description and other properties of the beam diagrams and their curves may
 be edited in the same way as for other graphs and curves.
+However, selection of the result quantity to be plotted
+is done slightly differently for the beam diagram curves, see
+\protect\hyperlink{selecting-beam-results}{\sl"Selecting RDB results"} below.
 
-\clearpage
 \begin{wrapfigure}[8]{r}{0.5\textwidth}
   \includegraphics[width=0.5\textwidth]{Figures/7-BeamDiagram}
 \end{wrapfigure}
@@ -1290,14 +1292,14 @@ curves (see \refSection{curve-properties}{Curve properties}) whereas the
   {\sl Length}. The first three choices indicate the corresponding global
   position coordinate of the Spatial domain objects, whereas {\sl Length}
   is a running coordinate along the spatial objects.
-  The latter is useful when the beamstring is curved or not parallel to
+  The latter is useful when the beam string is curved or not parallel to
   one of the global coordinate axes.
 
 \item{\sl Y Axis} --
   Defines the result quantity to be plotted.
   Click the \textbf{Edit...} button to open the RDB selector dialog box
   where you can pick the wanted result (see
-  \protect\hyperlink{selecting-rdb-results}{\sl"Selecting RDB results"}
+  \protect\hyperlink{selecting-beam-results}{\sl"Selecting RDB results"}
   below for details). Alternatively, you may also right-click the curve in the
   Model Manager {\sl Results} list and then select \textbf{Edit Y Axis...}
 
@@ -1328,9 +1330,9 @@ curves (see \refSection{curve-properties}{Curve properties}) whereas the
   beam diagram curves are not updated automatically.
 \end{bulletlist}
 
-\subsubsection{Selecting RDB results}
+\SubSubSection{Selecting RDB results}{selecting-beam-results}
 
-To select the results to plot in a beam diagram curve,do the following steps:
+To select the results to plot in a beam diagram curve, do the following steps:
 
 \begin{enumerate}
 \item
@@ -1344,43 +1346,49 @@ To select the results to plot in a beam diagram curve,do the following steps:
   \refSubSection{selecting-rdb-results}{Selecting RDB results}
                 {curve-properties}) is then opened.
 \item
-  Select a mechanism object from the {\sl Existing Results} list or the
-  {\sl Modeler} view that represent the starting point of the beam diagram
-  curve. Only {\sl Triad} and {\sl Beam} elements may be selected.
-  Selection of any other object is ignored.
-
-  \EnumNote{If the mechanism analysis have been performed, variables for
-    the selected object are listed in the {\rm Existing Results} list.
-    If you have not yet performed an analysis, variables are listed in the
-    {\rm Possible Results} list instead.}
+  Select either a single {\sl Triad} or a single {\sl Beam} element
+  from the {\sl Existing Results} list or the {\sl Modeler} view
+  that represent the starting point of the beam diagram curve.
+  If the mechanism analysis has been performed, available variables for
+  the selected object will then be listed in the {\sl Existing Results} list.
+  If you have not yet performed an analysis, the variables are listed in the
+  {\sl Possible Results} list instead.
 \item
   Select a variable to be used as the $Y$-coordinates from either the
   {\sl Existing Results} or {\sl Possible Results} lists, and click \textbf{OK}
-  to close the panel or \textbf{Apply} to continue variable selection.
+  to close the dialog box, or \textbf{Apply} to continue variable selection.
 \end{enumerate}
 
-The {\sl Triad} or {\sl Beam} that you select in Step 3 above needs to be at the
-end of a beam string, i.e., the Triad can only be attached to one Beam object,
-or the Beam (if selected) can only have a neighboring Beam in one of its ends.
-If these conditions are not fulfilled, the selection is rejected and the curve
-does not appear in the graph view.
+The Triad or Beam that you select in Step 3 above needs to be at the end of a
+beam string, i.e., a selected Triad can only be attached to one Beam element,
+whereas a selected Beam can only have a neighboring Beam at one of its ends.
+If these conditions are not fulfilled, or the selected object is neither a Triad
+nor a Beam element, the selection is rejected and the curve does not appear
+in the graph view.
 
 When a valid object selection has been made, the beam topology is traversed
-automatically to determine the {\sl Spatial domain} objects
-(see bullet 2 above). The traversal is continued until the opposite end of the
-beam string, or until a Triad connected to three or more Beams is encountered.
+automatically to determine the {\sl Spatial domain} objects (see bullet
+\TextBullet{2} above). The traversal is continued until the opposite end of the
+beam string, or a Triad connected to three or more Beams, is encountered.
 
 \Note{If a beam string is connected to another (but only one) beam string via a
-  single-master joint (Rigid, Revolute, Ball or Free joint), the beam diagram is
-  continued across that joint. When plotting such beam diagram curves, you may
-  see discontinuities in the plot reflecting the location of that joint.}
+  single-master joint (Rigid, Revolute, Ball or Free joint), the beam diagram
+  curve is continued across that joint. When plotting such curves, you may see
+  discontinuities in the plot reflecting the location of that joint.}
 
-\Caution{Using {\rm Length} as the $X$-axis definition (see bullet 3 above)
-  is not recommended if the beam string is interrupted by a joint, because the
-  length coordinate (which is calculated based on updated coordinate values)
-  will then start from zero again on the other side of the joint.
-  It is then better to select the {\rm Position X, Y} or {\rm Z} value
-  that best corresponds to the axis direction of the beamstring.}
+\Caution{Using {\rm Length} as the $X$-axis definition (see bullet
+  \TextBullet{3} above) is not recommended if the beam string is interrupted by
+  a joint, because the length coordinate (which is calculated based on updated
+  coordinate values) will then start from zero again on the other side of the
+  joint. It is then better to select the {\rm Position X, Y} or {\rm Z} value
+  that best corresponds to the axis direction of the beam string.}
+
+It is also possible to directly multi-select a set of triads or single-master
+joints to define the {\sl Spatial domain} objects of the curve.
+This is useful if you want to plot a result quantity over a spatial domain
+which is not associated with a physical beam string.
+The selected objects then need to be of the same type,
+and the {\sl X axis} definition can not be {\sl Length}.
 
 \clearpage
 
