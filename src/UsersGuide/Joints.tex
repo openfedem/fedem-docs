@@ -97,28 +97,28 @@ one tab with a summary table of the major joint properties, and additional tabs
 for each of the {\sl joint variables} where their properties are displayed in
 detail. The summary table shows a non-editable summary of all joint variables
 along with other editable joint properties.
-There is an {\sl Origin} tab for the point-to-point joint types
-(Rigid, Revolute, Ball and Free joints) and an {\sl Advanced} tab with further
-properties for Ball and Free joints.
-Finally, all joint types (except for Rigid joints) have a {\sl Results} tab
+
+For the point-to-point joint types (Rigid, Revolute, Ball and Free joints),
+there is also an {\sl Origin} tab, and for the Ball and Free joints
+there is in addition an {\sl Advanced} tab with further properties.
+Finally, all joint types (except for Rigid) have a {\sl Results} tab
 for output specification.
 
 Since the number of joint variables depends on the joint type, you may see from
 zero (Rigid joint) to six (Free joint) sets of joint variables listed in the
 summary table and a similar number of joint variable tabs.
 
-\begin{figure}[H]
-  \begin{picture}(343,104)
-    \put(0,-7){\includegraphics[width=\textwidth]{\ReferenceImg/prp/free-joint-1}}
-    \put(15,103){\Bullet{1}}
-    \put(43,103){\Bullet{2}}
-    \put(105,103){\Bullet{3}}
-    \put(178,103){\Bullet{4}}
-    \put(207,103){\Bullet{5}}
-    \put(30,5){\Bullet{6}}
-    \put(250,15){\Bullet{7}}
-  \end{picture}
-\end{figure}
+\noindent
+\begin{picture}(343,130)
+  \put(0,3){\includegraphics[width=\textwidth]{\ReferenceImg/prp/free-joint-1}}
+  \put(15,113){\Bullet{1}}
+  \put(43,113){\Bullet{2}}
+  \put(105,113){\Bullet{3}}
+  \put(178,113){\Bullet{4}}
+  \put(207,113){\Bullet{5}}
+  \put(30,15){\Bullet{6}}
+  \put(250,25){\Bullet{7}}
+\end{picture}
 
 \begin{bulletlist}
 \item{\sl Summary tab} --
@@ -171,16 +171,14 @@ joint variable. The displayed options depend on the {\sl Constraint Type}.
 
 \SubSubSection{\sl\textbf{Free}}{free-joint-var}
 
-\begin{figure}[H]
-  \begin{picture}(343,80)
-    \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/joint-2}}
-    \put(46,53){\Bullet{1}}
-    \put(40,16){\Bullet{2}}
-    \put(60,2){\Bullet{3}}
-    \put(190,58){\Bullet{4}}
-    \put(200,22){\Bullet{5}}
-  \end{picture}
-\end{figure}
+\begin{picture}(343,80)
+  \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/joint-2}}
+  \put(46,53){\Bullet{1}}
+  \put(40,16){\Bullet{2}}
+  \put(60,2){\Bullet{3}}
+  \put(190,58){\Bullet{4}}
+  \put(200,22){\Bullet{5}}
+\end{picture}
 
 \begin{bulletlist}
 \item{\sl Additional BC} --
@@ -229,12 +227,10 @@ joint variable. The displayed options depend on the {\sl Constraint Type}.
 
 \subsubsection{\sl\textbf{Fixed}}
 
-\begin{figure}[H]
-  \begin{picture}(343,75)
-    \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/joint-3}}
-    \put(190,55){\Bullet{1}}
-  \end{picture}
-\end{figure}
+\begin{picture}(343,50)
+  \put(0,-30){\includegraphics[width=\textwidth]{\ReferenceImg/prp/joint-3}}
+  \put(190,25){\Bullet{1}}
+\end{picture}
 
 \begin{bulletlist}
 \item{\sl Length/Angle in model} --
@@ -252,17 +248,15 @@ joint variable. The displayed options depend on the {\sl Constraint Type}.
 
 \subsubsection{\sl\textbf{Prescribed}}
 
-\begin{figure}[H]
-  \begin{picture}(343,80)
-    \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/joint-4}}
-    \put(40,15){\Bullet{1}}
-    \put(60,3){\Bullet{2}}
-    \put(170,59){\Bullet{3}}
-    \put(170,40){\Bullet{4}}
-    \put(125,10){\Bullet{5}}
-    \put(220,13){\Bullet{6}}
-  \end{picture}
-\end{figure}
+\begin{picture}(343,85)
+  \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/joint-4}}
+  \put(40,15){\Bullet{1}}
+  \put(60,3){\Bullet{2}}
+  \put(170,59){\Bullet{3}}
+  \put(170,40){\Bullet{4}}
+  \put(125,10){\Bullet{5}}
+  \put(220,13){\Bullet{6}}
+\end{picture}
 
 \begin{bulletlist}
 \item{\sl Prescribed quantity} --
@@ -280,13 +274,13 @@ joint variable. The displayed options depend on the {\sl Constraint Type}.
   \protect\hyperlink{free-joint-var}{\sl Free} (see above).
 
 \item{\sl Constant length/angle, Constant displacement/rotation} --
-  These radio buttons and fields work together to allow you to set a constant
-  prescribed value of the joint variable during the dynamics simulation.
-  You can choose to enter the constant length/angle either as an absolute value,
+  These buttons and fields work together to define a constant
+  prescribed value of the joint variable during the simulation.
+  You can specify the constant length/angle either as an absolute value,
   or relative to the {\sl Length/angle in model},
   if the {\sl Prescribed quantity} is set to {\sl Deflection}.
-  For prescribed {\sl Velocity} or {\sl Acceleration}, you enter the constant
-  velocity/acceleration that should be applied in the first of these two fields
+  For prescribed {\sl Velocity} or {\sl Acceleration}, enter the constant
+  value that should be applied in the first of these two fields
   (the other field is inactive).
 
 \EnumCaution{If you prescribe a {\rm length/angle} that differs from the
@@ -310,7 +304,7 @@ joint variable. The displayed options depend on the {\sl Constraint Type}.
   this toggle will enable the prescribed motion to be applied in the frequency
   domain instead of the time domain, if the {\sl Frequency response analysis}
   toggle is enabled in the Dynamics Solver Setup dialog box, see
-  \refSection{dynamics-solver-basic-mode}{Dynamics Solver Basic Mode}
+  \refSection{dynamics-solver-basic-mode}{Dynamics Solver Basic Mode}.
 \end{bulletlist}
 
 \Tip{You may plot the reaction force associated with a fixed joint DOF by
@@ -319,19 +313,19 @@ joint variable. The displayed options depend on the {\sl Constraint Type}.
   \refSubSection{selecting-rdb-results}{Selecting RDB results}
                 {curve-properties}).}
 
+\clearpage
 \subsubsection{\sl\textbf{Spring-Damper}}
 
-\begin{figure}[H]
-  \begin{picture}(343,80)
-    \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/joint-5}}
-    \put(50,52){\Bullet{1}}
-    \put(43,17){\Bullet{2}}
-    \put(60,3){\Bullet{3}}
-    \put(160,70){\Bullet{4}}
-    \put(270,70){\Bullet{5}}
-    \put(270,38){\Bullet{6}}
-  \end{picture}
-\end{figure}
+\noindent
+\begin{picture}(343,80)
+  \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/joint-5}}
+  \put(50,52){\Bullet{1}}
+  \put(43,17){\Bullet{2}}
+  \put(60,3){\Bullet{3}}
+  \put(160,70){\Bullet{4}}
+  \put(270,70){\Bullet{5}}
+  \put(270,38){\Bullet{6}}
+\end{picture}
 
 These options enable you to add elastic and damping
 behavior to the joint variable by entering values for the spring
@@ -370,6 +364,7 @@ and damper properties.
 \end{bulletlist}
 
 
+\clearpage
 \SubSubSection{Summary table}{summary-table}
 
 The summary table displays an overview of the settings for each joint variable.
@@ -377,9 +372,8 @@ The columns relate to the fields in the
 \protect\hyperlink{joint-variable-properties}{\sl Joint variable properties}
 described above.
 
-\begin{figure}[H]
-  \includegraphics[trim=0 15.2 0 0,clip,width=\textwidth]{\ReferenceImg/prp/free-joint-1}
-\end{figure}
+\noindent
+\includegraphics[trim=0 15.2 0 0,clip,width=\textwidth]{\ReferenceImg/prp/free-joint-1}
 
 \begin{itemize}
 \item{\sl Constraint} --
@@ -416,6 +410,7 @@ described above.
 \end{itemize}
 
 
+\clearpage
 \SubSubSection{Advanced joint properties}{advanced-joint-properties}
 
 For the Ball joint and Free joint, you have possibility to alter the
@@ -425,14 +420,13 @@ rotational DOFs are represented internally. You can also control the
 the circular or cylindrical stiffness behavior of rubber bushings, etc.
 This is done through the {\sl Advanced} tab shown below.
 
-\begin{figure}[H]
-  \begin{picture}(343,83)
-    \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/joint-6}}
-    \put(-10,49){\Bullet{1}}
-    \put(-10,36){\Bullet{2}}
-    \put(290,55){\Bullet{3}}
-  \end{picture}
-\end{figure}
+\noindent
+\begin{picture}(343,90)
+  \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/joint-6}}
+  \put(-10,49){\Bullet{1}}
+  \put(-10,36){\Bullet{2}}
+  \put(290,55){\Bullet{3}}
+\end{picture}
 
 \begin{bulletlist}
 \item You may change the rotational formulation of the joint.
@@ -470,16 +464,15 @@ This is done through the {\sl Advanced} tab shown below.
 \end{bulletlist}
 
 
+\clearpage
 \SubSubSection{Results tab}{joint-results-tab}
 
-\begin{figure}[H]
-  \begin{picture}(343,83)
-    \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/joint-7}}
-    \put(65,70){\Bullet{1}}
-    \put(210,70){\Bullet{2}}
-    \put(300,70){\Bullet{3}}
-  \end{picture}
-\end{figure}
+\begin{picture}(343,83)
+  \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/joint-7}}
+  \put(65,70){\Bullet{1}}
+  \put(210,70){\Bullet{2}}
+  \put(300,70){\Bullet{3}}
+\end{picture}
 
 The {\sl Results} tab (shown above) contains toggles for activating
 output of secondary solution variables to the results database for the
@@ -694,15 +687,14 @@ will move along with the joint symbol if the joint itself is moved.
 (See also \refSection{origin-property}{Origin property} and
 \refSection{align-cs-and-rotations}{Align CS and rotations}.)
 
-\begin{figure}[!h]
-\center
-\includegraphics[width=0.5\textwidth]{Figures/4-RelativePositioningOfTriads}
-\end{figure}
+\begin{center}
+  \includegraphics[width=0.5\textwidth]{Figures/4-RelativePositioningOfTriads}
+\end{center}
 
 The sensitivity of the {\sl Position} and {\sl Orientation} fields in
 the {\sl Origin} tab of the joint and its triads will reflect the
 movability of the selected object, and may change when changing these options.
-E.g., triads attached to FE nodes can not be moved, an thus if
+E.g., triads attached to FE nodes can not be moved, and thus if
 the triad is set to follow the joint, the joint can not be moved either.
 
 \Note{These settings do not apply when you are using the \textbf{Smart Move}
@@ -746,17 +738,17 @@ and (of course) not for joints where the master is attached to ground.
 
 \SubSection{Point-to-path joints}{point-to-path-joints}
 
-\begin{wrapfigure}[7]{r}{0.5\textwidth}
+\begin{wrapfigure}[7]{r}{0.3\textwidth}
   \vspace{-4mm}
-  \center
   \includegraphics[width=0.3\textwidth]{Figures/2nd_Joint_Pulldown_Window}
 \end{wrapfigure}
 
-Point-to-path joints are more complex than point-to-point joints
-as they require more than one master triad for each slave.
-The motion is defined by at least two master triads in a
-straight or curved path. Point-to-path joints are found on the
-{\sl Mechanism Creation} tool bar (shown at right).
+Point-to-path joints are more complex than \newline point-to-point joints
+as they require at least \newline two master triad for each slave triad.
+The motion constraint in these joints is defined by a straight
+or curved path through the given set of master triads.
+Point-to-path joints are found on the {\sl Mechanism Creation} tool bar
+(shown at right).
 
 \Note{The same set of master triads can be used in more than one point-to-path
   joint.}
@@ -770,10 +762,14 @@ Each of the point-to-path joint types is described in the following.
 \IconTextFirst{prismaticJoint}{
   A flexible prismatic joint consists of a slave triad sliding along a straight
   path defined by two or more master triads. The local coordinate system of the
-  joint is defined with its $Z$-axis directed along the slide path. The $X$-
-  and $Y$-axes are defined from the coordinate systems of the master triads.}
+  joint is defined with its $Z$-axis directed along the slide path.
+  The $X$- and $Y$-axes are then arbitrary, but will defined from the geometric
+  feature on which the joint is constructed, if any.
+  See \protect\hyperlink{point-to-path-joint-coordinate-systems}
+  {\sl"Point-to-path joint coordinate systems"} below for further details on the
+  local coordinate system for the prismatic joints.}
 
-The joint has three unconstrained DOFs, but only a single joint variable
+A prismatic joint has three unconstrained DOFs, but only a single joint variable
 (the slider variable) that allows you to control the translational displacement
 of the slave along the local $Z$-axis.
 Rotation is constrained about the $Z$-axis, but not in the other two directions
@@ -857,7 +853,9 @@ and the \FedemTGuide{Section 6.5, "Joint Friction"}.)
   translational displacement along the local $Z$-axis, and rotation about the
   local $Z$-axis. As with prismatic joints, cylindric joints do not constrain
   motion in the other two rotational directions. The joint's local coordinate
-  system is defined in the same manner as for the prismatic joint.}
+  system is defined in the same manner as for the prismatic joint.
+  See also \protect\hyperlink{point-to-path-joint-coordinate-systems}
+  {\sl"Point-to-path joint coordinate systems"} below.}
 
 The cylindric joint has two joint variables. They are the translational distance
 along the local $Z$-axis from the first master to the slave (the slider
@@ -939,20 +937,60 @@ Similaraly, a Prismatic joint will have a
 which will add an (initially {\sl Free}) {\sl Rz} DOF.
 
 
+\SubSubSection{Point-to-path joint coordinate systems}
+              {point-to-path-joint-coordinate-systems}
+
+The point-to-path joints do not have a {\sl Origin} tab in their
+Property Editor panel, in contrast to the point-to-point joint types,
+see \refSection{joint-properties}{Joint properties}.
+The local coordinate system of these joints are constructed when the joint is
+created and can not be changed. For prismatic and cylindric joints,
+the local coordinate system is defined as follows:
+
+\begin{itemize}
+\item The local $Z$-axis passes through the two (end) master triads.
+\item The local $X$-axis is formed by the cross product between a vector
+  defined from the geometric item the joint is created on (e.g., the tangent
+  vector of a curve or the normal vector of a face) and the $Z$-axis.
+\item The $Y$-axis is then the cross product of the $Z$- and $X$-axes.
+\end{itemize}
+
+The slave triad of a prismatic and cylindric joint will have identical local
+axes as the joint coordinate system.
+The master triads will also get the same orientation by construction,
+but this can be changed by rotatating the triads around the local $Z$-axis.
+To do this,
+%
+\begin{wrapfigure}[4]{r}{0.45\textwidth}
+  \vspace{-7.5mm}
+  \includegraphics[width=0.45\textwidth]{Figures/4-PrismJoint-orientation}
+\end{wrapfigure}
+%
+you have to change the {\sl Reference CS} for the {\sl Orientation} in the
+Property Editor Panel to the joint itself, as shown to the right.
+Then the {\sl RotZ [Deg]} field will be editiable, and you can here enter the
+angle between local the $X$-axis of the triad and the $X$-axis of the joint.
+The other master triads of the joint will then automatically be assigned
+the same rotation angle.
+
+
 \subsubsection{Cam joint}
 
 \IconTextFirst{camJoint}{
   A cam joint has six unconstrained DOFs that allow the slave triad (a.k.a.
   the {\sl follower}) to move over a curved surface (the {\sl cam surface}).
-  The cam surface is defined by a curve consisting of three-point circular arcs.
-  Each arc is defined by the location of three master triads,
-  also called the {\sl cam triads}.
-  A cam joint must consist of one follower triad and at least three cam triads.
-  See also the \FedemTGuide{Section 6.3.3, "Cam joint"}.}
+  The cam surface is defined by a cam curve consisting of circular arcs and
+  straight lines as its segments. Each segment is defined by the location
+  of three master triads, also called the {\sl cam triads}.
+  If the triads are located on a straight line,
+  a line segment will be defined (circular arc with zero curvature).}
 
+A cam joint must consist of one follower triad and at least three cam triads.
 It is recommended to use at least one arc segment per quarter of a circle
 to make the solution more stable.
 This means you will need at least eight master/cam triads for a complete circle.
+See the \FedemTGuide{Section 6.3.3, "Cam joint"} for more details and the
+theoretical foundation on the Cam joints.
 
 \Tip{You can use the same cam triads in several different cam joints, making it
   possible to constrain several follower triads to the same cam surface.}
@@ -960,7 +998,7 @@ This means you will need at least eight master/cam triads for a complete circle.
 \noindent
 \begin{minipage}{0.67\textwidth}
   \raggedright
-  An example cam joint is shown to the right.
+  An example cam joint is depicted to the right.
   %
   \vskip2mm
   \begin{bulletlist}
@@ -972,7 +1010,7 @@ This means you will need at least eight master/cam triads for a complete circle.
   \end{bulletlist}
 \end{minipage}% <--- the % is needed here to kill off spurious spacing
 \hfill\begin{minipage}{0.22\textwidth}
-  \begin{picture}(75,75)
+  \begin{picture}(75,83)
     \put(0,-20){\includegraphics[width=\textwidth]{Figures/cam joint symbol}}
     \put(22,65){\Bullet{1}}
     \put(-7,33){\Bullet{2}}
@@ -982,26 +1020,24 @@ This means you will need at least eight master/cam triads for a complete circle.
 
 \subsubsection{\sl\textbf{Creating cam joints}}
 
-The cam curve is defined by circular arcs and straight lines. Each three-point
-arc is defined by three triads. If the triads are located on a straight line,
-a straight line will be defined (circular arc with zero curvature).
-
 To create a cam joint, complete the following steps:
 
 \begin{enumerate}
 \item
   Click the cam joint icon.
 \item
-  Select a position for a new follower triad, or select an existing triad.
+  Select a position for the follower, or select an existing triad.
 \item
   Confirm by pressing Done. If an existing triad was selected,
-  this triad will become the follower triad, otherwise a new triad is created.
+  this triad will become the follower, otherwise a new triad will be created
+  at the selected position.
 \item
   Select a position for the first master, or select an existing triad.
-  You can also select an existing cam curve.
+  \newline You can also select an existing cam curve.
 \item
   Confirm by pressing Done. If an existing triad was selected,
-  this triad will become the first cam triad, otherwise a new triad is created.
+  this triad will become the first cam triad, otherwise a new triad will be
+  created at the selected position.
   If an existing cam curve was selected, the new cam joint is complete,
   and the selected cam surface will be used by the new follower triad.
 \item
@@ -1020,7 +1056,7 @@ To create a cam joint, complete the following steps:
   See \refSection{moving-mechanism-elements}{Moving mechanism elements}.
 \end{enumerate}
 \vskip\parskip
-\begin{minipage}{0.6\textwidth}
+\begin{minipage}{0.53\textwidth}
   \raggedright
   \begin{itemize}
   \item[9.]
@@ -1031,7 +1067,7 @@ To create a cam joint, complete the following steps:
     $X$-translation DOF.
   \end{itemize}
 \end{minipage}% <--- the % is needed here to kill off spurious spacing
-\hfill\begin{minipage}{0.37\textwidth}
+\hfill\begin{minipage}{0.44\textwidth}
   \includegraphics[width=\textwidth]{Figures/4-3-4-CamJointStiffness}
 \end{minipage}
 
@@ -1107,6 +1143,7 @@ also defined relative to these initial positions.
   This happens because the stress free length of these springs then are
   undefined. A warning is issued from the dynamics solver if this occurs.}
 
+\clearpage
 \subsubsection{\sl\textbf{Cam friction}}
 
 The friction parameters for cam joints are the same as those for
@@ -1150,6 +1187,7 @@ overlapping contact domains.
   that varies gradually from zero as the follower enters the contact domain,
   to one as the contact stiffness is activated.}
 
+\clearpage
 \subsubsection{\sl\textbf{Radial contact springs}}
 
 By enabling the {\sl Use radial stiffness} toggle, the springs
