@@ -43,26 +43,26 @@ about how to attach joints.
 \SubSection{Joint variables}{joint-variables}
 
 The joint variables are the accessible or controllable DOFs for each joint.
-As an example, the Revolute Joint normally has one accessible DOF,
-namely the rotation about one axis. The other DOFs are fixed.
-For most joints the DOFs that are not accessible are fixed,
-but for Prismatic and Cylindrical joints that is not the case.
-Refer to \protect\hyperlink{prismatic-joint}{\sl"Prismatic joint"} and
-\protect\hyperlink{cylindric-joint}{\sl"Cylindric joint"} for further details.
+As an example, the Revolute Joint normally has only one accessible DOF,
+namely the rotation about one axis.
+The DOFs that are not accessible are fixed,
+except for in the Prismatic and Cylindrical joints (see
+\protect\hyperlink{prismatic-joint}{\sl"Prismatic joint"} and
+\protect\hyperlink{cylindric-joint}{\sl"Cylindric joint"} for details).
 
 The behavior of the joint variable can be controlled or customized in
-several ways. There are four main options.
+several ways. The following are the four main {\sl Constraint Type} options:
 
 \begin{itemize}
-\item{\sl Fixed} --
+\item\protect\hyperlink{free-joint-var}{\sl Free} --
+  This DOF is free to move. No constraints are applied.
+\item\protect\hyperlink{fixed-joint-var}{\sl Fixed} --
   This DOF is fixed, and can not be moved.
   It is removed from the system of equations (condensed out).
-\item{\sl Free} --
-  This DOF is free to move. No constraints are applied.
-\item{\sl Prescribed} --
+\item\protect\hyperlink{prescribed-joint-var}{\sl Prescribed} --
   This DOF can be assigned a prescribed motion,
   and is thus condensed out from the system of equations.
-\item{\sl Spring-Damper} --
+\item\protect\hyperlink{spring-damper}{\sl Spring-Damper} --
   This DOF is free to move, but a spring and a damper may be applied
   to assign stiffness and/or damping properties to it.
 \end{itemize}
@@ -225,11 +225,11 @@ joint variable. The displayed options depend on the {\sl Constraint Type}.
   see \refSection{dynamics-solver-basic-mode}{Dynamics Solver (Basic Mode)}.
 \end{bulletlist}
 
-\subsubsection{\sl\textbf{Fixed}}
+\SubSubSection{\sl\textbf{Fixed}}{fixed-joint-var}
 
-\begin{picture}(343,50)
-  \put(0,-30){\includegraphics[width=\textwidth]{\ReferenceImg/prp/joint-3}}
-  \put(190,25){\Bullet{1}}
+\begin{picture}(343,80)
+  \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/joint-3}}
+  \put(190,55){\Bullet{1}}
 \end{picture}
 
 \begin{bulletlist}
@@ -246,7 +246,7 @@ joint variable. The displayed options depend on the {\sl Constraint Type}.
   \refSubSection{selecting-rdb-results}{Selecting RDB results}
                 {curve-properties}).}
 
-\subsubsection{\sl\textbf{Prescribed}}
+\SubSubSection{\sl\textbf{Prescribed}}{prescribed-joint-var}
 
 \begin{picture}(343,85)
   \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/joint-4}}
@@ -307,16 +307,15 @@ joint variable. The displayed options depend on the {\sl Constraint Type}.
   \refSection{dynamics-solver-basic-mode}{Dynamics Solver Basic Mode}.
 \end{bulletlist}
 
-\Tip{You may plot the reaction force associated with a fixed joint DOF by
+\Tip{You may plot the reaction force associated with a prescribed joint DOF by
   selecting the {\rm Force/Moment value} item under the joint variable node in
   question from the RDB selector (see
   \refSubSection{selecting-rdb-results}{Selecting RDB results}
                 {curve-properties}).}
 
 \clearpage
-\subsubsection{\sl\textbf{Spring-Damper}}
+\SubSubSection{\sl\textbf{Spring-Damper}}{spring-damper}
 
-\noindent
 \begin{picture}(343,80)
   \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/joint-5}}
   \put(50,52){\Bullet{1}}
@@ -327,9 +326,8 @@ joint variable. The displayed options depend on the {\sl Constraint Type}.
   \put(270,38){\Bullet{6}}
 \end{picture}
 
-These options enable you to add elastic and damping
-behavior to the joint variable by entering values for the spring
-and damper properties.
+These options enable you to add elastic and damping behavior to the
+joint variable by entering values for the spring and damper properties.
 
 \begin{bulletlist}
 \item{\sl Additional BC} --
@@ -372,7 +370,7 @@ The columns relate to the fields in the
 \protect\hyperlink{joint-variable-properties}{\sl Joint variable properties}
 described above.
 
-\noindent
+\vskip2mm\noindent
 \includegraphics[trim=0 15.2 0 0,clip,width=\textwidth]{\ReferenceImg/prp/free-joint-1}
 
 \begin{itemize}
@@ -500,18 +498,18 @@ selected joint, such that they are available for curve plotting, etc.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \SubSection{Point-to-point joints}{point-to-point-joints}
 
-\begin{minipage}{0.75\textwidth}
-  \raggedright
-  With point-to-point joints, the motion constraints of the joint are applied
-  between two points represented by the slave and the master triad with
-  their corresponding FE nodes. Point-to-point joints are found on the
-  \textbf{Mechanism Creation} tool bar (shown at right).
-\end{minipage}% <--- the % is needed here to kill off spurious spacing
-\hfill\begin{minipage}{0.2\textwidth}
-\includegraphics[width=\textwidth]{Figures/1st_Joint_Pulldown}
-\end{minipage}
+\begin{wrapfigure}[6]{r}{0.3\textwidth}
+  \vspace{-5mm}
+  \center
+  \includegraphics[width=0.27\textwidth]{Figures/1st_Joint_Pulldown}
+\end{wrapfigure}
 
-Each of the point-to-point joint types are described in the following.
+For these joint types, the motion constraints are applied
+between two points represented by the slave and the master triad with
+their corresponding FE nodes.
+The point-to-point joints are found on the \newline
+\textbf{Mechanism Creation} tool bar (shown at right). \newline
+They can also be accessed from the \textbf{Mechanism} menu of the main window.
 
 
 \subsubsection{Revolute joint}
@@ -744,17 +742,15 @@ and (of course) not for joints where the master is attached to ground.
 \end{wrapfigure}
 
 Point-to-path joints are more complex than \newline point-to-point joints
-as they require at least \newline two master triad for each slave triad.
-The motion constraint in these joints is defined by a straight
+as they require at least \newline two master triads for each slave triad.
+The motion constraints in these joints are defined by a straight
 or curved path through the given set of master triads.
-Point-to-path joints are found on the {\sl Mechanism Creation} tool bar
-(shown at right).
+Point-to-path joints are found on the \textbf{Mechanism Creation} tool bar
+(shown at right). They can also be accessed from the \textbf{Mechanism} menu
+of the main window.
 
 \Note{The same set of master triads can be used in more than one point-to-path
   joint.}
-
-\medskip\noindent
-Each of the point-to-path joint types is described in the following.
 
 
 \SubSubSection{Prismatic joint}{prismatic-joint}
@@ -776,7 +772,7 @@ Rotation is constrained about the $Z$-axis, but not in the other two directions
 (the slave can rotate about the local $X$- and $Y$-axes
 independently of the masters).
 
-\Tip{You can attach two prismatic joints to make a stiff translating connection
+\Tip{You can use two prismatic joints to make a stiff translating connection
   by attaching the masters of the two joints to the same nodes (in same order)
   and attaching the two slave triads to the same part on different nodes.}
 
@@ -793,8 +789,9 @@ to the slave triad in the direction of the local $Z$-axis.
   \end{picture}
 \end{wrapfigure}
 
-The symbol for a prismatic joint is displayed in the {\sl Modeler} view as
-shown to the right.
+The symbol for a prismatic joint \newline
+is displayed in the {\sl Modeler} view \newline
+as shown to the right.
 
 \begin{bulletlist}
 \item
@@ -819,14 +816,14 @@ to the two masters closest to the current position of the slave.
 \begin{wrapfigure}[4]{r}{0.35\textwidth}
   \vspace{-8mm}
   \center
-  \includegraphics[width=0.22\textwidth]{Figures/4-PrismJoint-topology}
+  \includegraphics[width=0.25\textwidth]{Figures/4-PrismJoint-topology}
 \end{wrapfigure}
 
 To add master triads to a joint, click the \textbf{Add Master} button
 located below the ID and Topology panel (shown at right) and select
 additional FE nodes along the slider path.
 
-\medskip
+\bigskip
 \Note{You can add master to a prismatic joint only after it has been attached to
   a part (see \refSection{using-the-attach-command}{Using the Attach command}).
   It is not possible to add masters to a joint that is attached to ground.}
