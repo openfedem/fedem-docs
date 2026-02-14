@@ -971,12 +971,15 @@ of the Spring objects.
 
 \vskip\parskip
 \IconsText{force}{torque}{
-  Two types of loads can be applied to triads or parts: forces and torques.
-  Both types are applied as point-force vectors on FE nodes. These loads can be
-  used to introduce motion into your mechanism. During simulation, the magnitude
-  of forces and torques can be constant or controlled by functions
-  (see \refSection{functions}{Functions}). When creating them,
-  it is possible to add a load directly to an existing triad or to an FE node.}
+  Two types of loads can be applied to triads or parts: Forces and Torques.
+  Both load types are applied as point-force vectors on FE nodes.
+  The loads can be used to introduce motion into your mechanism.
+  During simulation, the magnitude of forces and torques can be constant
+  or controlled by functions (see \refSection{functions}{Functions}).}
+
+When creating load objects, it is possible to add a load directly to an
+existing Triad, or to any FE node on a Part. In the latter case,
+a new Triad will be created and attached to the Part on the chosen FE node.
 
 
 \SubSection{Load symbols}{load-symbols}
@@ -1003,60 +1006,74 @@ Property Editor panel (shown below).
 Select the force or torque to show its properties.
 
 \noindent
-\begin{picture}(243,100)
-  \put(0,0){\includegraphics[width=\textwidth]{Figures/force property editor panel}}
-  \put(35,82){\Bullet{1}}
-  \put(50,63){\Bullet{2}}
-  \put(150,85){\Bullet{3}}
-  \put(102,55){\Bullet{4}}
-  \put(102,33){\Bullet{5}}
-  \put(-50,-72){\includegraphics[width=7mm]{Figures/mouse}}
-  \put(-50,-185){\includegraphics[width=7mm]{Figures/eyes}}
+\begin{picture}(343,90)
+  \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/load-1}}
+  \put(45,82){\Bullet{1}}
+  \put(70,54){\Bullet{2}}
+  \put(170,82){\Bullet{3}}
+  \put(108,43){\Bullet{4}}
+  \put(219,45){\Bullet{4}}
+  \put(324,45){\Bullet{4}}
+  \put(108,21){\Bullet{5}}
+  \put(219,23){\Bullet{5}}
+  \put(324,23){\Bullet{5}}
+  \put(219,69){\Bullet{6}}
+  \put(324,69){\Bullet{6}}
+  \put(313,-72){\includegraphics[trim=8 5 8 6,clip,width=5mm]{Figures/mouse}}
+  \put(-50,-138){\includegraphics[width=7mm]{Figures/mouse}}
+  \put(-50,-179){\includegraphics[width=7mm]{Figures/eyes}}
 \end{picture}
 
 \begin{bulletlist}
   \setlength\itemsep{1mm}
 
 \item{\sl Magnitude} --
-  To change the load magnitude, enter a constant value or select one from the
-  list of functions in your model (see \refSection{functions}{Functions}).
+  To change the load magnitude, enter a constant value or select from the
+  list of functions (see \refSection{functions}{Functions}).
 
-\item{\sl Load Target Point} --
-  The point is given in either global or local coordinates.
+\item{\sl Load target point} --
+  The point is given either in global coordinates, \newline
+  or in local coordinates with respect to the Part the load is attached to.
   You can also select a new target point using the \textbf{Mouse} button
-  (see \refSection{target-point}{Target point} below).
+  (~~~~~), see \refSection{target-point}{Target point} below.
 
 \item{\sl Direction} --
   The {\sl From} and {\sl To} options allow you to edit the orientation of the
   load vector (see \refSection{direction}{Direction} below).
 
 \item
-  You can select a new point for the {\sl Load Target Point}, or {\sl From}
-  or {\sl To Directions} using the \textbf{Mouse} buttons
- (then select a new point in the {\sl Modeler} view).
+  You can select a new {\sl Load target point}, and change the {\sl From} and
+  {\sl To} points for the load {\sl Direction} using the \textbf{Mouse} buttons.
+  The new point is then selected in the {\sl Modeler} view.
 
 \item
   You can click and hold down any of the \textbf{View} buttons in the Property
   Editor panel to highlight the corresponding point in the {\sl Modeler} view.
+
+\item
+  Click and hold down these \textbf{View} buttons to highlight the Part or
+  Triad defining the load direction in the {\sl Modeler} view.
 \end{bulletlist}
 
 
 \SubSection{Target point}{target-point}
 
 \IconTextFirst{../mouse}{
-  To specify a new target point, click the \textbf{Mouse} button and use the
-  cursor to select a part in the {\sl Modeler} view.
-  If the target point does not coincide with an FE node, the target point will
-  snap to the closest node. Press \textbf{Done} to confirm the selection.
-  A triad is created at that position.}
+  To specify a new target point, click the \textbf{Mouse} button and
+  select a Part in the {\sl Modeler} view.
+  If the clicked point does not coincide with an FE node, it will
+  snap to the closest node in the selected Part.
+  Press \textbf{Done} to confirm the selection.
+  A triad is created at that position.
+  You may also select an existing Triad which is not attached to a Part.}
 
 \SubSection{Direction}{direction}
 
 \RightFigure{4-Direction-text}{
-  The direction of the input load vector can be specified by two points moving
-  together with the selected parts, or by two fixed points given
+  The direction of the load vector can be specified by two points moving
+  together with the selected Parts or Triads, or by two fixed points given
   in global coordinates. The direction is given by the vector pointing
-  from the {\sl From} point to the {\sl To} point (shown at right).}
+  from the {\sl From} point to the {\sl To} point, as shown to the right.}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
