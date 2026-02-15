@@ -18,7 +18,7 @@
     \includegraphics[width=0.8\textwidth]{Figures/#1}
   \end{minipage}}
 
-% Temporary, to aid setting picture encironment sizes
+% Temporary, to aid setting picture environment sizes
 \def\Hline#1{\put(0,0){\line(1,0){#1}}}
 \def\Vline#1{\put(0,0){\line(0,1){#1}}}
 
@@ -491,26 +491,32 @@ In addition, you can create general couplings using {\sl Generic DB} objects.
   A gear is a rotational constraint between two revolute joints.
   The gear constrains the two joints to rotate at a given transmission ratio.}
 
-\begin{wrapfigure}{r}{0.5\textwidth}
-  \vspace{-5mm}
-  \includegraphics[width=0.4\textwidth]{Figures/4-GearSymbol.png}
+\Note{The {\rm Constraint Type} of the {\rm Rz} DOF in the two Revolute joints
+  of the gear has to be set to either {\rm Free} or {\rm Spring-Damper},
+  see~\refSection{joint-variables}{Joint variables}.
+  It can neither be {\rm Prescribed} nor {\rm Fixed}.}
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+  \vspace{-7mm}
+  \includegraphics[trim=0 10 0 0,clip,width=0.4\textwidth]{Figures/4-GearSymbol}
 \end{wrapfigure}
 
 \subsubsection{Gear symbol}
 
-The gear symbol (shown at right) is displayed in the {\sl Modeler} view
+The gear symbol (shown at right) \newline
+is displayed in the {\sl Modeler} view \newline
 as a line between two revolute joints.
 
-\begin{wrapfigure}{r}{0.5\textwidth}
-  \includegraphics[width=0.5\textwidth]{Figures/4-TransmissionRatio}
+\begin{wrapfigure}[3]{r}{0.45\textwidth}
+  \vskip2mm
+  \includegraphics[trim=0 100 300 0,clip,width=0.45\textwidth]{\ReferenceImg/prp/prp-gear-1}
 \end{wrapfigure}
 
-\subsubsection{Transmission ratio}
+\SubSubSection{Transmission ratio}{transmission-ratio}
 
-You can specify the gear transmission ratio (dimensionless rate) in the
-Property Editor panel (shown at right). For information about the gear
-transmission ratio, see the \FedemTGuide{Section 6.4.1, "Gear joint"}.
-
+You can specify the gear {\sl Transmission output ratio} (dimensionless rate)
+in the Property Editor panel (shown at right). For information about the
+transmission ratio in gears, see the \FedemTGuide{Section 6.4.1, "Gear joint"}.
 
 \SubSection{Rack-and-Pinion}{rack-and-pinion}
 
@@ -520,29 +526,30 @@ transmission ratio, see the \FedemTGuide{Section 6.4.1, "Gear joint"}.
   a rotational input displacement to a translational output displacement.
   The joint has a transmission ratio similar to that of gears.}
 
+\hspace*{0pt}\Note{
+  The {\rm Constraint Type} of both the {\rm Rz} DOF in input Revolute joint
+  and the {\rm Tz} DOF in the output Prismatic joint have to be set to either
+  {\rm Free} or {\rm Spring-Damper},
+  see~\refSection{joint-variables}{Joint variables}.
+  They can neither be {\rm Prescribed} nor {\rm Fixed}.}
+
+\begin{wrapfigure}{r}{0.38\textwidth}
+  \vspace{-9mm}
+  \includegraphics[width=0.38\textwidth]{Figures/4-rack-and-pinion-symbol}
+\end{wrapfigure}
+
 \subsubsection{Rack-and-Pinion symbol}
 
-\noindent
-\begin{minipage}{0.6\textwidth}
-  \raggedright
-  The Rack-and-Pinion symbol (shown at right) is displayed in the
-  {\sl Modeler} view as a line between a prismatic joint and a revolute
-  joint.
-\end{minipage}% <--- the % is needed here to kill off  spurious spacing
-\begin{minipage}{0.4\textwidth}
-  \raggedleft
-  \includegraphics[scale=0.25]{Figures/4-rack-and-pinion-symbol}
-\end{minipage}
-
-\subsubsection{Transmission ratio}
-
-\begin{minipage}{\textwidth}
-You can specify the transmission ratio (dimensionless rate) for a
-Rack-and-Pinion constraint in the Property Editor panel
-(see \refSection{gear}{Gear}).
-\end{minipage}
+The Rack-and-Pinion symbol (shown at right) is displayed in the {\sl Modeler}
+view as a line between a prismatic joint and a revolute joint.
 
 \clearpage
+\subsubsection{Transmission ratio}
+
+You can specify the {\sl Transmission output ratio} (dimensionless rate) for a
+Rack-and-Pinion constraint in the Property Editor panel
+(see \refSubSection{transmission-ratio}{Transmission ratio}{gear}).
+
 \SubSection{General joint pair constraints}{general-joint-pair-constraints}
 
 In addition to the specific cases
@@ -552,12 +559,12 @@ any other joint pair constraint can be modeled using a Generic database object.
 See \refSection{generic-database-objects}{Generic database objects}
 on how to create and manipulate such objects.
 
-\begin{wrapfigure}[8]{r}{0.4\textwidth}
-  \vspace{-8mm}
-  \includegraphics[width=0.28\textwidth]{Figures/4-gen-joint-pair-constr}
+\begin{wrapfigure}[6]{r}{0.33\textwidth}
+  \vspace{-6mm}
+  \includegraphics[trim=0 45 0 0,clip,width=0.33\textwidth]{Figures/4-gen-joint-pair-constr}
 \end{wrapfigure}
 
-A joint pair constraint is created by using the {\sl Type} keyword
+A joint pair constraint is created by \newline using the {\sl Type} keyword
 {\tt HIGHER\_PAIR} and by specifying the two joints and DOFs to be coupled
 in the {\sl Definition} field, as in the example shown to the right.
 The transmission ratio between the two joint DOFs is specified using the
@@ -577,8 +584,8 @@ which is the basis for computing the friction force.
 For a detailed description of friction behavior,
 see the \FedemTGuide{Section 6.5, "Joint friction"}.
 
-\begin{wrapfigure}[8]{r}{0.55\textwidth}
-  \vspace{-4mm}
+\begin{wrapfigure}[6]{r}{0.5\textwidth}
+  \vspace{-5mm}
   \includegraphics[width=0.5\textwidth]{Figures/4-Friction}
 \end{wrapfigure}
 
@@ -595,7 +602,7 @@ properties in the Property Editor panel. Each type of friction has a different
 image and parameters associated with it. The figure below shows the
 Property Editor panel with prismatic joint friction selected.
 
-\clearpage\noindent
+\vskip2mm\noindent
 \includegraphics[width=\textwidth]{Figures/friction properties panel}
 
 To edit the friction, enter new values for each of the friction parameters
@@ -797,11 +804,11 @@ springs, respectively), see \refSection{advanced-spring-characteristics}
 The four basic spring characteristics types are:
 
 \begin{itemize} \setlength\itemsep{0.2em}
-  \item Force - Translation
-  \item Torque - Rotation
-  \item Stiffness - Translation
-  \item Stiffness - Rotation
-  \end{itemize}
+\item Force - Translation
+\item Torque - Rotation
+\item Stiffness - Translation
+\item Stiffness - Rotation
+\end{itemize}
 
 \subsubsection{\sl\textbf{Force-Translation/Torque-Translation}}
 
@@ -964,12 +971,15 @@ of the Spring objects.
 
 \vskip\parskip
 \IconsText{force}{torque}{
-  Two types of loads can be applied to triads or parts: forces and torques.
-  Both types are applied as point-force vectors on FE nodes. These loads can be
-  used to introduce motion into your mechanism. During simulation, the magnitude
-  of forces and torques can be constant or controlled by functions
-  (see \refSection{functions}{Functions}). When creating them,
-  it is possible to add a load directly to an existing triad or to an FE node.}
+  Two types of loads can be applied to triads or parts: Forces and Torques.
+  Both load types are applied as point-force vectors on FE nodes.
+  The loads can be used to introduce motion into your mechanism.
+  During simulation, the magnitude of forces and torques can be constant
+  or controlled by functions (see \refSection{functions}{Functions}).}
+
+When creating load objects, it is possible to add a load directly to an
+existing Triad, or to any FE node on a Part. In the latter case,
+a new Triad will be created and attached to the Part on the chosen FE node.
 
 
 \SubSection{Load symbols}{load-symbols}
@@ -996,60 +1006,74 @@ Property Editor panel (shown below).
 Select the force or torque to show its properties.
 
 \noindent
-\begin{picture}(243,100)
-  \put(0,0){\includegraphics[width=\textwidth]{Figures/force property editor panel}}
-  \put(35,82){\Bullet{1}}
-  \put(50,63){\Bullet{2}}
-  \put(150,85){\Bullet{3}}
-  \put(102,55){\Bullet{4}}
-  \put(102,33){\Bullet{5}}
-  \put(-50,-72){\includegraphics[width=7mm]{Figures/mouse}}
-  \put(-50,-185){\includegraphics[width=7mm]{Figures/eyes}}
+\begin{picture}(343,90)
+  \put(0,0){\includegraphics[width=\textwidth]{\ReferenceImg/prp/load-1}}
+  \put(45,82){\Bullet{1}}
+  \put(70,54){\Bullet{2}}
+  \put(170,82){\Bullet{3}}
+  \put(108,43){\Bullet{4}}
+  \put(219,45){\Bullet{4}}
+  \put(324,45){\Bullet{4}}
+  \put(108,21){\Bullet{5}}
+  \put(219,23){\Bullet{5}}
+  \put(324,23){\Bullet{5}}
+  \put(219,69){\Bullet{6}}
+  \put(324,69){\Bullet{6}}
+  \put(313,-72){\includegraphics[trim=8 5 8 6,clip,width=5mm]{Figures/mouse}}
+  \put(-50,-138){\includegraphics[width=7mm]{Figures/mouse}}
+  \put(-50,-179){\includegraphics[width=7mm]{Figures/eyes}}
 \end{picture}
 
 \begin{bulletlist}
   \setlength\itemsep{1mm}
 
 \item{\sl Magnitude} --
-  To change the load magnitude, enter a constant value or select one from the
-  list of functions in your model (see \refSection{functions}{Functions}).
+  To change the load magnitude, enter a constant value or select from the
+  list of functions (see \refSection{functions}{Functions}).
 
-\item{\sl Load Target Point} --
-  The point is given in either global or local coordinates.
+\item{\sl Load target point} --
+  The point is given either in global coordinates, \newline
+  or in local coordinates with respect to the Part the load is attached to.
   You can also select a new target point using the \textbf{Mouse} button
-  (see \refSection{target-point}{Target point} below).
+  (~~~~~), see \refSection{target-point}{Target point} below.
 
 \item{\sl Direction} --
   The {\sl From} and {\sl To} options allow you to edit the orientation of the
   load vector (see \refSection{direction}{Direction} below).
 
 \item
-  You can select a new point for the {\sl Load Target Point}, or {\sl From}
-  or {\sl To Directions} using the \textbf{Mouse} buttons
- (then select a new point in the {\sl Modeler} view).
+  You can select a new {\sl Load target point}, and change the {\sl From} and
+  {\sl To} points for the load {\sl Direction} using the \textbf{Mouse} buttons.
+  The new point is then selected in the {\sl Modeler} view.
 
 \item
   You can click and hold down any of the \textbf{View} buttons in the Property
   Editor panel to highlight the corresponding point in the {\sl Modeler} view.
+
+\item
+  Click and hold down these \textbf{View} buttons to highlight the Part or
+  Triad defining the load direction in the {\sl Modeler} view.
 \end{bulletlist}
 
 
 \SubSection{Target point}{target-point}
 
 \IconTextFirst{../mouse}{
-  To specify a new target point, click the \textbf{Mouse} button and use the
-  cursor to select a part in the {\sl Modeler} view.
-  If the target point does not coincide with an FE node, the target point will
-  snap to the closest node. Press \textbf{Done} to confirm the selection.
-  A triad is created at that position.}
+  To specify a new target point, click the \textbf{Mouse} button and
+  select a Part in the {\sl Modeler} view.
+  If the clicked point does not coincide with an FE node, it will
+  snap to the closest node in the selected Part.
+  Press \textbf{Done} to confirm the selection.
+  A triad is created at that position.
+  You may also select an existing Triad which is not attached to a Part.}
 
 \SubSection{Direction}{direction}
 
 \RightFigure{4-Direction-text}{
-  The direction of the input load vector can be specified by two points moving
-  together with the selected parts, or by two fixed points given
+  The direction of the load vector can be specified by two points moving
+  together with the selected Parts or Triads, or by two fixed points given
   in global coordinates. The direction is given by the vector pointing
-  from the {\sl From} point to the {\sl To} point (shown at right).}
+  from the {\sl From} point to the {\sl To} point, as shown to the right.}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1683,7 +1707,7 @@ where $t=v-v_0$ and $\omega=\frac{\pi}{2}\frac{A_{max}}{V_{max}})$
 
 \noindent
 \begin{minipage}{0.45\textwidth}
-  \includegraphics[width=\textwidth]{Figures/4-Functions_SmoothTrajectory.png}
+  \includegraphics[width=\textwidth]{Figures/4-Functions_SmoothTrajectory}
 \end{minipage}%
 \begin{minipage}{0.55\textwidth}
   $v_0$ -- start abscissa value (delay) \\
