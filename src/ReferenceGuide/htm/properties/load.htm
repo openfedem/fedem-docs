@@ -1,0 +1,69 @@
+<!doctype html public "-//ietf//dtd html//en">
+<!---
+  SPDX-FileCopyrightText: 2023 SAP SE
+
+  SPDX-License-Identifier: Apache-2.0
+
+  This file is part of FEDEM - https://openfedem.org
+--->
+
+<html>
+<head>
+<link rel="stylesheet" href="/css/hhstyle.css" type="text/css">
+<script language="javascript" src="/script/syncurl.js"></script>
+</head>
+<body>
+
+<h5>
+<table width="100%" bgcolor="#3399cc" border="0" cellspacing="0" cellpadding="3"><tr><td>
+<img src="../../img/top1.png" width="200" height="16">
+</td></tr></table>
+</h5>
+
+<h1><a name="_load"></a>Load</h1>
+
+<p>The Load object is used to introduce motion in a FEDEM model
+through an external force.
+There are two types of loads in FEDEM:
+Forces (for translational motion) and Torques (for angular motion).
+The load is applied on a <a href="triad.htm">Triad</a> which can either be
+attached to a <a href="part.htm">Part</a> or a <a href="beam.htm">Beam</a>,
+or exist as an unattached triad connected to an axial
+<a href="spring.htm">Spring</a> and/or <a href="damper.htm">Damper</a>.</p>
+
+<p><img src="../../img/prp/load-1.png"></p>
+
+<p>The figure above illustrates the Load properties,
+which consist of the following items:</p>
+
+<p><table border="1">
+<tr bgcolor="#dbe5f1"><td><b>Name:</b></td><td><b>Description:</b></td></tr>
+<tr><td>Magnitude</td><td>In this field you can either enter a constant load
+value or select a <a href="function.htm">Function</a> from the pull-down list.
+<tr><td>Load target point</td><td>These fields display the coordinates of the
+Triad where the load attacks, referred to either the <i>Global</i> axes,
+or the <i>Local</i> axes of the Part the Triad is attached to.
+Click the
+<img src="../../img/icons/mouse.png" width="20" height="15">
+button to select a new load target point in the <i>Modeler</i> view.
+Click and hold the
+<img src="../../img/icons/eyes.png" width="20" height="15">
+button to highlight the load target point in the <i>Modeler</i> view.</td></tr>
+<tr><td>Direction</td><td>These fields are used to define the direction
+of the load. It is specified as the vector through two given points,
+<i>From</i> and <i>To</i>. Click the
+<img src="../../img/icons/mouse.png" width="20" height="15">
+buttons to select the <i>From</i> and <i>To</i> points.
+Click and hold the lower
+<img src="../../img/icons/eyes.png" width="20" height="15">
+buttons to highlight the currently used points in the <i>Modeler</i> view.
+Click and hold the upper
+<img src="../../img/icons/eyes.png" width="20" height="15">
+buttons to highlight the object (Part, Triad or Reference plane),
+the selected point is attached to.
+You may also type in the coordinate fields to adjust the point locations.
+</td></tr>
+</table></p>
+
+</body>
+</html>

@@ -60,6 +60,10 @@
 			<param name="Local" value="htm\properties\graph.htm">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Load">
+			<param name="Local" value="htm\properties\load.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="Material">
 			<param name="Local" value="htm\properties\material.htm">
 			</OBJECT>
