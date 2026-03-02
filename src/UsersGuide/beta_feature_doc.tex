@@ -27,15 +27,15 @@ These features are typically available through commands or options
 entered in the description field of an entity's property panel.
 This means to enter the special character {\tt\#} followed by a keyword and
 possibly some values into the description field along with the user description,
-like in the example shown below. See also
-\refSection{property-editor}{Property Editor}.
+like in the example shown below.
+See also \refSection{property-editor}{Property Editor}.
 
 \includegraphics[width=0.9\textwidth]{Figures/F-PropertyPanel}
 
 Due to the Beta nature of the features, they should be used with some care.
 The present way of accessing these features through the options or commands in
 the description field is subject to change, or no longer being supported,
-in future releases. However, most of the features listed here will be supported
+in future releases. However, many of the features listed here will be supported
 in a more "permanent" fashion in future releases.
 
 Sections in this appendix address the following topics:
@@ -728,34 +728,37 @@ whereas $w(t)=1$ for $|t-t_0|<r_1T_p$ and $|t-t_0|>r_2T_p$.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \Section{Result output control}{result-output-control-2}
 
-Simulating large models over long time series will generate a lot of
-results data. Users may then be interested in the results for only a few
-objects of a certain type, in order to reduce the size of the result
-database files. To facilitate such output selection, the options
-{\tt-allPrimaryVars-} and {\tt-allSecondaryVars-} may be specified
-as additional solver options for the Dynamics Solver
-\refSection{additional-solver-options}{Additional solvercoptions} to switch off
-all output of primary and secondary solution variables, respectively.
+Simulating large models over long time series will generate a lot of results.
+Users may then be interested in the results data for only a few objects of a
+certain type, in order to reduce the size of the result database files.
 
-The following two description field commands are then provided to enable
-output for specific objects:
+To facilitate such output selection, {\tt-allPrimaryVars-}
+may be specified as additional option for the Dynamics Solver (see
+\refSection{additional-solver-options}{Additional solver options}),
+to switch off all output of primary solution variables.
+The following description field command is then provided for specific objects:
 
 \LinkFormatText{\#savePos}
 
 \noindent
 This command enables saving of the position matrix for Triads, Parts and
 Beam objects in the model when {\tt-allPrimaryVars-} is used.
-It has no effect for other object types.
+It has no effect for the other object types.
+
+The easiest way to request output of all secondary variables in the model is
+to specify {\tt-allSecondaryVars} as additional option for the Dynamics Solver,
+if the size of the results database is of no concern.
+However, requesting output of only a subset of the available variables on only
+a few objects may be done through the following description field command:
 
 \LinkFormatText{\#savevar \Variable{f1}  \Variable{f2} ... \Variable{fn}}
 
 \noindent
 where the {\tt\Variable{f\sl i}} flags have the value 0 or 1 indicating whether
 a certain variable is to be saved for that object or not.
-This command is effective when the option {\tt-allSecondaryVars-} is used.
-The number of flags in the {\tt\#saveVar} command varies depending on the type
-of object it is used for. The flags have the interpretation as shown in the
-following for the different object types.
+The number of flags in the {\tt\#saveVar} command varies depending on
+the type of object it is used for. The interpretation of the flags
+for different object types is given in the following.
 
 
 \SubSection{Triads}{triads-1}
@@ -889,15 +892,17 @@ see \refSection{id-and-topology-panel}{ID and Topology panel}.
   Model description field of the Model Preferences dialog box, see
   \refSection{model-preferences}{Model preferences}.}
 
+\clearpage
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \Section{Undocumented features}{undocumented-features}
 
 In addition to the description field commands discussed in the above sections,
 there also exists another set of commands without any further documentation.
-They are used for features that are still under testing, or as a back-door for
-some special-purpose features. For the sake of completeness,
-these commands are listed in the table below.
+They are used for features that are still under development or testing,
+or as a back-door for some special-purpose features.
+For the sake of completeness, these commands are listed in the table below.
 
 \Warning{Do not use any of these commands unless you know what you are doing.
   If you encounter a Fedem model file where one or more of them are being used,
@@ -909,76 +914,94 @@ these commands are listed in the table below.
   \rowcolor[HTML]{EFEFEF}
   \rule{0pt}{15pt} Command & Object Type & Comment \\
   \hline\hline
-  {\tt\#Displace}  & FE Part & Support for sub-model analysis \\
+  {\tt\#UseEngines} & Mechanism & Applied in Model Preferences \\
   \hline
-  {\tt\#LocalDofs} & Free Joint & \\
+  {\tt\#waveTheory} & Mechanism & Applied in Model Preferences \\
   \hline
-  {\tt\#RefTriads} & FE Part & \\
+  {\tt\#Displace}      & FE Part & Support for sub-model analysis \\
   \hline
-  {\tt\#TetGen}    & FE Part & \\
+  {\tt\#Fixed}         & FE Part & \\
   \hline
-  {\tt\#BALL\_FRICTION}  & Rotational Friction & \\
-  {\tt\#BALL\_FRICTION2} &                     & \\
+  {\tt\#PrintSupelDef} & FE Part & \\
   \hline
-  {\tt\#EndTime}      & Mechanism & Applied in Model Preferences \\
+  {\tt\#Projection}    & FE Part & \\
   \hline
-  {\tt\#ModalDamping} & Mechanism & Applied in Model Preferences \\
+  {\tt\#RefTriads}     & FE Part & \\
   \hline
-  {\tt\#waveTheory}   & Mechanism & Applied in Model Preferences \\
+  {\tt\#TetGen}        & FE Part & \\
   \hline
-  {\tt\#Drag} & Generic Part & \\
+  {\tt\#Bodygroup}       & Generic Part & \\
   \hline
-  {\tt\#Slam} & Generic Part & \\
-  \hline
-  {\tt\#Bodygroup} & Generic Part & \\
+  {\tt\#Drag}            & Generic Part & \\
   \hline
   {\tt\#DragTX \#DragTY} &              & \\
   {\tt\#DragTZ \#DragRX} & Generic Part & \\
   {\tt\#DragRY \#DragRZ} &              & \\
   \hline
-  {\tt\#PrintSupelDef} & FE Part & \\
+  {\tt\#Slam}            & Generic Part & \\
   \hline
-  {\tt\#Fixed Part}    & & \\
-  \hline
-  {\tt\#Projection}    & FE Part & \\
-  \hline
-  {\tt\#Version}       & Joint(any type) & \\
-  \hline
-  {\tt\#BallFriction}  & Ball Joint & \\
-  \hline
-  {\tt\#PipeRadius} & & \\
-  {\tt\#OuterPipeRadius} & Friction & DrillSim support \\
-  \hline
-  {\tt\#HydroFric} & & \\
-  {\tt\#SkinFric}  & & \\
-  {\tt\#RadFric}   & Friction & DrillSim support \\
+  {\tt\#LocalAxis} & Triad & For pre-R7.3 compatibility \\
   \hline
   {\tt\#ShowDir}   & Triad & \\
   \hline
+  {\tt\#SysDir}    & Triad & \\
+  \hline
   {\tt\#DragTX \#DragTY \#DragTZ} & Triad & \\
   \hline
-  {\tt\#FlipWCaxis} & Tire & \\
+  {\tt\#Acceleration \#Velocity} & Spring & Prescribed motion \\
   \hline
-  {\tt\#Old}    & Wave function    & User-defined wave spectrum \\
+  {\tt\#LocalDofs}    & Free Joint & \\
+  \hline
+  {\tt\#BallFriction} & Ball Joint & \\
+  \hline
+  {\tt\#Version}      & Joint (any type) & \\
+  \hline
+  {\tt\#OuterPipeRadius \#PipeRadius}   & Friction & DrillSim support \\
+  \hline
+  {\tt\#HydroFric \#RadFric \#SkinFric} & Friction & DrillSim support \\
+  \hline
+  {\tt\#BALL\_FRICTION \#BALL\_FRICTION2} & Rotational Friction & \\
+  \hline
+\end{tabular}
+\begin{tabular}{|>\raggedright p{0.23\textwidth} | p{0.26\textwidth} | p{0.4\textwidth}|}
+  \hline
+  \rowcolor[HTML]{EFEFEF}
+  \rule{0pt}{15pt} Command & Object Type & Comment \\
+  \hline\hline
+  {\tt\#FlipWCaxis \#ISWTCH \#MirrorTChar \#SteadyState} & Tire & \\
+  \hline
+  {\tt\#radialDamp \#radialStiff} & Tire & \\
+  \hline
+  {\tt\#RoadXengId \#RoadYengId \#RoadZengId} & Road & \\
+  \hline
+  {\tt\#Params}   & User-defined element & \\
+  \hline
+  {\tt\#Property} & User-defined element & \\
+  \hline
+  {\tt\#Engine}   & User-defined element & \\
+  \hline
+  {\tt\#Morison}  & User-defined element & \\
+  \hline
+  {\tt\#Old}      & Wave function   & User-defined wave spectrum \\
+  \hline
+  {\tt\#JONSWAP \#PiersonMoskowitz} & General function & \\
+  \hline
+  {\tt\#EndTime} & General function &  \\
+  \hline
+  {\tt\#ModalDamping} & General function & \\
   \hline
   {\tt\#ramp}   & General function & Only for function type Constant \\
   \hline
-  {\tt\#Params} & User-defined element & \\
+  {\tt\#noramp} & General function & Switch off initial ramping \\
   \hline
-  {\tt\#Property}  & User-defined element & \\
-  \hline
-  {\tt\#Engine}    & User-defined element & \\
-  \hline
-  {\tt\#Morison}   & User-defined element & \\
-  \hline
-  {\tt\#Wear}      & Graph & \\
-  \hline
-  {\tt\#skipBlade} & Animation & \\
+  {\tt\#Wear}   & Graph & \\
   \hline
   {\tt\#Model}  & Graph & \\
   \hline
   {\tt\#PVX}    & Curve & \\
   \hline
   {\tt\#noClip} & Curve & \\
+  \hline
+  {\tt\#skipBlade} & Animation & \\
   \hline
 \end{tabular}}
