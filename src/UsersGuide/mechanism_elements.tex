@@ -1755,19 +1755,16 @@ A special type of function definitions are the {\sl Time history input file}
 object. This object behaves essentially as a function of time, but is optimized
 to be used for input of time history data from an external files.
 
-\subsubsection{Creating}
-
 \begin{wrapfigure}[5]{r}{0.35\textwidth}
   \vspace{-5mm}
-  \center\includegraphics[width=0.3\textwidth]{Figures/4-TimeHistoryInputFile}
+  \includegraphics[width=0.35\textwidth]{Figures/4-TimeHistoryInputFile}
 \end{wrapfigure}
 
 To create a {\sl Time history input file} object, right click in the
 Model Manager {\sl Objects} list, select \textbf{Create} and
-\textbf{Time history input file}. A new object will then be created and
-its properties are displayed in the Property Editor panel.
-
-\subsubsection{Properties}
+\textbf{Time history input file}, as shown to the right.
+A new object will then be created and its properties are displayed
+in the Property Editor panel.
 
 The behavior and options for this object is the same as for the
 \protect\hyperlink{polyline-from-file}{\sl Polyline from file} function type,
@@ -1801,7 +1798,7 @@ processed by a function and used in the model or a control system (see
 \refSection{functions}{Functions} and
 \refChapter{control-system-modeling}{Control System Modeling}).
 
-There are two types of sensors, simple sensors and relative sensors:
+There are two main types of sensors, simple sensors and relative sensors:
 
 
 \SubSection{Simple sensors}{simple-sensors}
@@ -1813,22 +1810,28 @@ There are two types of sensors, simple sensors and relative sensors:
   When an object is tagged with a sensor, it will appear in the {\sl Argument}
   drop-down menu in Functions and the {\sl Input} menu in Control Inputs.
   In addition a 3D symbol will be created to show that this
-  particular object is being measured. The symbol for a simple sensor is
-  displayed in the {\sl Modeler} view as shown to the right.
+  particular object is being measured.
 }{Figures/4-SimpleSensor}
-
-
+\newline The symbol for a simple sensor is displayed in the {\sl Modeler} view,
+\newline as shown to the right.
+  
 \SubSection{Relative sensors}{relative-sensors}
 
 \vskip\parskip
 \IconTextFigure{relativeSensor}{
-  {\sl Relative sensors} are used to tag two triads in order to extract relative
-  measurements from them. The sensor will be displayed in the {\sl Argument}
-  drop-down menu in Functions and the {\sl Input} menu in Control
+  {\sl Relative sensors} are used to tag two (or four) triads in order to
+  extract relative measurements from them. The sensor will be displayed in the
+  {\sl Argument} drop-down menu in Functions and the {\sl Input} menu in Control
   Inputs. The symbol for a relative sensor is displayed in the
-  {\sl Modeler} view as shown to the right.
+  {\sl Modeler} view, as shown to the right.
 }{Figures/4-RelativeSensor}
 
+If four triads are tagged in a relative sensor, the sensor will measure the
+angle between the two vectors defined by the first and third triad, and the
+second and fourth triad, respectively.
+The first and second triad may in this case be colocated or be the same triad.
+Similarly, the third and fourth triad may be the same or colocated, if the first
+and second triads at the same time are at different locations.
 
 \SubSection{Managing sensors}{managing-sensors}
 
