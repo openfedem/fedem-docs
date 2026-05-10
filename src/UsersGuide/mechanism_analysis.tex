@@ -49,7 +49,7 @@ Sections in this chapter address the following topics:
                     {Strain coat analysis}
 \item
   \protect\hyperlink{direct-linear-analysis-of-fe-parts}
-                    {Direct linear analysis of FE Parts}
+                    {Direct linear analysis of FE parts}
 \item
   \protect\hyperlink{interaction-during-processing}
                     {Interaction during processing}
@@ -86,7 +86,7 @@ parts and other mechanism elements.
 
 Fedem uses a Component Mode Synthesis (CMS) model reduction method that replaces
 the internal nodal DOFs with a set of static and component modes.
-The model reduction process for each part generates superelement mass- and
+The model reduction process for each FE part generates superelement mass- and
 stiffness matrices, which are then assembled into the system mass and stiffness
 matrices in the dynamics simulation.
 See the \FedemTGuide{Chapter 3, "Model Reduction"}
@@ -204,24 +204,24 @@ To specify the parameters for modal analysis, see
 \SubSection{Stress recovery}{stress-recovery-1}
 
 After performing the dynamics analysis,
-a stress analysis can be conducted on the mechanism.
+a stress recovery can be conducted on the mechanism.
 The stresses, strains and elastic displacements can then be calculated at
 different time steps and/or mechanism positions of the dynamics analysis.
 See the \FedemTGuide{Section 9.4, "Finite element stress analysis"}
-for more information about the stress analysis.
+for more information about the stress recovery calculations.
 See \refSection{stress-recovery-analysis}{Stress recovery analysis}
-to setup and perform the stress analysis.
+to setup and perform the stress recovery.
 
 \clearpage
 
 
 \subsection{Mode shape recovery}
 
-A mode shape recovery analysis enables you to expand the system mode shapes
+A mode shape recovery enables you to expand the system mode shapes
 calculated during the dynamics simulation.
 These mode shapes can later be animated.
 See \refSection{mode-shape-recovery-analysis}{Mode shape recovery analysis}
-to setup and perform the mode shape analysis.
+to setup and perform the mode shape recovery.
 
 
 \subsection{Strain rosette recovery}
@@ -230,30 +230,30 @@ Fedem enables you to recover strains and stresses from virtual strain gages
 which are defined in a separate file.
 The results are similar to those from real strain gages.
 See the \FedemTGuide{Section 9.5, "Virtual strain gauges"}
-for more information about the strain rosette analysis.
+for more information about the strain rosette recovery calculations.
 See \refSection{strain-rosette-analysis-1}{Strain rosette analysis}
-to setup and perform the strain rosette analysis.
+to setup and perform the strain rosette recovery.
 
 
 \subsection{Strain coat recovery}
 
 The strain coat recovery process calculates the stresses and strains
 on the strain coat elements in the model,
-in a similar manner as in the strain rosette analysis.
+in a similar manner as in the strain rosette recovery.
 This is primarily used as input for subsequent fatigue calculations.
 See \refSection{strain-coat-analysis-1}{Strain coat analysis}
-to setup and perform the strain coat analysis.
+to setup and perform the strain coat recovery.
 
 
 \subsection{Linear analysis}
 
 Instead of doing a full dynamics simulation with subsequent recovery,
 it is also possible to perform a direct linear FE analysis on individual parts.
-This is handy if you only want to asses the static properties of a part before
-using it in a larger mechanism simulation.
+This is handy if you only want to asses the static properties of an FE part
+before using it in a larger mechanism simulation.
 The loads and boundary conditions then need to be defined in the FE model file.
 See \refSection{direct-linear-analysis-of-fe-parts}
-{Direct linear analysis of FE Parts} to perform such linear analyses.
+{Direct linear analysis of FE parts} to perform such linear analyses.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -425,7 +425,7 @@ from the respective setup dialog boxes or the various Property Editor panels.
     You can set the maximum number of concurrent processes that will be run
     during a simulation task. This is useful if you have a multi-processor
     machine and want to run several part reductions or recovery processes
-    parallel.
+    in parallel.
   \item
     You can fine-tune the memory usage of the FE model Reducer through
     these options. See
@@ -465,9 +465,9 @@ from the respective setup dialog boxes or the various Property Editor panels.
   may already have been provided to the corresponding solver
   through their respective setup dialog boxes. Specifying any such option also
   in the Additional Solver Options dialog box will then override the setting in
-  the solver-specific dialog box and should therefore be avoided.}
-  %Consult Fedem technical support if you are in doubt
-  %on the usage of a particular command-line option.}
+  the solver-specific dialog box and should therefore be avoided.
+  Consult the OpenFEDEM team if you are in doubt
+  on the usage of a particular command-line option.}
 
 \Note{If you mis-spell a command-line option in the Additional Solver Options
   dialog box, or specify options that do not exist, the solver process will run
@@ -578,10 +578,10 @@ non-existing directory, they are placed in the directory
 
 \SubSection{Part- and group-wise solving}{part-and-group-wise-solving}
 
-Fedem has the capability of running some of its solvers on individual
-parts of the mechanism (FE Parts and element groups). This is beneficial
-when dealing with big models where the solver execution may be both
-time- and disc space consuming.
+Fedem has the capability of running its solvers also on individual parts of the
+mechanism (FE parts and element groups).
+This is beneficial when dealing with big models containing a large number of
+FE parts, where the solver execution may be both time- and disc-space consuming.
 
 \Note{These solver tasks act upon each part independently, and do not affect
   the global response in any way. The user is encouraged to identify critical
@@ -594,14 +594,16 @@ time- and disc space consuming.
 \noindent
 \begin{minipage}{0.45\textwidth}
   \raggedright
-  Solver processes that may be run on parts individually are: Linear Analysis,
-  Reducer, Stress recovery, Strain Rosette recovery and Strain Coat recovery.
-  A part-wise solve process is started by right-clicking on a Part in the
+  All the solver processes listed in
+  \refSection{overview-of-fedem-analyses}{Overview of Fedem analyses}
+  may be run on FE parts, except for the Dynamics analysis which only operates
+  on the global mechanism assembly.
+  A part-wise solve process is started by right-clicking on an FE part in the
   {\sl Objects} list of the Model Manager panel, choosing \textbf{Solve},
   and then the wanted process (see illustration to the right).
-  You may also multi-select parts in the {\sl Objects} list to solve for two or
-  more parts simultaneously. As always, when trying to run the Reducer,
-  a part will only be reduced if necessary.
+  You may also multi-select Parts in the {\sl Objects} list to solve for two or
+  more FE parts simultaneously. As always, when trying to run the Reducer,
+  an FE part will only be reduced if necessary.
 \end{minipage}%
 \hfill\begin{minipage}{0.5\textwidth}
   \includegraphics[width=\textwidth]{Figures/6-LinkwiseSolve}
@@ -679,7 +681,7 @@ simultaneously running reduction or recovery processes.
 
 The FE model reduction process requires no user setup apart from the settings
 found in the \protect\hyperlink{reduction-options-tab}
-{\sl Reduction Options tab} of the Property Editor panel for each part
+{\sl Reduction Options tab} of the Property Editor panel for each Part
 (see \refSection{part-properties}{Part properties}).
 Some of these options are discussed in further detail in the sub-sections below.
 
@@ -857,8 +859,8 @@ for bad elements if you get warnings on negative pivots.
 \SubSection{Eigenvalue analysis of the reduced parts}
            {eigenvalue-analysis-of-the-reduced-parts}
 
-To assess the dynamic properties of the reduced FE part matrices,
-you can perform an eigenvalue analysis of the reduced system, i.e.
+To assess the dynamic properties of the resulting superelement matrices,
+you can perform an eigenvalue analysis of the reduced system, i.e.,
 $$\left({\bf K} - \omega^2{\bf M}\right)\mbox{\boldmath$\phi$} = {\bf 0}$$
 where \textbf{K} and \textbf{M} denote the reduced stiffness and mass matrices.
 Since the reduced system does not include any constrained DOFs\footnote{
@@ -1314,12 +1316,12 @@ following parameters:
   A tensile membrane/axial force will effectively increase the
   bending/rotational stiffness and a compressive force will reduce the
   bending/rational stiffness. For information on the computation of the
-  geometric stiffness on parts, see the
+  geometric stiffness on FE parts, see the
   \FedemTGuide{Section 4.4, "Superelement tangent stiffness".}
 
   The centripetal moment correction option enables an improved representation of
-  the inertia forces on parts with only a few Triads that experience high-speed
-  rotations (see the
+  the inertia forces on FE parts with only a few Triads that experience
+  high-speed rotations (see the
   \FedemTGuide{Section 3.3, "Inertia forces and high-speed rotation"}
   for details).
 \end{bulletlist}
@@ -1581,8 +1583,8 @@ This file may then be opened in the Ceetron GLview software for further viewing
 
 Only curves plotting results produced by the Dynamics Solver can be exported
 in this manner. If you need to include curves with results from other Fedem
-simulations in the same output file (e.g., results from subsequent strain
-rosette analyses), you have to run the Fedem Curve Export Utility module instead
+simulations in the same output file (e.g., results from subsequent Strain
+Rosette analyses), you have to run the Fedem Curve Export Utility module instead
 (see \refSection{automated-curve-export-from-multiple-result-database-files}
                 {Automated curve export from multiple result database files}).
 
@@ -1897,7 +1899,7 @@ It is possible to perform recovery of internal displacements and stresses
 (von Mises stress only) for FE parts during the dynamics simulation itself,
 instead of doing it as separate processes after the dynamics simulation process
 is finished as described in \refSection{stress-recovery-1}{Stress recovery}.
-Similarly, strain rosette recovery can also be performed
+Similarly, the strain rosette recovery can also be performed
 during the dynamics simulation. This has the great advantage that you
 can monitor these results while the dynamics simulation is still running.
 
@@ -1910,12 +1912,12 @@ To activate recovery during simulation, use the appropriate toggles in the
 \protect\hyperlink{advanced-tab}{\sl Advanced tab} of the Property Editor panel
 for the Part in question (shown at right, see also
 \refSection{part-properties}{Part properties}). You may enable one
-or both of these toggles to activate such recovery during for an FE Part,
+or both of these toggles to activate such recovery during for an FE part,
 and can also enable them for several parts in a multi-part model.
 
 Enabling strain rosette recovery during dynamics simulation will, of course,
-have no effect unless strain rosette objects have been defined on that FE part.
-If any of the strain rosette objects on the selected FE part are used as
+have no effect unless Strain Rosette objects have been defined on that FE part.
+If any of the Strain Rosette objects on the selected FE part are used as
 Argument in a Function (see \refSection{functions}{Functions}), this toggle
 will be automatically enabled for that part when the Dynamics Solver is started.
 
@@ -2091,7 +2093,7 @@ double precision (64-bit real) by using the {\tt-double} solver option.
   simulation, you can start the stress recovery by clicking the
   \textbf{Recover Stress} button on the \textbf{Solvers} tool bar (or from the
   \textbf{Solve} menu). You may also run the stress recovery on a selection
-  of parts or on individual element groups, see
+  of FE parts or on individual element groups, see
   \refSection{part-and-group-wise-solving}{Part- and group-wise solving}.}
 
 \Note{If element calculations fail during stress recovery analysis,
@@ -2133,7 +2135,7 @@ perform the dynamics analysis and then the mode shape recovery analysis.
     Inserts selected mode shape for the selected time into the results list.
 
   \item{\sl Mode shapes to recover:} --
-    List of selected mode shapes to expand during postprocessing
+    List of selected mode shapes to expand during post-processing
     (sorted by mode number).
 
   \item\textbf{Delete} button --
@@ -2176,11 +2178,13 @@ perform the dynamics analysis and then the mode shape recovery analysis.
 
 \IconTextFirst{modes}{
   Once you have set up the mode shape recovery options and performed the
-  dynamics simulation, you can post process the modes at the selected times
+  dynamics simulation, you can post-process the modes at the selected times
   by clicking the \textbf{Recover Mode Shapes} button on the \textbf{Solvers}
-  tool bar (or from the \textbf{Solve} menu).}
+  tool bar (or from the \textbf{Solve} menu).
+  You may also run the mode shape recovery on a selection of parts, see
+  \refSection{part-and-group-wise-solving}{Part- and group-wise solving}.}
 
-When Fedem has postprocessed all the selected modes, you can animate the
+When Fedem has post-processed all the selected modes, you can animate the
 mode shapes (see \refSection{animations}{Animations} for more information).
 
 
@@ -2252,7 +2256,11 @@ principal stresses/strains, and angle of max/min. principals.
   Once you have set up the strain rosette recovery options and performed the
   dynamics simulation, you can start the strain rosette recovery by clicking the
   \textbf{Recover Strain Rosettes} button on the \textbf{Solvers} tool bar
-  (or from the \textbf{Solve} menu).}
+  (or from the \textbf{Solve} menu).
+  You may also run the strain rosette recovery on a selection of parts,
+  see \refSection{part-and-group-wise-solving}{Part- and group-wise solving}.
+  This command will ignore parts which do not have any Strain Rosette objects
+  defined on them.}
 
 
 \SubSection{Result output}{result-output}
@@ -2268,8 +2276,8 @@ nodal deformations in the strain rosettes to the \File{.frs} file, by specifying
 (see \refSection{additional-solver-options}{Additional solver options}).
 
 If enabled, a file named \File{rosette{\sl ID}\_gage{\sl n}.dac} is written
-for each strain gage, containing the strain of leg {\sl n} in strain rosette
-{\sl ID}. This file is output in the nCode DAC format.
+for each strain gage, containing the strain of leg {\sl n} in Strain Rosette
+object {\sl ID}. This file is output in the nCode DAC format.
 
 It is also possible to output the strain rosette result directly to ASCII files.
 By specifying {\tt-writeAsciiFiles} as an additional option to the
@@ -2423,15 +2431,15 @@ the result file hierarchy
 
 \SubSection{Generating strain coat}{generating-strain-coat}
 
-\begin{wrapfigure}[17]{r}{0.35\textwidth} \vskip-5mm
+\begin{wrapfigure}[20]{r}{0.35\textwidth} \vskip-6mm
   \includegraphics[width=0.35\textwidth]{Figures/6-GenerateStraincoat}
 \end{wrapfigure}
 
-Before you run the strain coat analysis, \newline you must generate
-strain coat elements for \newline the parts or element groups in question.
-This is done by right-clicking the
-parts or groups in the {\sl Objects} list of the Model Manager panel
-and selecting \textbf{Generate Strain Coat} from the menu.
+Before you run the strain coat analysis, you \newline must generate
+strain coat elements for the parts \newline or element groups in question.
+This is done by \newline right-clicking the parts or groups in the
+{\sl Objects} \newline list of the Model Manager panel and selecting \newline
+\textbf{Generate Strain Coat} from the menu. \newline
 Again, multi-selection is possible.
 
 One strain coat element is created for \newline each non-interior face of the
@@ -2444,7 +2452,7 @@ the same selection has no effect.
 When creating strain coat elements by selecting an element group the new
 strain coat elements are automatically added to that group.
 
-If a part is selected, the created strain coat elements are only added to the
+If a Part is selected, the created strain coat elements are only added to the
 implicit element groups which the parent finite element belongs to, not to any
 explicit element groups that the parent element might be a member of.
 Refer to \refSection{element-groups}{Element groups}
@@ -2524,7 +2532,7 @@ see \refSection{element-group-properties}{Element group properties}.
   the dynamics simulation, you can start the strain coat recovery by clicking
   the \textbf{Recover Strain Coat Summary} button on the \textbf{Solvers}
   tool bar (or from the \textbf{Solve} menu).
-  The Strain Coat Recovery is then performed on each part in the model
+  The Strain Coat Recovery is then performed on each FE part in the model
   containing strain coat elements.
   Parts without strain coat elements are automatically omitted.}
 
@@ -2543,7 +2551,7 @@ It is therefore no need to do this manually, as explained in
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\Section{Direct linear analysis of FE Parts}{direct-linear-analysis-of-fe-parts}
+\Section{Direct linear analysis of FE parts}{direct-linear-analysis-of-fe-parts}
 
 Instead of doing a full dynamic simulation with subsequent stress recovery,
 it is also possible to perform a direct linear FE analysis on individual parts.
@@ -2570,19 +2578,21 @@ A direct linear analysis can only be started as a Part-wise solve process, see
 \refSection{part-and-group-wise-solving}{Part- and group-wise solving}, since
 no coupling will exist between multiple parts in the model during the analysis.
 
-\begin{wrapfigure}[16]{r}{0.5\textwidth}
+\begin{wrapfigure}[18]{r}{0.5\textwidth}
   \includegraphics[width=0.5\textwidth]{Figures/6-SolveLinearAnalysis}
 \end{wrapfigure}
 
-Start the process by right-clicking on the part (or parts) in the {\sl Objects}
-list of the Model Manager panel, and choose \textbf{Solve} and then
-\textbf{Linear Analysis} from the menu (as shown to the right).
+Start the process by right-clicking on the FE part (or parts) in the \newline
+{\sl Objects} list of the Model Manager \newline panel,
+and choose \textbf{Solve} and then \newline \textbf{Linear Analysis}
+from the menu \newline (as shown to the right).
 
-The results of a linear analysis is only the displacement field, which then can
-be viewed in an Animation object. However, it is possible to also perform
-a Part-wise stress recovery on the same part afterwards, to compute stresses
-based on the computed displacement field. This stress recovery will perform the
-same simulation as the normal stress recovery process described in
+The results of a linear analysis is only the displacement field,
+which then can be viewed in an Animation object.
+However, it is possible to perform a part-wise stress recovery on the same part
+afterwards, to compute the stresses based on the computed displacement field.
+This stress recovery will perform the same simulation as the normal
+stress recovery process described in
 \refSection{stress-recovery-analysis}{Stress recovery analysis},
 except that the recovered displacements are read from a file instead of being
 computed from the system response of the dynamics simulation.
@@ -2697,7 +2707,7 @@ for the subsequent post-processing operations.
 
 If you need to export curve data from several result database files into
 a single output file (e.g., if you want curves from one or more Strain Rosette
-analyses exported to a single RPC-file or a multi-columns ASCII file),
+Recovery analyses exported to a single RPC-file or a multi-columns ASCII file),
 that can be done by executing the Fedem Curve Export Utility module after the
 necessary solver tasks have been completed.
 
@@ -3027,7 +3037,7 @@ directories named \File{event\_\#\#\#} and under each of them the normal
 response directories \File{response\_\#\#\#\#}, as described in
 \refSection{response-directory-structure}{Response directory structure}.
 
-It is possible to postprocess the simulation results (graph plotting and
+It is possible to post-process the simulation results (graph plotting and
 animation) for the active event only. Therefore, it is not possible to,
 for instance, define a graph where a result quantity from two different
 simulation events are compared. To do that, you will have to export the curves
