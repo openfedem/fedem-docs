@@ -15,7 +15,7 @@ if not exist "%PDFLATEX%.exe" (
 setlocal ENABLEDELAYEDEXPANSION
 
 REM Edit this line to match the location of your
-REM local clone of https://github.com/SAP/fedem-gui
+REM local clone of https://github.com/openfedem/fedem-gui
 set gui_dir=%USERPROFILE%\Fedem-src\fedem-gui
 
 set /a doTheory=0
