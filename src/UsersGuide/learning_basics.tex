@@ -292,7 +292,6 @@ starting with standard file functions, then continuing with viewing commands,
 mechanism modeling, control system modeling, analysis/solution tools,
 and finally results management.
 
-
 \subsubsection{Command sensitivity}
 
 Menu and tool bar buttons are sensitive to the active view and object
@@ -853,6 +852,7 @@ new model, or perform a \textbf{Save As...} command.
   \end{tabular}
 \end{minipage}
 
+
 \SubSection{Select}{select}
 
 To select items in your model, or points on objects as references for
@@ -933,6 +933,7 @@ in the {\sl Modeler view}.
 To select the ground during modeling,
 simply click anywhere on the Reference Plane.
 
+
 \SubSection{Done}{done}
 
 When executing a command in Fedem, the Guide panel prompts you to select
@@ -941,6 +942,7 @@ the \textbf{Done} button in the Guide panel to accept it.
 
 \Tip{You can also press the center mouse button within one of the Workspace
   views or the \textbf{Enter} key on the keyboard to accept the selection.}
+
 
 \SubSection{Cancel}{cancel}
 
@@ -1354,9 +1356,12 @@ and the appearance of individual Parts and the Reference Plane.
     The {\sl Polygons} and {\sl Lines} settings allow you to change
     the complexity of models displayed in the {\sl Modeler} view,
     (see \protect\hyperlink{level-of-detail}{\sl"Level of Detail"} below).
-    Changing these settings can improve the graphic performance of 3D rendering.
+    Changing these settings affects the graphic performance of 3D rendering.
   \item{\sl Color} --
     controls the RGB settings of the selected Part or Reference Plane.
+    The default color for a Part is picked from a configurable color palette
+    (see \protect\hyperlink{predefined-part-colors}{\sl"Predefined part colors"}
+    below).
   \item{\sl Material} --
     controls the shininess and transparency of the selected Part
     or Reference Plane.
@@ -1374,10 +1379,8 @@ and the appearance of individual Parts and the Reference Plane.
 
 \SubSubSection{Level of Detail}{level-of-detail}
 
-Polygons can be displayed at five levels of detail:
-Surface and Internals, Reduced Surface and Internals,
-Surface, Reduced Surface, and Off. The default level is Surface.
-
+Polygons can be displayed at the following five levels of detail:
+%
 \begin{enumerate}
 \item{\sl Surface and Internals} --
   With polygon detail set to Surface and Internals,
@@ -1401,10 +1404,10 @@ Surface, Reduced Surface, and Off. The default level is Surface.
 \item{\sl Off} --
   Setting the polygon detail to Off turns all polygons off.
 \end{enumerate}
-
-Lines can be displayed at six levels of detail: Full, Surface, Outline, Outline
-No 1D-elements, Simplified, and Off. The default level is Outline.
-
+%
+The default level of detail for polygons is {\sl Surface}. \newline
+Lines can be displayed at the following six levels of detail:
+%
 \begin{enumerate}
 \item{\sl Full} --
   With line detail set to Full, mesh lines from solid elements inside the parts
@@ -1430,10 +1433,57 @@ No 1D-elements, Simplified, and Off. The default level is Outline.
 \item{\sl Off} --
   Setting the line detail to Off turns all mesh lines off.
 \end{enumerate}
+%
+The default level of detail for lines is {\sl Outline}.
 
 \Tip{To edit the appearance or level of detail on several parts
   at the same time, select multiple parts in the Objects list in the
   Model Manager panel, after clicking on the Item Appearance icon.}
+
+\SubSubSection{Predefined part colors}{predefined-part-colors}
+
+When a new part is imported into a model
+(see~\refSection{creating-parts-by-file-import}{Creating parts by file import}),
+it is assigned a default color from a predefined color palette.
+This palette is stored in the file \File{linkcolors.flc}
+located in the \File{resources} folder of the Fedem installation.
+It can be overridden by the user by keeping an edited version of this file
+in the home directory of the user profile.
+
+The content of the included \File{linkcolors.flc} file is as follows:
+%
+\begin{center}
+\begin{minipage}{0.8\textwidth}
+\vskip1mm\begin{verbatim}
+# FEDEM default link colors
+ 40 105 160 : Engineering Blue
+220 125  45 : Industrial Orange
+ 70 140 100 : Machine Green
+190  65  60 : Technical Red
+220 180  55 : Safety Yellow
+125  90 155 : Analysis Purple
+ 65 150 165 : Steel Cyan
+120 130 135 : Machine Grey
+160 105  65 : Copper/Bronze
+ 65  70  75 : Graphite
+\end{verbatim}
+\end{minipage}
+\end{center}
+%
+The first line (or any line starting with the {\tt\#}-character)
+is a command line and will be ignored.
+The three integer values on each of the following lines are RGB-codes in the
+range 0 to 255 defining a color.
+The text after and including the colon on each line is also ignored and
+considered as comments only, but can be useful for naming the various colors.
+
+When a new part is imported into an empty model, it will be assigned the first
+color from the paletter (i.e., {\sl Engineering Blue}), the second part imported
+will be assigned the second color, and so on. After reaching the last entry of
+the palette, it is started from the beginning again such that a model containing
+many parts might end up with the same color on some parts. However,
+the color on any part may always be adjusted in the
+\protect\hyperlink{item-appearance}{Item Appearance} dialog box.
 
 
 \SubSection{Element face visibility}{element-face-visibility}
@@ -1449,6 +1499,7 @@ Either all visible \includegraphics[scale=0.8]{Figures/AllElementsVisible},
 some visible \includegraphics[scale=0.8]{Figures/SomeElementsVisible}
 or all hidden \includegraphics[scale=0.8]{Figures/AllElementsHidden}.
 
+\clearpage
 These commands will only be active when the polygon detail level is set to
 Surface or Surface and Internals, or when color contour results are loaded for
 the Part. This feature can also be utilized to load color contour results only
@@ -1500,6 +1551,7 @@ for the Mechanism symbols.
 See \refSection{general-appearance}{General Appearance}.
 
 
+\clearpage
 \SubSection{Measuring distance and angles in a model}{measuring-distance-and-angles}
 
 Sometimes during the modeling of complex mechanisms, it is necessary or
@@ -1540,6 +1592,8 @@ through the third and second are then shown in the \OutputList view.
 You can repeat to click on three  new points to measure more angles as many
 times you like. Press \textbf{Cancel} to quit the command.
 
+\clearpage
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \Section{Opening and saving model files}{opening-and-saving-model-files}
@@ -1559,7 +1613,7 @@ You can open a Fedem model file created in this version
 \end{enumerate}}
 
 \begin{center}
-  \includegraphics[scale=0.62]{Figures/Dialogs/2-Open}
+  \vskip-5mm\includegraphics[scale=0.6]{Figures/Dialogs/2-Open}
 \end{center}
 
 The Open model file dialog box normally displays all files with the Fedem model
@@ -1632,6 +1686,7 @@ file is moved, Fedem uses the following search path to locate the parts:
 \item The base name of the original FE part with the extension \File{.ftl}
   located in the same directory as the model file.
 \end{enumerate}
+
 
 \clearpage
 \SubSection{Saving models}{saving-models}
